@@ -12,24 +12,31 @@ class RemoteEventLoader {
     }
 
     func load() {
-        client.request = "REQ"
+        client.receive(from: "REQ")
     }
 }
 
-class WebSocketClient {
+protocol WebSocketClient {
+    func receive(from request: String)
+}
+
+class WebSocketClientSpy: WebSocketClient {
     var request: String?
+    func receive(from request: String) {
+        self.request = request
+    }
 }
 
 class RemoteEventLoaderTests: XCTestCase {
     func test_init_doesNotRequestWhenCreated() {
-        let client = WebSocketClient()
+        let client = WebSocketClientSpy()
         _ = RemoteEventLoader(client: client)
 
         XCTAssertNil(client.request)
     }
 
     func test_load_requestEventFromClient() {
-        let client = WebSocketClient()
+        let client = WebSocketClientSpy()
         let sut = RemoteEventLoader(client: client)
 
         sut.load()
