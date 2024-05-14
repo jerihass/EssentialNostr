@@ -71,8 +71,7 @@
 		AD51DB532BF42A4E00B5673C /* EssentialNostr */ = {
 			isa = PBXGroup;
 			children = (
-				AD51DB692BF42A7100B5673C /* Event.swift */,
-				AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */,
+				AD51DB6D2BF42C4600B5673C /* Event Feature */,
 			);
 			path = EssentialNostr;
 			sourceTree = "<group>";
@@ -83,6 +82,15 @@
 				AD51DB5E2BF42A4E00B5673C /* EssentialNostrTests.swift */,
 			);
 			path = EssentialNostrTests;
+			sourceTree = "<group>";
+		};
+		AD51DB6D2BF42C4600B5673C /* Event Feature */ = {
+			isa = PBXGroup;
+			children = (
+				AD51DB692BF42A7100B5673C /* Event.swift */,
+				AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */,
+			);
+			path = "Event Feature";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
