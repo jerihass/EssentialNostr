@@ -32,28 +32,35 @@ protocol WebSocketClient {
     func receive(with request: String)
 }
 
-class WebSocketClientSpy: WebSocketClient {
-    var request: String?
-    func receive(with request: String) {
-        self.request = request
-    }
-}
 
 class RemoteEventLoaderTests: XCTestCase {
     func test_init_doesNotRequestWhenCreated() {
-        let client = WebSocketClientSpy()
-        _ = RemoteEventLoader(client: client)
+        let (_, client) = makeSUT()
 
         XCTAssertNil(client.request)
     }
 
     func test_load_requestEventFromClient() {
         let request = "Some Request"
-        let client = WebSocketClientSpy()
-        let sut = RemoteEventLoader(client: client)
+        let (sut, client) = makeSUT()
 
         sut.load(request: request)
 
         XCTAssertEqual(client.request, request)
+    }
+
+    // MARK: - Helpers
+
+    func makeSUT() -> (sut: RemoteEventLoader, client: WebSocketClientSpy) {
+        let client = WebSocketClientSpy()
+        let sut = RemoteEventLoader(client: client)
+        return (sut, client)
+    }
+
+    class WebSocketClientSpy: WebSocketClient {
+        var request: String?
+        func receive(with request: String) {
+            self.request = request
+        }
     }
 }
