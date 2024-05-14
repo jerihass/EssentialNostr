@@ -6,5 +6,5 @@ import Foundation
 
 protocol EventLoader {
     typealias LoadEventResult = Result<[Event], Error>
-    func load(completion: @escaping (LoadEventResult) -> Void)
+    func load(request: String, completion: @escaping (LoadEventResult) -> Void)
 }
