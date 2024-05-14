@@ -8,9 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		AD51DB5A2BF42A4E00B5673C /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
-		AD51DB5F2BF42A4E00B5673C /* EssentialNostrTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB5E2BF42A4E00B5673C /* EssentialNostrTests.swift */; };
 		AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB692BF42A7100B5673C /* Event.swift */; };
 		AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */; };
+		AD51DB6F2BF42CCD00B5673C /* RemoteEventLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB6E2BF42CCD00B5673C /* RemoteEventLoaderTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -26,9 +26,9 @@
 /* Begin PBXFileReference section */
 		AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialNostr.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD51DB592BF42A4E00B5673C /* EssentialNostrTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostrTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		AD51DB5E2BF42A4E00B5673C /* EssentialNostrTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialNostrTests.swift; sourceTree = "<group>"; };
 		AD51DB692BF42A7100B5673C /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLoader.swift; sourceTree = "<group>"; };
+		AD51DB6E2BF42CCD00B5673C /* RemoteEventLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEventLoaderTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,7 +79,7 @@
 		AD51DB5D2BF42A4E00B5673C /* EssentialNostrTests */ = {
 			isa = PBXGroup;
 			children = (
-				AD51DB5E2BF42A4E00B5673C /* EssentialNostrTests.swift */,
+				AD51DB6E2BF42CCD00B5673C /* RemoteEventLoaderTests.swift */,
 			);
 			path = EssentialNostrTests;
 			sourceTree = "<group>";
@@ -211,7 +211,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD51DB5F2BF42A4E00B5673C /* EssentialNostrTests.swift in Sources */,
+				AD51DB6F2BF42CCD00B5673C /* RemoteEventLoaderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
