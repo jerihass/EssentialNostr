@@ -5,7 +5,15 @@
 import XCTest
 
 class RemoteEventLoader {
+    var client: WebSocketClient
 
+    init(client: WebSocketClient) {
+        self.client = client
+    }
+
+    func load() {
+        client.request = "REQ"
+    }
 }
 
 class WebSocketClient {
@@ -15,8 +23,17 @@ class WebSocketClient {
 class RemoteEventLoaderTests: XCTestCase {
     func test_init_doesNotRequestWhenCreated() {
         let client = WebSocketClient()
-        _ = RemoteEventLoader()
+        _ = RemoteEventLoader(client: client)
 
         XCTAssertNil(client.request)
+    }
+
+    func test_load_requestEventFromClient() {
+        let client = WebSocketClient()
+        let sut = RemoteEventLoader(client: client)
+
+        sut.load()
+
+        XCTAssertNotNil(client.request)
     }
 }
