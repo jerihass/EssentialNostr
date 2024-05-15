@@ -85,6 +85,15 @@ class RemoteEventLoaderTests: XCTestCase {
         }
     }
 
+    func test_load_deliversOKNoticeErrorOnNoticeWithAcceptedFalse() {
+        let (sut, client) = makeSUT()
+        let message = "duplicate: already have this event"
+        expect(sut, toCompleteWith: .failure(RemoteEventLoader.Error.ok(sub: "sub1", accepted: false, reason: message))) {
+            let okMessage = Data("[\"OK\",\"sub1\",false,\"\(message)\"]".utf8)
+            client.complete(with: okMessage)
+        }
+    }
+
     func test_load_deliversEventOnValidEvents() {
         let (sut, client) = makeSUT()
         let date = Date.distantPast

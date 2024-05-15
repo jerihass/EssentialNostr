@@ -18,6 +18,7 @@ final public class RemoteEventLoader {
         case closed(sub: String, message: String)
         case eose(sub: String)
         case notice(message: String)
+        case ok(sub: String, accepted: Bool, reason: String)
     }
 
     public init(client: WebSocketClient) {
@@ -47,14 +48,16 @@ private class RelayMessageMapper {
     static func map(_ data: Data) throws -> Event {
         if let message = try? JSONDecoder().decode(RelayMessage.self, from: data) {
             switch message.message {
-            case .event(_, let event):
+            case let .event(_, event):
                 return event.local
-            case .closed(let sub, let message):
+            case let .closed(sub, message):
                 throw RemoteEventLoader.Error.closed(sub: sub, message: message)
             case .eose(let sub):
                 throw RemoteEventLoader.Error.eose(sub: sub)
             case let .notice(message: mess):
                 throw RemoteEventLoader.Error.notice(message: mess)
+            case let .ok(sub, accepted, reason):
+                throw RemoteEventLoader.Error.ok(sub: sub, accepted: accepted, reason: reason)
             }
         } else {
             throw RemoteEventLoader.Error.invalidData
@@ -69,6 +72,7 @@ private class RelayMessageMapper {
             case closed = "CLOSED"
             case eose = "EOSE"
             case notice = "NOTICE"
+            case ok = "OK"
         }
 
         enum Message {
@@ -76,6 +80,7 @@ private class RelayMessageMapper {
             case closed(sub: String, message: String)
             case eose(sub: String)
             case notice(message: String)
+            case ok(sub: String, accepted: Bool, reason: String)
         }
 
         enum CodingKeys: CodingKey {
@@ -102,6 +107,11 @@ private class RelayMessageMapper {
             case .notice:
                 let mess = try container.decode(String.self)
                 message = .notice(message: mess)
+            case .ok:
+                let sub = try container.decode(String.self)
+                let accepted = try container.decode(Bool.self)
+                let mess = try container.decode(String.self)
+                message = .ok(sub: sub, accepted: accepted, reason: mess)
             }
         }
     }
