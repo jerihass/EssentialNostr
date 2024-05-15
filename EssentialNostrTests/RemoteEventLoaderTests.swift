@@ -110,7 +110,15 @@ class RemoteEventLoaderTests: XCTestCase {
     private func makeSUT() -> (sut: RemoteEventLoader, client: WebSocketClientSpy) {
         let client = WebSocketClientSpy()
         let sut = RemoteEventLoader(client: client)
+        trackForMemoryLeaks(sut)
+        trackForMemoryLeaks(client)
         return (sut, client)
+    }
+
+    private func trackForMemoryLeaks(_ object: AnyObject, file: StaticString = #file, line: UInt = #line) {
+        addTeardownBlock { [weak object] in
+            XCTAssertNil(object, "Instance should have been deallocated. Possible memory leak.", file: file, line: line)
+        }
     }
 
     private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (model: Event, data: Data) {
