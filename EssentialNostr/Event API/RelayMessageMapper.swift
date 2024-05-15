@@ -5,7 +5,16 @@
 import Foundation
 
 final class RelayMessageMapper {
-    internal static func map(_ data: Data) throws -> Event {
+
+    internal static func mapData(_ data: Data) -> RemoteEventLoader.Result {
+        do {
+            return .success(try mapEvent(data))
+        } catch {
+            return .failure(error as? RemoteEventLoader.Error ?? .unknown)
+        }
+    }
+
+    private static func mapEvent(_ data: Data) throws -> Event {
         if let message = try? JSONDecoder().decode(RelayMessage.self, from: data) {
             switch message.message {
             case let .event(_, event):
@@ -23,6 +32,7 @@ final class RelayMessageMapper {
             throw RemoteEventLoader.Error.invalidData
         }
     }
+
 
     private struct RelayMessage: Decodable {
         let message: Message
