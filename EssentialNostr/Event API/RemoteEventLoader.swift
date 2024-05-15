@@ -31,7 +31,7 @@ final public class RemoteEventLoader {
                 if let message = try? JSONDecoder().decode(RelayMessage.self, from: data) {
                     switch message.message {
                     case .event(_, let event):
-                        completion(.success(Event(event)))
+                        completion(.success(event.local))
                         break
                     case .closed(let sub, let message):
                         completion(.failure(.closed(sub: sub, message: message)))
@@ -103,19 +103,7 @@ private struct RelayEvent: Decodable {
     let content: String
     let sig: String
 
-    var event: Event {
-        Event(self)
-    }
-}
-
-extension Event {
-    fileprivate init(_ relayEvent: RelayEvent) {
-        id = relayEvent.id
-        pubkey = relayEvent.pubkey
-        created_at = Date(timeIntervalSince1970: relayEvent.created_at)
-        kind = relayEvent.kind
-        tags = relayEvent.tags
-        content = relayEvent.content
-        sig = relayEvent.sig
+    var local: Event {
+        return Event(id: id, pubkey: pubkey, created_at: Date(timeIntervalSince1970: created_at), kind: kind, tags: tags, content: content, sig: sig)
     }
 }
