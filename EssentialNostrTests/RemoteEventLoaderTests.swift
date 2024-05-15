@@ -43,8 +43,8 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClosedResponse() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(.closed)) {
-            let closedMessage = Data("[\"CLOSED\",\"sub1\",\"duplicate: sub1 already opened\"]".utf8)
+        expect(sut, toCompleteWith: .failure(.closed(sub: "sub1", message: "duplicate: already opened"))) {
+            let closedMessage = Data("[\"CLOSED\",\"sub1\",\"duplicate: already opened\"]".utf8)
             client.complete(with: closedMessage)
         }
     }

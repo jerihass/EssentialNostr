@@ -14,7 +14,7 @@ final public class RemoteEventLoader {
     public typealias Result = Swift.Result<Event, Error>
     public enum Error: Swift.Error, Equatable {
         case connectivity
-        case closed
+        case closed(sub: String, message: String)
         case eose
         case notice(message: String)
         case invalidData
@@ -33,8 +33,8 @@ final public class RemoteEventLoader {
                     case .event(_, let event):
                         completion(.success(Event(event)))
                         break
-                    case .closed:
-                        completion(.failure(.closed))
+                    case .closed(let sub, let message):
+                        completion(.failure(.closed(sub: sub, message: message)))
                     case .eose:
                         completion(.failure(.eose))
                     case let .notice(message: mess):
