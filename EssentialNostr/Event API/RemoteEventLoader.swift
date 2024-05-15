@@ -32,6 +32,8 @@ final public class RemoteEventLoader {
                         break
                     case .closed:
                         completion(.failure(.closed))
+                    case .eose:
+                        completion(.success([]))
                     }
                 } else {
                     completion(.failure(.invalidData))
@@ -48,11 +50,13 @@ final public class RemoteEventLoader {
         enum MessageType: String, Decodable {
             case event = "EVENT"
             case closed = "CLOSED"
+            case eose = "EOSE"
         }
 
         enum Message {
-            case event(String, RelayEvent)
-            case closed(String, String)
+            case event(sub: String, event: RelayEvent)
+            case closed(sub: String, message: String)
+            case eose(sub: String)
         }
 
         enum CodingKeys: CodingKey {
@@ -67,11 +71,14 @@ final public class RemoteEventLoader {
             case .event:
                 let sub = try container.decode(String.self)
                 let event = try container.decode(RelayEvent.self)
-                message = .event(sub, event)
+                message = .event(sub: sub, event: event)
             case .closed:
                 let sub = try container.decode(String.self)
                 let mess = try container.decode(String.self)
-                message = .closed(sub, mess)
+                message = .closed(sub: sub, message: mess)
+            case .eose:
+                let sub = try container.decode(String.self)
+                message = .eose(sub: sub)
             }
         }
     }

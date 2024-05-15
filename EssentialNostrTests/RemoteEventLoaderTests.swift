@@ -58,6 +58,15 @@ class RemoteEventLoaderTests: XCTestCase {
         }
     }
 
+    func test_load_deliversNoEventsOnEndOfStoredEvents() {
+        let (sut, client) = makeSUT()
+
+        expect(sut, toCompleteWith: .success([])) {
+            let eoseMessage = Data("[\"EOSE\",\"sub1\"]".utf8)
+            client.complete(with: eoseMessage)
+        }
+    }
+
     // MARK: - Helpers
 
     private func makeSUT() -> (sut: RemoteEventLoader, client: WebSocketClientSpy) {
