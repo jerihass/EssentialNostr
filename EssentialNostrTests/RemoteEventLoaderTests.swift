@@ -9,7 +9,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_init_doesNotRequestWhenCreated() {
         let (_, client) = makeSUT()
 
-        XCTAssertNil(client.request)
+        XCTAssertTrue(client.requests.isEmpty)
     }
 
     func test_load_requestEventFromClient() {
@@ -18,7 +18,7 @@ class RemoteEventLoaderTests: XCTestCase {
 
         sut.load(request: request)
 
-        XCTAssertEqual(client.request, request)
+        XCTAssertEqual(client.requests, [request])
     }
 
     func test_loadTwice_requestEventFromClientTwice() {
@@ -40,11 +40,8 @@ class RemoteEventLoaderTests: XCTestCase {
     }
 
     class WebSocketClientSpy: WebSocketClient {
-        var request: String?
         var requests = [String]()
-        var requestCallCount: Int { requests.count }
         func receive(with request: String) {
-            self.request = request
             requests.append(request)
         }
     }
