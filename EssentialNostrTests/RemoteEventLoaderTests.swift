@@ -125,18 +125,9 @@ class RemoteEventLoaderTests: XCTestCase {
 
 private extension Array where Element == [String] {
     var stringed: String {
-        let final = self.map { array in
-            var temp: String = ""
-
-            array.forEach { tag in
-                temp += "\"\(tag)\","
-            }
-            temp = String(temp.dropLast())
-            temp = "[\(temp)]"
-            return temp
+        if let json = try? JSONEncoder().encode(self), let string = String(data: json, encoding: .utf8) {
+            return string
         }
-
-        let temp = "[\(final.joined(separator: ","))]"
-        return temp
+        return ""
     }
 }
