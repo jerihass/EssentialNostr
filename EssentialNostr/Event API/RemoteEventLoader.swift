@@ -28,24 +28,36 @@ final public class RemoteEventLoader {
         client.receive(with: request) { result in
             switch result {
             case .success(let data):
-                if let message = try? JSONDecoder().decode(RelayMessage.self, from: data) {
-                    switch message.message {
-                    case .event(_, let event):
-                        completion(.success(event.local))
-                        break
-                    case .closed(let sub, let message):
-                        completion(.failure(.closed(sub: sub, message: message)))
-                    case .eose(let sub):
-                        completion(.failure(.eose(sub: sub)))
-                    case let .notice(message: mess):
-                        completion(.failure(.notice(message: mess)))
+                do {
+                    let event = try RelayMessageMapper.map(data)
+                    completion(.success(event))
+                } catch {
+                    if let error = error as? RemoteEventLoader.Error {
+                        completion(.failure(error))
                     }
-                } else {
-                    completion(.failure(.invalidData))
                 }
             case .failure:
-                completion(.failure(.connectivity))
+                completion(.failure(RemoteEventLoader.Error.connectivity))
             }
+        }
+    }
+}
+
+private class RelayMessageMapper {
+    static func map(_ data: Data) throws -> Event {
+        if let message = try? JSONDecoder().decode(RelayMessage.self, from: data) {
+            switch message.message {
+            case .event(_, let event):
+                return event.local
+            case .closed(let sub, let message):
+                throw RemoteEventLoader.Error.closed(sub: sub, message: message)
+            case .eose(let sub):
+                throw RemoteEventLoader.Error.eose(sub: sub)
+            case let .notice(message: mess):
+                throw RemoteEventLoader.Error.notice(message: mess)
+            }
+        } else {
+            throw RemoteEventLoader.Error.invalidData
         }
     }
 
@@ -69,6 +81,7 @@ final public class RemoteEventLoader {
         enum CodingKeys: CodingKey {
             case type
         }
+
         struct DecodingError: Swift.Error {}
 
         init(from decoder: Decoder) throws {
@@ -92,18 +105,18 @@ final public class RemoteEventLoader {
             }
         }
     }
-}
 
-private struct RelayEvent: Decodable {
-    let id: String
-    let pubkey: String
-    let created_at: Double
-    let kind: UInt16
-    let tags: [[String]]
-    let content: String
-    let sig: String
+    private struct RelayEvent: Decodable {
+        let id: String
+        let pubkey: String
+        let created_at: Double
+        let kind: UInt16
+        let tags: [[String]]
+        let content: String
+        let sig: String
 
-    var local: Event {
-        return Event(id: id, pubkey: pubkey, created_at: Date(timeIntervalSince1970: created_at), kind: kind, tags: tags, content: content, sig: sig)
+        var local: Event {
+            return Event(id: id, pubkey: pubkey, created_at: Date(timeIntervalSince1970: created_at), kind: kind, tags: tags, content: content, sig: sig)
+        }
     }
 }
