@@ -49,6 +49,15 @@ class RemoteEventLoaderTests: XCTestCase {
         }
     }
 
+    func test_load_deliversErrorOnClosedResponseInvalidFormat() {
+        let (sut, client) = makeSUT()
+
+        expect(sut, toCompleteWith: .failure(.invalidData)) {
+            let closedMessage = Data("[\"CLOSED\",\"duplicate: already opened\"]".utf8)
+            client.complete(with: closedMessage)
+        }
+    }
+
     func test_load_deliversErrorOnEventResponseWithInvalidJSON() {
         let (sut, client) = makeSUT()
 
@@ -61,7 +70,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversEOSEErrorOnEndOfStoredEvents() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(.eose)) {
+        expect(sut, toCompleteWith: .failure(.eose(sub: "sub1"))) {
             let eoseMessage = Data("[\"EOSE\",\"sub1\"]".utf8)
             client.complete(with: eoseMessage)
         }

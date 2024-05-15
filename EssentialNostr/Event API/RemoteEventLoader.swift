@@ -14,10 +14,10 @@ final public class RemoteEventLoader {
     public typealias Result = Swift.Result<Event, Error>
     public enum Error: Swift.Error, Equatable {
         case connectivity
-        case closed(sub: String, message: String)
-        case eose
-        case notice(message: String)
         case invalidData
+        case closed(sub: String, message: String)
+        case eose(sub: String)
+        case notice(message: String)
     }
 
     public init(client: WebSocketClient) {
@@ -35,8 +35,8 @@ final public class RemoteEventLoader {
                         break
                     case .closed(let sub, let message):
                         completion(.failure(.closed(sub: sub, message: message)))
-                    case .eose:
-                        completion(.failure(.eose))
+                    case .eose(let sub):
+                        completion(.failure(.eose(sub: sub)))
                     case let .notice(message: mess):
                         completion(.failure(.notice(message: mess)))
                     }
