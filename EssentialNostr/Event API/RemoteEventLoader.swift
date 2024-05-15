@@ -5,13 +5,15 @@
 import Foundation
 
 public protocol WebSocketClient {
-    func receive(with request: String, completion: @escaping (Error) -> Void)
+    typealias ReceiveResult = Result<String, Error>
+    func receive(with request: String, completion: @escaping (ReceiveResult) -> Void)
 }
 
 final public class RemoteEventLoader {
     private let client: WebSocketClient
     public enum Error: Swift.Error {
         case connectivity
+        case closed
     }
 
     public init(client: WebSocketClient) {
@@ -19,8 +21,14 @@ final public class RemoteEventLoader {
     }
 
     public func load(request: String, completion: @escaping (Error) -> Void) {
-        client.receive(with: request) { error in
-            completion(.connectivity)
+        client.receive(with: request) { result in
+            switch result {
+            case .success:
+                completion(.closed)
+
+            case .failure(_):
+                completion(.connectivity)
+            }
         }
     }
 }

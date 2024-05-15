@@ -43,6 +43,17 @@ class RemoteEventLoaderTests: XCTestCase {
         XCTAssertEqual(capturedErrors, [.connectivity])
     }
 
+    func test_load_deliversErrorOnClosedResponse() {
+        let (sut, client) = makeSUT()
+        let request = "Some Request"
+        var capturedErrors = [RemoteEventLoader.Error]()
+
+        sut.load(request: request) { capturedErrors.append($0) }
+        client.complete(withClosed: "[\"CLOSED\",\"sub1\",\"duplicate: sub1 already opened\"]")
+
+        XCTAssertEqual(capturedErrors, [.closed])
+    }
+
     // MARK: - Helpers
 
     func makeSUT() -> (sut: RemoteEventLoader, client: WebSocketClientSpy) {
@@ -52,14 +63,18 @@ class RemoteEventLoaderTests: XCTestCase {
     }
 
     class WebSocketClientSpy: WebSocketClient {
-        var allRequests = [(request: String, completion: (Error) -> Void)]()
+        var allRequests = [(request: String, completion: (Result<String, Error>) -> Void)]()
         var requests: [String] { allRequests.map { $0.request }}
-        func receive(with request: String, completion: @escaping (Error) -> Void) {
+        func receive(with request: String, completion: @escaping (Result<String, Error>) -> Void) {
             allRequests.append((request, completion))
         }
 
         func complete(with error: Error, at index: Int = 0) {
-            allRequests[index].completion(error)
+            allRequests[index].completion(.failure(error))
+        }
+
+        func complete(withClosed message: String, at index: Int = 0) {
+            allRequests[index].completion(.success(message))
         }
     }
 }
