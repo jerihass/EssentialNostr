@@ -21,6 +21,16 @@ class RemoteEventLoaderTests: XCTestCase {
         XCTAssertEqual(client.request, request)
     }
 
+    func test_loadTwice_requestEventFromClientTwice() {
+        let request = "Some Request"
+        let (sut, client) = makeSUT()
+
+        sut.load(request: request)
+        sut.load(request: request)
+
+        XCTAssertEqual(client.requests, [request, request])
+    }
+
     // MARK: - Helpers
 
     func makeSUT() -> (sut: RemoteEventLoader, client: WebSocketClientSpy) {
@@ -31,8 +41,11 @@ class RemoteEventLoaderTests: XCTestCase {
 
     class WebSocketClientSpy: WebSocketClient {
         var request: String?
+        var requests = [String]()
+        var requestCallCount: Int { requests.count }
         func receive(with request: String) {
             self.request = request
+            requests.append(request)
         }
     }
 }
