@@ -52,15 +52,14 @@ class RemoteEventLoaderTests: XCTestCase {
     }
 
     class WebSocketClientSpy: WebSocketClient {
-        var requests = [String]()
-        var completions = [(Error) -> Void]()
+        var allRequests = [(request: String, completion: (Error) -> Void)]()
+        var requests: [String] { allRequests.map { $0.request }}
         func receive(with request: String, completion: @escaping (Error) -> Void) {
-            completions.append(completion)
-            requests.append(request)
+            allRequests.append((request, completion))
         }
 
         func complete(with error: Error, at index: Int = 0) {
-            completions[index](error)
+            allRequests[index].completion(error)
         }
     }
 }
