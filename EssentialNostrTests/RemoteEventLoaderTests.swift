@@ -55,6 +55,18 @@ class RemoteEventLoaderTests: XCTestCase {
         XCTAssertEqual(capturedErrors, [.closed])
     }
 
+    func test_load_deliversErrorOnEventResponseWithInvalidJSON() {
+        let (sut, client) = makeSUT()
+        let request = "Some Request"
+        var capturedErrors = [RemoteEventLoader.Error]()
+
+        sut.load(request: request) { capturedErrors.append($0) }
+        let closedMessage = Data("[\"EVENT\",\"sub1\",\"INVALID_event_JSON\"]".utf8)
+        client.complete(with: closedMessage)
+
+        XCTAssertEqual(capturedErrors, [.invalidData])
+    }
+
     // MARK: - Helpers
 
     func makeSUT() -> (sut: RemoteEventLoader, client: WebSocketClientSpy) {
