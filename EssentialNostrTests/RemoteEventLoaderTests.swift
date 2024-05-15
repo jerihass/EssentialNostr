@@ -34,10 +34,12 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
         let request = "Some Request"
-        client.error = NSError(domain: "", code: 0)
+        let clientError = NSError(domain: "", code: 0)
         var capturedErrors = [RemoteEventLoader.Error]()
 
         sut.load(request: request) { capturedErrors.append($0) }
+
+        client.completions[0](clientError)
 
         XCTAssertEqual(capturedErrors, [.connectivity])
     }
@@ -52,11 +54,9 @@ class RemoteEventLoaderTests: XCTestCase {
 
     class WebSocketClientSpy: WebSocketClient {
         var requests = [String]()
-        var error: Error?
+        var completions = [(Error) -> Void]()
         func receive(with request: String, completion: @escaping (Error) -> Void) {
-            if let error = error {
-                completion(error)
-            }
+            completions.append(completion)
             requests.append(request)
         }
     }
