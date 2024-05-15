@@ -11,6 +11,7 @@
 		AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB692BF42A7100B5673C /* Event.swift */; };
 		AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */; };
 		AD51DB6F2BF42CCD00B5673C /* RemoteEventLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB6E2BF42CCD00B5673C /* RemoteEventLoaderTests.swift */; };
+		AD51DB722BF433E500B5673C /* RemoteEventLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,7 @@
 		AD51DB692BF42A7100B5673C /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
 		AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLoader.swift; sourceTree = "<group>"; };
 		AD51DB6E2BF42CCD00B5673C /* RemoteEventLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEventLoaderTests.swift; sourceTree = "<group>"; };
+		AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEventLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +73,7 @@
 		AD51DB532BF42A4E00B5673C /* EssentialNostr */ = {
 			isa = PBXGroup;
 			children = (
+				AD51DB702BF433D900B5673C /* Event API */,
 				AD51DB6D2BF42C4600B5673C /* Event Feature */,
 			);
 			path = EssentialNostr;
@@ -91,6 +94,14 @@
 				AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */,
 			);
 			path = "Event Feature";
+			sourceTree = "<group>";
+		};
+		AD51DB702BF433D900B5673C /* Event API */ = {
+			isa = PBXGroup;
+			children = (
+				AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */,
+			);
+			path = "Event API";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -202,6 +213,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD51DB722BF433E500B5673C /* RemoteEventLoader.swift in Sources */,
 				AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */,
 				AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */,
 			);
