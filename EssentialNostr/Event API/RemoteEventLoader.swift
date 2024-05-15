@@ -12,10 +12,11 @@ public protocol WebSocketClient {
 final public class RemoteEventLoader {
     private let client: WebSocketClient
     public typealias Result = Swift.Result<Event, Error>
-    public enum Error: Swift.Error {
+    public enum Error: Swift.Error, Equatable {
         case connectivity
         case closed
         case eose
+        case notice(message: String)
         case invalidData
     }
 
@@ -36,6 +37,8 @@ final public class RemoteEventLoader {
                         completion(.failure(.closed))
                     case .eose:
                         completion(.failure(.eose))
+                    case let .notice(message: mess):
+                        completion(.failure(.notice(message: mess)))
                     }
                 } else {
                     completion(.failure(.invalidData))
@@ -53,12 +56,14 @@ final public class RemoteEventLoader {
             case event = "EVENT"
             case closed = "CLOSED"
             case eose = "EOSE"
+            case notice = "NOTICE"
         }
 
         enum Message {
             case event(sub: String, event: RelayEvent)
             case closed(sub: String, message: String)
             case eose(sub: String)
+            case notice(message: String)
         }
 
         enum CodingKeys: CodingKey {
@@ -81,6 +86,9 @@ final public class RemoteEventLoader {
             case .eose:
                 let sub = try container.decode(String.self)
                 message = .eose(sub: sub)
+            case .notice:
+                let mess = try container.decode(String.self)
+                message = .notice(message: mess)
             }
         }
     }
