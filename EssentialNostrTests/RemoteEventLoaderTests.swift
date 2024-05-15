@@ -35,13 +35,11 @@ class RemoteEventLoaderTests: XCTestCase {
         let (sut, client) = makeSUT()
         let request = "Some Request"
         client.error = NSError(domain: "", code: 0)
-        var capturedError: RemoteEventLoader.Error?
+        var capturedErrors = [RemoteEventLoader.Error]()
 
-        sut.load(request: request) { error in
-            capturedError = error
-        }
+        sut.load(request: request) { capturedErrors.append($0) }
 
-        XCTAssertEqual(capturedError, .connectivity)
+        XCTAssertEqual(capturedErrors, [.connectivity])
     }
 
     // MARK: - Helpers
