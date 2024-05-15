@@ -4,11 +4,6 @@
 
 import Foundation
 
-public protocol WebSocketClient {
-    typealias ReceiveResult = Result<Data, Error>
-    func receive(with request: String, completion: @escaping (ReceiveResult) -> Void)
-}
-
 final public class RemoteEventLoader {
     private let client: WebSocketClient
     public typealias Result = Swift.Result<Event, Error>

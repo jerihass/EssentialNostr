@@ -12,6 +12,7 @@
 		AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */; };
 		AD51DB6F2BF42CCD00B5673C /* RemoteEventLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB6E2BF42CCD00B5673C /* RemoteEventLoaderTests.swift */; };
 		AD51DB722BF433E500B5673C /* RemoteEventLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */; };
+		AD7B0B1A2BF571AE0053793A /* WebSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7B0B192BF571AE0053793A /* WebSocketClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +32,7 @@
 		AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLoader.swift; sourceTree = "<group>"; };
 		AD51DB6E2BF42CCD00B5673C /* RemoteEventLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEventLoaderTests.swift; sourceTree = "<group>"; };
 		AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEventLoader.swift; sourceTree = "<group>"; };
+		AD7B0B192BF571AE0053793A /* WebSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,6 +102,7 @@
 			isa = PBXGroup;
 			children = (
 				AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */,
+				AD7B0B192BF571AE0053793A /* WebSocketClient.swift */,
 			);
 			path = "Event API";
 			sourceTree = "<group>";
@@ -215,6 +218,7 @@
 			files = (
 				AD51DB722BF433E500B5673C /* RemoteEventLoader.swift in Sources */,
 				AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */,
+				AD7B0B1A2BF571AE0053793A /* WebSocketClient.swift in Sources */,
 				AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
