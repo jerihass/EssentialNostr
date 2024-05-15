@@ -18,7 +18,7 @@ final public class RemoteEventLoader {
         self.client = client
     }
 
-    public func load(request: String, completion: @escaping (Error) -> Void = { _ in }) {
+    public func load(request: String, completion: @escaping (Error) -> Void) {
         client.receive(with: request) { error in
             completion(.connectivity)
         }

@@ -16,7 +16,7 @@ class RemoteEventLoaderTests: XCTestCase {
         let request = "Some Request"
         let (sut, client) = makeSUT()
 
-        sut.load(request: request)
+        sut.load(request: request) { _ in }
 
         XCTAssertEqual(client.requests, [request])
     }
@@ -25,8 +25,8 @@ class RemoteEventLoaderTests: XCTestCase {
         let request = "Some Request"
         let (sut, client) = makeSUT()
 
-        sut.load(request: request)
-        sut.load(request: request)
+        sut.load(request: request) { _ in }
+        sut.load(request: request) { _ in }
 
         XCTAssertEqual(client.requests, [request, request])
     }
