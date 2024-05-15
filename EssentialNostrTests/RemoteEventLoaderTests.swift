@@ -89,10 +89,10 @@ class RemoteEventLoaderTests: XCTestCase {
         let (sut, client) = makeSUT()
         let date = Date.distantPast
 
-        let (event1, event1Data) = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
+        let event = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
 
-        expect(sut, toCompleteWith: .success(event1)) {
-            client.complete(with: event1Data)
+        expect(sut, toCompleteWith: .success(event.model)) {
+            client.complete(with: event.data)
         }
     }
 
@@ -104,7 +104,7 @@ class RemoteEventLoaderTests: XCTestCase {
         return (sut, client)
     }
 
-    private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (event: Event, data: Data) {
+    private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (model: Event, data: Data) {
         let event = Event(id: id, pubkey: pubkey, created_at: created_at, kind: kind, tags: tags, content: content, sig: sig)
         let time = created_at.timeIntervalSince1970
         let tagString = tags.stringed
