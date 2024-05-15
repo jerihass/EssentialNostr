@@ -70,11 +70,11 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversEventOnValidEvents() {
         let (sut, client) = makeSUT()
         let date = Date.distantPast
-        let time = date.timeIntervalSince1970
-        let event1 = Event(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [[]], content: "content1", sig: "sig1")
-        let event1JSON = "[\"EVENT\",\"sub1\",{\"id\":\"id1\",\"pubkey\":\"pubkey1\",\"created_at\":\(time),\"kind\":1,\"tags\":[[]],\"content\":\"content1\",\"sig\":\"sig1\"}]"
+
+        let (event1, event1Data) = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
+
         expect(sut, toCompleteWith: .success(event1)) {
-            client.complete(with: Data(event1JSON.utf8))
+            client.complete(with: event1Data)
         }
     }
 
@@ -84,6 +84,15 @@ class RemoteEventLoaderTests: XCTestCase {
         let client = WebSocketClientSpy()
         let sut = RemoteEventLoader(client: client)
         return (sut, client)
+    }
+
+    private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (event: Event, data: Data) {
+        let event = Event(id: id, pubkey: pubkey, created_at: created_at, kind: kind, tags: tags, content: content, sig: sig)
+        let time = created_at.timeIntervalSince1970
+        let tagString = tags.stringed
+
+        let eventJSON = "[\"EVENT\",\"sub1\",{\"id\":\"\(id)\",\"pubkey\":\"\(pubkey)\",\"created_at\":\(time),\"kind\":\(kind),\"tags\":\(tagString),\"content\":\"\(content)\",\"sig\":\"\(sig)\"}]"
+        return (event, Data(eventJSON.utf8))
     }
 
     private func expect(_ sut: RemoteEventLoader, toCompleteWith result: RemoteEventLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
@@ -111,5 +120,23 @@ class RemoteEventLoaderTests: XCTestCase {
         func complete(with message: Data, at index: Int = 0) {
             allRequests[index].completion(.success(message))
         }
+    }
+}
+
+private extension Array where Element == [String] {
+    var stringed: String {
+        let final = self.map { array in
+            var temp: String = ""
+
+            array.forEach { tag in
+                temp += "\"\(tag)\","
+            }
+            temp = String(temp.dropLast())
+            temp = "[\(temp)]"
+            return temp
+        }
+
+        let temp = "[\(final.joined(separator: ","))]"
+        return temp
     }
 }
