@@ -38,8 +38,7 @@ class RemoteEventLoaderTests: XCTestCase {
         var capturedErrors = [RemoteEventLoader.Error]()
 
         sut.load(request: request) { capturedErrors.append($0) }
-
-        client.completions[0](clientError)
+        client.complete(with: clientError)
 
         XCTAssertEqual(capturedErrors, [.connectivity])
     }
@@ -58,6 +57,10 @@ class RemoteEventLoaderTests: XCTestCase {
         func receive(with request: String, completion: @escaping (Error) -> Void) {
             completions.append(completion)
             requests.append(request)
+        }
+
+        func complete(with error: Error, at index: Int = 0) {
+            completions[index](error)
         }
     }
 }
