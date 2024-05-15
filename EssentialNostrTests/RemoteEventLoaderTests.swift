@@ -61,7 +61,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversNoEventsOnEndOfStoredEvents() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .success([])) {
+        expect(sut, toCompleteWith: .failure(.eose)) {
             let eoseMessage = Data("[\"EOSE\",\"sub1\"]".utf8)
             client.complete(with: eoseMessage)
         }
@@ -69,12 +69,11 @@ class RemoteEventLoaderTests: XCTestCase {
 
     func test_load_deliversEventOnValidEvents() {
         let (sut, client) = makeSUT()
-        let date = Date.now
+        let date = Date.distantPast
         let time = date.timeIntervalSince1970
         let event1 = Event(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [[]], content: "content1", sig: "sig1")
         let event1JSON = "[\"EVENT\",\"sub1\",{\"id\":\"id1\",\"pubkey\":\"pubkey1\",\"created_at\":\(time),\"kind\":1,\"tags\":[[]],\"content\":\"content1\",\"sig\":\"sig1\"}]"
-        print(String(data: Data(event1JSON.utf8), encoding: .utf8)!)
-        expect(sut, toCompleteWith: .success([event1])) {
+        expect(sut, toCompleteWith: .success(event1)) {
             client.complete(with: Data(event1JSON.utf8))
         }
     }

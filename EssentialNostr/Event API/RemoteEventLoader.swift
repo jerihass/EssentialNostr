@@ -11,10 +11,11 @@ public protocol WebSocketClient {
 
 final public class RemoteEventLoader {
     private let client: WebSocketClient
-    public typealias Result = Swift.Result<[Event], Error>
+    public typealias Result = Swift.Result<Event, Error>
     public enum Error: Swift.Error {
         case connectivity
         case closed
+        case eose
         case invalidData
     }
 
@@ -29,12 +30,12 @@ final public class RemoteEventLoader {
                 if let message = try? JSONDecoder().decode(RelayMessage.self, from: data) {
                     switch message.message {
                     case .event(_, let event):
-                        completion(.success([Event(event)]))
+                        completion(.success(Event(event)))
                         break
                     case .closed:
                         completion(.failure(.closed))
                     case .eose:
-                        completion(.success([]))
+                        completion(.failure(.eose))
                     }
                 } else {
                     completion(.failure(.invalidData))
