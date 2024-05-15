@@ -35,7 +35,7 @@ final public class RemoteEventLoader {
                 } else {
                     completion(.invalidData)
                 }
-            case .failure(_):
+            case .failure:
                 completion(.connectivity)
             }
         }

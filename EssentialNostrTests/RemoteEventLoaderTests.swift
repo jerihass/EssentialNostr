@@ -33,46 +33,48 @@ class RemoteEventLoaderTests: XCTestCase {
 
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
-        let request = "Some Request"
-        let clientError = NSError(domain: "", code: 0)
-        var capturedErrors = [RemoteEventLoader.Error]()
 
-        sut.load(request: request) { capturedErrors.append($0) }
-        client.complete(with: clientError)
-
-        XCTAssertEqual(capturedErrors, [.connectivity])
+        expect(sut, toCompleteWith: .connectivity) {
+            let clientError = NSError(domain: "", code: 0)
+            client.complete(with: clientError)
+        }
     }
 
     func test_load_deliversErrorOnClosedResponse() {
         let (sut, client) = makeSUT()
-        let request = "Some Request"
-        var capturedErrors = [RemoteEventLoader.Error]()
 
-        sut.load(request: request) { capturedErrors.append($0) }
-        let closedMessage = Data("[\"CLOSED\",\"sub1\",\"duplicate: sub1 already opened\"]".utf8)
-        client.complete(with: closedMessage)
-
-        XCTAssertEqual(capturedErrors, [.closed])
+        expect(sut, toCompleteWith: .closed) {
+            let closedMessage = Data("[\"CLOSED\",\"sub1\",\"duplicate: sub1 already opened\"]".utf8)
+            client.complete(with: closedMessage)
+        }
     }
 
     func test_load_deliversErrorOnEventResponseWithInvalidJSON() {
         let (sut, client) = makeSUT()
-        let request = "Some Request"
-        var capturedErrors = [RemoteEventLoader.Error]()
 
-        sut.load(request: request) { capturedErrors.append($0) }
-        let closedMessage = Data("[\"EVENT\",\"sub1\",\"INVALID_event_JSON\"]".utf8)
-        client.complete(with: closedMessage)
-
-        XCTAssertEqual(capturedErrors, [.invalidData])
+        expect(sut, toCompleteWith: .invalidData) {
+            let closedMessage = Data("[\"EVENT\",\"sub1\",\"INVALID_event_JSON\"]".utf8)
+            client.complete(with: closedMessage)
+        }
     }
 
     // MARK: - Helpers
 
-    func makeSUT() -> (sut: RemoteEventLoader, client: WebSocketClientSpy) {
+    private func makeSUT() -> (sut: RemoteEventLoader, client: WebSocketClientSpy) {
         let client = WebSocketClientSpy()
         let sut = RemoteEventLoader(client: client)
         return (sut, client)
+    }
+
+    private func expect(_ sut: RemoteEventLoader, toCompleteWith error: RemoteEventLoader.Error, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+        let request = "Some Request"
+        var capturedErrors = [RemoteEventLoader.Error]()
+
+        sut.load(request: request) { capturedErrors.append($0) }
+
+        action()
+
+        XCTAssertEqual(capturedErrors, [error])
     }
 
     class WebSocketClientSpy: WebSocketClient {
