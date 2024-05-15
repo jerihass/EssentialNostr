@@ -4,8 +4,12 @@
 
 import Foundation
 
+public struct RelayMessage {
+
+}
+
 public protocol WebSocketClient {
-    typealias ReceiveResult = Result<String, Error>
+    typealias ReceiveResult = Result<Data, Error>
     func receive(with request: String, completion: @escaping (ReceiveResult) -> Void)
 }
 
