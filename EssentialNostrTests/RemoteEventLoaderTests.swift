@@ -34,7 +34,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .connectivity) {
+        expect(sut, toCompleteWith: .failure(.connectivity)) {
             let clientError = NSError(domain: "", code: 0)
             client.complete(with: clientError)
         }
@@ -43,7 +43,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClosedResponse() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .closed) {
+        expect(sut, toCompleteWith: .failure(.closed)) {
             let closedMessage = Data("[\"CLOSED\",\"sub1\",\"duplicate: sub1 already opened\"]".utf8)
             client.complete(with: closedMessage)
         }
@@ -52,7 +52,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversErrorOnEventResponseWithInvalidJSON() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .invalidData) {
+        expect(sut, toCompleteWith: .failure(.invalidData)) {
             let closedMessage = Data("[\"EVENT\",\"sub1\",\"INVALID_event_JSON\"]".utf8)
             client.complete(with: closedMessage)
         }
@@ -66,15 +66,15 @@ class RemoteEventLoaderTests: XCTestCase {
         return (sut, client)
     }
 
-    private func expect(_ sut: RemoteEventLoader, toCompleteWith error: RemoteEventLoader.Error, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: RemoteEventLoader, toCompleteWith result: RemoteEventLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
         let request = "Some Request"
-        var capturedErrors = [RemoteEventLoader.Error]()
+        var capturedResults = [RemoteEventLoader.Result]()
 
-        sut.load(request: request) { capturedErrors.append($0) }
+        sut.load(request: request) { capturedResults.append($0) }
 
         action()
 
-        XCTAssertEqual(capturedErrors, [error])
+        XCTAssertEqual(capturedResults, [result])
     }
 
     class WebSocketClientSpy: WebSocketClient {

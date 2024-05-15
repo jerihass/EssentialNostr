@@ -4,7 +4,7 @@
 
 import Foundation
 
-struct Event {
+public struct Event: Equatable {
     let id: String
     let pubkey: String
     let created_at: Date

@@ -11,6 +11,7 @@ public protocol WebSocketClient {
 
 final public class RemoteEventLoader {
     private let client: WebSocketClient
+    public typealias Result = Swift.Result<[Event], Error>
     public enum Error: Swift.Error {
         case connectivity
         case closed
@@ -21,7 +22,7 @@ final public class RemoteEventLoader {
         self.client = client
     }
 
-    public func load(request: String, completion: @escaping (Error) -> Void) {
+    public func load(request: String, completion: @escaping (Result) -> Void) {
         client.receive(with: request) { result in
             switch result {
             case .success(let data):
@@ -30,13 +31,13 @@ final public class RemoteEventLoader {
                     case .event:
                         break
                     case .closed:
-                        completion(.closed)
+                        completion(.failure(.closed))
                     }
                 } else {
-                    completion(.invalidData)
+                    completion(.failure(.invalidData))
                 }
             case .failure:
-                completion(.connectivity)
+                completion(.failure(.connectivity))
             }
         }
     }
