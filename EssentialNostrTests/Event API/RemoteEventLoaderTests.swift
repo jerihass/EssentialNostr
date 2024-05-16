@@ -132,12 +132,6 @@ class RemoteEventLoaderTests: XCTestCase {
         return (sut, client)
     }
 
-    private func trackForMemoryLeaks(_ object: AnyObject, file: StaticString = #file, line: UInt = #line) {
-        addTeardownBlock { [weak object] in
-            XCTAssertNil(object, "Instance should have been deallocated. Possible memory leak.", file: file, line: line)
-        }
-    }
-
     private func failure(_ error: RemoteEventLoader.Error) -> RemoteEventLoader.Result {
         .failure(error)
     }
