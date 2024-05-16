@@ -9,6 +9,7 @@ class NetworkConnectionWebSocketClient {
     let connection: NWConnection
     var state: NWConnection.State { connection.state }
     var stateHandler: ((_ state: NWConnection.State) -> Void)?
+    var receiveHandler: ((_ data: Data) -> Void)?
 
     enum Error: Swift.Error {
         case stateHandlerNotSet
@@ -30,18 +31,23 @@ class NetworkConnectionWebSocketClient {
         connection.start(queue: .main)
     }
 
-    func send(_ data: Data) {
+    func receive(with request: String) {
+        guard receiveHandler != nil else { return }
+
+        let data = request.data(using: .utf8)!
+        send(data)
+
+        connection.receiveMessage { content, contentContext, isComplete, error in
+            if let content = content, isComplete {
+                self.receiveHandler?(content)
+            }
+        }
+    }
+
+    private func send(_ data: Data) {
         let metaData = NWProtocolWebSocket.Metadata(opcode: .text)
         let context = NWConnection.ContentContext(identifier: "text", metadata: [metaData])
         connection.send(content: data, contentContext: context, completion: .contentProcessed({ _ in}))
-    }
-
-    func receive(_ completion: @escaping(Data) -> Void) {
-        connection.receiveMessage { content, contentContext, isComplete, error in
-            if let content = content, isComplete {
-                completion(content)
-            }
-        }
     }
 }
 
@@ -66,34 +72,32 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         try? sut.start()
 
-        wait(for: [exp], timeout: 1)
+        wait(for: [exp], timeout: 0.2)
 
         XCTAssertEqual(state, .ready)
     }
 
-    func test_send_sendsRequestToServer() {
+    func test_receive_sendsRequestToServer() {
         let sut = NetworkConnectionWebSocketClient()
         var echo: Data?
-        let data = "Data".data(using: .utf8)!
+        let request = "Request"
+        let data = request.data(using: .utf8)!
 
         let exp = expectation(description: "Wait for ready")
 
-        sut.stateHandler = { s in
-            if case .ready = s {
-                sut.send(data)
-            }
+        sut.stateHandler = { state in
+            if case .ready = state { sut.receive(with: request) }
+        }
+
+        sut.receiveHandler = {
+            echo = $0
+            exp.fulfill()
         }
 
         try? sut.start()
 
-        sut.receive { data in
-            echo = data
-            exp.fulfill()
-        }
-
-        wait(for: [exp], timeout: 1.0)
+        wait(for: [exp], timeout: 0.2)
 
         XCTAssertEqual(echo, data)
     }
-
 }
