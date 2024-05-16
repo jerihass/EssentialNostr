@@ -150,20 +150,26 @@ class RemoteEventLoaderTests: XCTestCase {
     private func expect(_ sut: RemoteEventLoader, toCompleteWith expectedResult: RemoteEventLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
         let request = "Some Request"
 
+        let exp = expectation(description: "Wait for load completion.")
         sut.load(request: request) { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedEvent), .success(expectedEvent)):
-                XCTAssertEqual(receivedEvent, expectedEvent, "Got \(receivedEvent), expected \(expectedEvent)", file: file, line: line)
-            case let (.failure(receivedError), .failure(expectedError)):
-                XCTAssertEqual(receivedError as NSError, expectedError as NSError, "Got \(receivedError), expected \(expectedError)", file: file, line: line)
+                XCTAssertEqual(receivedEvent, expectedEvent, "Got \(receivedEvent), expected \(expectedEvent)",
+                               file: file, line: line)
+            case let (.failure(receivedError as RemoteEventLoader.Error), .failure(expectedError as RemoteEventLoader.Error)):
+                XCTAssertEqual(receivedError, expectedError, "Got \(receivedError), expected \(expectedError)",
+                               file: file, line: line)
 
             default:
-                XCTFail("Got \(receivedResult), expected \(expectedResult)", file: file, line: line)
+                XCTFail("Got \(receivedResult), expected \(expectedResult)", 
+                        file: file, line: line)
             }
+            exp.fulfill()
         }
 
         action()
 
+        waitForExpectations(timeout: 0.1)
     }
 
     class WebSocketClientSpy: WebSocketClient {

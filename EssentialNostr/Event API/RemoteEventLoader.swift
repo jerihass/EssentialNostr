@@ -4,7 +4,7 @@
 
 import Foundation
 
-final public class RemoteEventLoader {
+final public class RemoteEventLoader: EventLoader {
     private let client: WebSocketClient
     public typealias Result = LoadEventResult
 
