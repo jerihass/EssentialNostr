@@ -12,6 +12,7 @@
 		AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */; };
 		AD51DB6F2BF42CCD00B5673C /* RemoteEventLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB6E2BF42CCD00B5673C /* RemoteEventLoaderTests.swift */; };
 		AD51DB722BF433E500B5673C /* RemoteEventLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */; };
+		AD5B9EBD2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5B9EBC2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift */; };
 		AD7B0B1A2BF571AE0053793A /* WebSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7B0B192BF571AE0053793A /* WebSocketClient.swift */; };
 		AD7B0B1C2BF5726C0053793A /* RelayMessageMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7B0B1B2BF5726C0053793A /* RelayMessageMapper.swift */; };
 		AD7B0B1F2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7B0B1E2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift */; };
@@ -34,6 +35,7 @@
 		AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLoader.swift; sourceTree = "<group>"; };
 		AD51DB6E2BF42CCD00B5673C /* RemoteEventLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEventLoaderTests.swift; sourceTree = "<group>"; };
 		AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEventLoader.swift; sourceTree = "<group>"; };
+		AD5B9EBC2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionWebSocketClient.swift; sourceTree = "<group>"; };
 		AD7B0B192BF571AE0053793A /* WebSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketClient.swift; sourceTree = "<group>"; };
 		AD7B0B1B2BF5726C0053793A /* RelayMessageMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessageMapper.swift; sourceTree = "<group>"; };
 		AD7B0B1E2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionWebSocketClientTests.swift; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */,
 				AD7B0B192BF571AE0053793A /* WebSocketClient.swift */,
 				AD7B0B1B2BF5726C0053793A /* RelayMessageMapper.swift */,
+				AD5B9EBC2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift */,
 			);
 			path = "Event API";
 			sourceTree = "<group>";
@@ -235,6 +238,7 @@
 				AD7B0B1A2BF571AE0053793A /* WebSocketClient.swift in Sources */,
 				AD7B0B1C2BF5726C0053793A /* RelayMessageMapper.swift in Sources */,
 				AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */,
+				AD5B9EBD2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
