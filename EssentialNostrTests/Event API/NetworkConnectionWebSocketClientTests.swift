@@ -37,4 +37,23 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         let sut = NetworkConnectionWebSocketClient()
         XCTAssertThrowsError(try sut.start(), "Expected error without state handler set")
     }
+
+    func test_start_continuesToReadyStateOnGoodConnection() {
+        let sut = NetworkConnectionWebSocketClient()
+        var state: NWConnection.State?
+
+        let exp = expectation(description: "Wait for ready")
+        sut.stateHandler = { s in
+            if case .ready = s {
+                state = s
+                exp.fulfill()
+            }
+        }
+
+        try? sut.start()
+
+        wait(for: [exp], timeout: 0.1)
+
+        XCTAssertEqual(state, .ready)
+    }
 }
