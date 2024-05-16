@@ -17,7 +17,7 @@ class NetworkConnectionWebSocketClient {
     init() {
         let url = URL(string: "wss://127.0.0.1:8080")!
         let endpoint = NWEndpoint.url(url)
-        let parameters = NWParameters(tls: nil)
+        let parameters = NWParameters(tls: nil, tcp: .init())
         let options = NWProtocolWebSocket.Options()
         parameters.defaultProtocolStack.applicationProtocols.insert(options, at: 0)
         let connection = NWConnection(to: endpoint, using: parameters)
@@ -28,6 +28,20 @@ class NetworkConnectionWebSocketClient {
         guard stateHandler != nil else { throw Error.stateHandlerNotSet }
         connection.stateUpdateHandler = stateHandler
         connection.start(queue: .main)
+    }
+
+    func send(_ data: Data) {
+        let metaData = NWProtocolWebSocket.Metadata(opcode: .text)
+        let context = NWConnection.ContentContext(identifier: "text", metadata: [metaData])
+        connection.send(content: data, contentContext: context, completion: .contentProcessed({ _ in}))
+    }
+
+    func receive(_ completion: @escaping(Data) -> Void) {
+        connection.receiveMessage { content, contentContext, isComplete, error in
+            if let content = content, isComplete {
+                completion(content)
+            }
+        }
     }
 }
 
@@ -52,8 +66,34 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         try? sut.start()
 
-        wait(for: [exp], timeout: 0.1)
+        wait(for: [exp], timeout: 1)
 
         XCTAssertEqual(state, .ready)
     }
+
+    func test_send_sendsRequestToServer() {
+        let sut = NetworkConnectionWebSocketClient()
+        var echo: Data?
+        let data = "Data".data(using: .utf8)!
+
+        let exp = expectation(description: "Wait for ready")
+
+        sut.stateHandler = { s in
+            if case .ready = s {
+                sut.send(data)
+            }
+        }
+
+        try? sut.start()
+
+        sut.receive { data in
+            echo = data
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1.0)
+
+        XCTAssertEqual(echo, data)
+    }
+
 }
