@@ -14,6 +14,7 @@
 		AD51DB722BF433E500B5673C /* RemoteEventLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */; };
 		AD7B0B1A2BF571AE0053793A /* WebSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7B0B192BF571AE0053793A /* WebSocketClient.swift */; };
 		AD7B0B1C2BF5726C0053793A /* RelayMessageMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7B0B1B2BF5726C0053793A /* RelayMessageMapper.swift */; };
+		AD7B0B1F2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7B0B1E2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +36,7 @@
 		AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEventLoader.swift; sourceTree = "<group>"; };
 		AD7B0B192BF571AE0053793A /* WebSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketClient.swift; sourceTree = "<group>"; };
 		AD7B0B1B2BF5726C0053793A /* RelayMessageMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessageMapper.swift; sourceTree = "<group>"; };
+		AD7B0B1E2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionWebSocketClientTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				AD51DB6E2BF42CCD00B5673C /* RemoteEventLoaderTests.swift */,
+				AD7B0B1E2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift */,
 			);
 			path = "Event API";
 			sourceTree = "<group>";
@@ -240,6 +243,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD51DB6F2BF42CCD00B5673C /* RemoteEventLoaderTests.swift in Sources */,
+				AD7B0B1F2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
