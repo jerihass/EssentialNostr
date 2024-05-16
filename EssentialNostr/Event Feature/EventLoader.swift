@@ -3,8 +3,8 @@
 //
 
 import Foundation
+public typealias LoadEventResult = Result<Event, Error>
 
 public protocol EventLoader {
-    typealias LoadEventResult = Result<[Event], Error>
     func load(request: String, completion: @escaping (LoadEventResult) -> Void)
 }

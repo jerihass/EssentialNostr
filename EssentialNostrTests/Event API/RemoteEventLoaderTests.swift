@@ -147,15 +147,23 @@ class RemoteEventLoaderTests: XCTestCase {
         return (event, Data(eventJSON.utf8))
     }
 
-    private func expect(_ sut: RemoteEventLoader, toCompleteWith result: RemoteEventLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: RemoteEventLoader, toCompleteWith expectedResult: RemoteEventLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
         let request = "Some Request"
-        var capturedResults = [RemoteEventLoader.Result]()
 
-        sut.load(request: request) { capturedResults.append($0) }
+        sut.load(request: request) { receivedResult in
+            switch (receivedResult, expectedResult) {
+            case let (.success(receivedEvent), .success(expectedEvent)):
+                XCTAssertEqual(receivedEvent, expectedEvent, "Got \(receivedEvent), expected \(expectedEvent)", file: file, line: line)
+            case let (.failure(receivedError), .failure(expectedError)):
+                XCTAssertEqual(receivedError as NSError, expectedError as NSError, "Got \(receivedError), expected \(expectedError)", file: file, line: line)
+
+            default:
+                XCTFail("Got \(receivedResult), expected \(expectedResult)", file: file, line: line)
+            }
+        }
 
         action()
 
-        XCTAssertEqual(capturedResults, [result], file: file, line: line)
     }
 
     class WebSocketClientSpy: WebSocketClient {

@@ -6,7 +6,7 @@ import Foundation
 
 final public class RemoteEventLoader {
     private let client: WebSocketClient
-    public typealias Result = Swift.Result<Event, Error>
+    public typealias Result = LoadEventResult
 
     public enum Error: Swift.Error, Equatable {
         case connectivity
@@ -22,14 +22,14 @@ final public class RemoteEventLoader {
         self.client = client
     }
 
-    public func load(request: String, completion: @escaping (Result) -> Void) {
+    public func load(request: String, completion: @escaping (LoadEventResult) -> Void) {
         client.receive(with: request) { [weak self] result in
             guard self != nil else { return }
             switch result {
             case .success(let data):
                 completion(RelayMessageMapper.mapData(data))
             case .failure:
-                completion(.failure(.connectivity))
+                completion(.failure(Error.connectivity))
             }
         }
     }
