@@ -85,8 +85,8 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         let exp = expectation(description: "Wait for ready")
 
-        sut.stateHandler = { state in
-            if case .ready = state { sut.receive(with: request) }
+        sut.stateHandler = {
+            if $0 == .ready { sut.receive(with: request) }
         }
 
         sut.receiveHandler = {
