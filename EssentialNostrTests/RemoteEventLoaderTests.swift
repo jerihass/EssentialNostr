@@ -105,6 +105,23 @@ class RemoteEventLoaderTests: XCTestCase {
         }
     }
 
+    func test_load_doesNotDeliverResultsAfterLoaderDeallocated() {
+        let client = WebSocketClientSpy()
+        var sut:RemoteEventLoader? = RemoteEventLoader(client: client)
+
+        var capturedResults = [RemoteEventLoader.Result]()
+
+        let request = "Some Request"
+        sut?.load(request: request) { capturedResults.append($0) }
+        
+        sut = nil
+
+        client.complete(with: NSError())
+
+
+        XCTAssertTrue(capturedResults.isEmpty)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT() -> (sut: RemoteEventLoader, client: WebSocketClientSpy) {

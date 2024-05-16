@@ -23,7 +23,8 @@ final public class RemoteEventLoader {
     }
 
     public func load(request: String, completion: @escaping (Result) -> Void) {
-        client.receive(with: request) { result in
+        client.receive(with: request) { [weak self] result in
+            guard self != nil else { return }
             switch result {
             case .success(let data):
                 completion(RelayMessageMapper.mapData(data))
