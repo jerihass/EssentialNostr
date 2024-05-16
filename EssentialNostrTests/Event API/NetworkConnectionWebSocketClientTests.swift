@@ -15,8 +15,7 @@ class NetworkConnectionWebSocketClient {
         case stateHandlerNotSet
     }
 
-    init() {
-        let url = URL(string: "wss://127.0.0.1:8080")!
+    init(url: URL) {
         let endpoint = NWEndpoint.url(url)
         let parameters = NWParameters(tls: nil, tcp: .init())
         let options = NWProtocolWebSocket.Options()
@@ -54,12 +53,14 @@ class NetworkConnectionWebSocketClient {
 
 class NetworkConnectionWebSocketClientTests: XCTestCase {
     func test_throwsError_withoutStateHandlerSetOnStart() {
-        let sut = NetworkConnectionWebSocketClient()
+        let url = URL(string: "wss://127.0.0.1:8080")!
+        let sut = NetworkConnectionWebSocketClient(url: url)
         XCTAssertThrowsError(try sut.start(), "Expected error without state handler set")
     }
 
     func test_start_continuesToReadyStateOnGoodConnection() {
-        let sut = NetworkConnectionWebSocketClient()
+        let url = URL(string: "wss://127.0.0.1:8080")!
+        let sut = NetworkConnectionWebSocketClient(url: url)
         var state: NWConnection.State?
 
         let exp = expectation(description: "Wait for ready")
@@ -78,7 +79,8 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     }
 
     func test_receive_sendsRequestToServer() {
-        let sut = NetworkConnectionWebSocketClient()
+        let url = URL(string: "wss://127.0.0.1:8080")!
+        let sut = NetworkConnectionWebSocketClient(url: url)
         var echo: Data?
         let request = "Request"
         let data = request.data(using: .utf8)!
