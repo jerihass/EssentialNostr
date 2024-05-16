@@ -34,7 +34,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(RemoteEventLoader.Error.connectivity)) {
+        expect(sut, toCompleteWith: failure(.connectivity)) {
             let clientError = NSError(domain: "", code: 0)
             client.complete(with: clientError)
         }
@@ -43,7 +43,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClosedResponse() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(RemoteEventLoader.Error.closed(sub: "sub1", message: "duplicate: already opened"))) {
+        expect(sut, toCompleteWith: failure(.closed(sub: "sub1", message: "duplicate: already opened"))) {
             let closedMessage = Data("[\"CLOSED\",\"sub1\",\"duplicate: already opened\"]".utf8)
             client.complete(with: closedMessage)
         }
@@ -52,7 +52,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClosedResponseInvalidFormat() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(RemoteEventLoader.Error.invalidData)) {
+        expect(sut, toCompleteWith: failure(.invalidData)) {
             let closedMessage = Data("[\"CLOSED\",\"duplicate: already opened\"]".utf8)
             client.complete(with: closedMessage)
         }
@@ -61,7 +61,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversErrorOnEventResponseWithInvalidJSON() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(RemoteEventLoader.Error.invalidData)) {
+        expect(sut, toCompleteWith: failure(.invalidData)) {
             let closedMessage = Data("[\"EVENT\",\"sub1\",\"INVALID_event_JSON\"]".utf8)
             client.complete(with: closedMessage)
         }
@@ -70,7 +70,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversEOSEErrorOnEndOfStoredEvents() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toCompleteWith: .failure(RemoteEventLoader.Error.eose(sub: "sub1"))) {
+        expect(sut, toCompleteWith: failure(.eose(sub: "sub1"))) {
             let eoseMessage = Data("[\"EOSE\",\"sub1\"]".utf8)
             client.complete(with: eoseMessage)
         }
@@ -79,7 +79,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversNoticeErrorOnNotice() {
         let (sut, client) = makeSUT()
         let message = "Notice Message"
-        expect(sut, toCompleteWith: .failure(RemoteEventLoader.Error.notice(message: message))) {
+        expect(sut, toCompleteWith: failure(.notice(message: message))) {
             let noticeMessage = Data("[\"NOTICE\",\"\(message)\"]".utf8)
             client.complete(with: noticeMessage)
         }
@@ -88,7 +88,7 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_load_deliversOKNoticeErrorOnNoticeWithAcceptedFalse() {
         let (sut, client) = makeSUT()
         let message = "duplicate: already have this event"
-        expect(sut, toCompleteWith: .failure(RemoteEventLoader.Error.ok(sub: "sub1", accepted: false, reason: message))) {
+        expect(sut, toCompleteWith: failure(.ok(sub: "sub1", accepted: false, reason: message))) {
             let okMessage = Data("[\"OK\",\"sub1\",false,\"\(message)\"]".utf8)
             client.complete(with: okMessage)
         }
@@ -136,6 +136,10 @@ class RemoteEventLoaderTests: XCTestCase {
         addTeardownBlock { [weak object] in
             XCTAssertNil(object, "Instance should have been deallocated. Possible memory leak.", file: file, line: line)
         }
+    }
+
+    private func failure(_ error: RemoteEventLoader.Error) -> RemoteEventLoader.Result {
+        .failure(error)
     }
 
     private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (model: Event, data: Data) {
