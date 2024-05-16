@@ -9,14 +9,12 @@ import EssentialNostr
 
 class NetworkConnectionWebSocketClientTests: XCTestCase {
     func test_throwsError_withoutStateHandlerSetOnStart() {
-        let url = URL(string: "wss://127.0.0.1:8080")!
-        let sut = NetworkConnectionWebSocketClient(url: url)
+        let sut = makeSUT()
         XCTAssertThrowsError(try sut.start(), "Expected error without state handler set")
     }
 
     func test_start_continuesToReadyStateOnGoodConnection() {
-        let url = URL(string: "wss://127.0.0.1:8080")!
-        let sut = NetworkConnectionWebSocketClient(url: url)
+        let sut = makeSUT()
         var state: NWConnection.State?
 
         let exp = expectation(description: "Wait for ready")
@@ -35,8 +33,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     }
 
     func test_receive_sendsRequestToServer() {
-        let url = URL(string: "wss://127.0.0.1:8080")!
-        let sut = NetworkConnectionWebSocketClient(url: url)
+        let sut = makeSUT()
         var echo: Data?
         let request = "Request"
         let data = request.data(using: .utf8)!
@@ -57,5 +54,13 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         wait(for: [exp], timeout: 0.2)
 
         XCTAssertEqual(echo, data)
+    }
+
+    // MARK: - Helpers
+    private func makeSUT() -> NetworkConnectionWebSocketClient {
+        let url = URL(string: "wss://127.0.0.1:8080")!
+        let sut = NetworkConnectionWebSocketClient(url: url)
+
+        return sut
     }
 }
