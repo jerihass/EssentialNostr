@@ -8,7 +8,7 @@ import Network
 public class NetworkConnectionWebSocketClient {
     private let connection: NWConnection
     public var stateHandler: ((_ state: NWConnection.State) -> Void)?
-    public var receiveHandler: ((_ data: Data) -> Void)?
+    public var receiveHandler: ((_ data: Result<Data, Error>) -> Void)?
 
     public enum Error: Swift.Error, Equatable {
         case stateHandlerNotSet
@@ -42,7 +42,10 @@ public class NetworkConnectionWebSocketClient {
 
         connection.receiveMessage { content, contentContext, isComplete, error in
             if let content = content, isComplete {
-                self.receiveHandler?(content)
+                self.receiveHandler?(.success(content))
+            }
+            if let error = error {
+                self.receiveHandler?(.failure(.networkError(error)))
             }
         }
     }
