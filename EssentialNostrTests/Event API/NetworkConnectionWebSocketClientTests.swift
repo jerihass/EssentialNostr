@@ -82,16 +82,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         sut.stateHandler = recieveOnDisconnect(sut, request)
 
         let exp = expectation(description: "Wait for receive error")
-        sut.receiveHandler = { result in
-            switch result {
-            case .failure(let capturedError):
-                error = capturedError
-                break
-            case .success:
-                break
-            }
-            exp.fulfill()
-        }
+        sut.receiveHandler = captureRecieveError({ error = $0 }, exp: exp)
 
         try? sut.start()
 
@@ -108,6 +99,19 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         return sut
     }
 
+    fileprivate func captureRecieveError(_ error: @escaping (NetworkConnectionWebSocketClient.Error?) -> Void, exp: XCTestExpectation) -> ((Result<Data, NetworkConnectionWebSocketClient.Error>) -> Void)? {
+        return { result in
+               switch result {
+               case .failure(let capturedError):
+                   error(capturedError)
+                   break
+               case .success:
+                   break
+               }
+               exp.fulfill()
+        }
+    }
+
     fileprivate func sendOnDisconnect(_ sut: NetworkConnectionWebSocketClient, _ request: String, _ error: @escaping (NetworkConnectionWebSocketClient.Error?) -> Void , _ exp: XCTestExpectation) -> (NWConnection.State) -> Void {
         return { [weak sut] in
             sut?.disconnect()
@@ -117,7 +121,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
             }) }
         }
     }
-    
+
     fileprivate func recieveOnDisconnect(_ sut: NetworkConnectionWebSocketClient, _ request: String) -> (NWConnection.State) -> Void {
         return { [weak sut] in
             if $0 == .ready {
@@ -125,6 +129,4 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
                 sut?.receive(with: request, completion: { _ in }) }
         }
     }
-
-
 }
