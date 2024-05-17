@@ -10,8 +10,9 @@ public class NetworkConnectionWebSocketClient {
     public var stateHandler: ((_ state: NWConnection.State) -> Void)?
     public var receiveHandler: ((_ data: Data) -> Void)?
 
-    private enum Error: Swift.Error {
+    public enum Error: Swift.Error, Equatable {
         case stateHandlerNotSet
+        case networkError(NWError?)
     }
 
     public init(url: URL) {
@@ -29,11 +30,15 @@ public class NetworkConnectionWebSocketClient {
         connection.start(queue: .main)
     }
 
-    public func receive(with request: String) {
+    public func disconnect() {
+        connection.cancel()
+    }
+
+    public func receive(with request: String, completion: @escaping (Error) -> Void) {
         guard receiveHandler != nil else { return }
 
         let data = request.data(using: .utf8)!
-        send(data)
+        send(data, completion: completion)
 
         connection.receiveMessage { content, contentContext, isComplete, error in
             if let content = content, isComplete {
@@ -42,9 +47,11 @@ public class NetworkConnectionWebSocketClient {
         }
     }
 
-    private func send(_ data: Data) {
+    private func send(_ data: Data, completion: @escaping (Error) -> Void) {
         let metaData = NWProtocolWebSocket.Metadata(opcode: .text)
         let context = NWConnection.ContentContext(identifier: "text", metadata: [metaData])
-        connection.send(content: data, contentContext: context, completion: .contentProcessed({ _ in}))
+        connection.send(content: data, contentContext: context, completion: .contentProcessed({ error in
+            completion(.networkError(error))
+        }))
     }
 }

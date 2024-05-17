@@ -41,7 +41,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         let exp = expectation(description: "Wait for ready")
 
         sut.stateHandler = { [weak sut] in
-            if $0 == .ready { sut?.receive(with: request) }
+            if $0 == .ready { sut?.receive(with: request, completion: { _ in }) }
         }
 
         sut.receiveHandler = {
@@ -54,6 +54,30 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         wait(for: [exp], timeout: 0.2)
 
         XCTAssertEqual(echo, data)
+    }
+
+    func test_receive_sendErrorGivesError() {
+        let sut: NetworkConnectionWebSocketClient = makeSUT()
+        let request = "Request"
+
+        var error: NetworkConnectionWebSocketClient.Error?
+
+        let exp = expectation(description: "Wait for ready")
+        sut.stateHandler = { [weak sut] in
+            sut?.disconnect()
+            if $0 == .cancelled { sut?.receive(with: request, completion: { 
+                error = $0
+                exp.fulfill()
+            }) }
+        }
+
+        sut.receiveHandler = { _ in }
+
+        try? sut.start()
+
+        wait(for: [exp], timeout: 0.2)
+
+        XCTAssertEqual(error, .networkError(.posix(.ECANCELED)))
     }
 
     // MARK: - Helpers
