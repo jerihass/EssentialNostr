@@ -63,14 +63,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         var error: NetworkConnectionWebSocketClient.Error?
 
         let exp = expectation(description: "Wait for send error")
-        sut.stateHandler = { [weak sut] in
-            sut?.disconnect()
-            if $0 == .cancelled { sut?.receive(with: request, completion: { 
-                error = $0
-                exp.fulfill()
-            }) }
-        }
-
+        sut.stateHandler = sendOnDisconnect(sut, request, { error = $0 }, exp)
         sut.receiveHandler = { _ in }
 
         try? sut.start()
@@ -86,13 +79,9 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         var error: NetworkConnectionWebSocketClient.Error?
 
-        let exp = expectation(description: "Wait for receive error")
-        sut.stateHandler = { [weak sut] in
-            if $0 == .ready {
-                sut?.disconnect()
-                sut?.receive(with: request, completion: { _ in }) }
-        }
+        sut.stateHandler = recieveOnDisconnect(sut, request)
 
+        let exp = expectation(description: "Wait for receive error")
         sut.receiveHandler = { result in
             switch result {
             case .failure(let capturedError):
@@ -118,4 +107,24 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
+
+    fileprivate func sendOnDisconnect(_ sut: NetworkConnectionWebSocketClient, _ request: String, _ error: @escaping (NetworkConnectionWebSocketClient.Error?) -> Void , _ exp: XCTestExpectation) -> (NWConnection.State) -> Void {
+        return { [weak sut] in
+            sut?.disconnect()
+            if $0 == .cancelled { sut?.receive(with: request, completion: {
+                error($0)
+                exp.fulfill()
+            }) }
+        }
+    }
+    
+    fileprivate func recieveOnDisconnect(_ sut: NetworkConnectionWebSocketClient, _ request: String) -> (NWConnection.State) -> Void {
+        return { [weak sut] in
+            if $0 == .ready {
+                sut?.disconnect()
+                sut?.receive(with: request, completion: { _ in }) }
+        }
+    }
+
+
 }
