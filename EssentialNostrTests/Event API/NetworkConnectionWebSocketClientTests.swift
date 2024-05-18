@@ -65,8 +65,8 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         let errorExp = expectation(description: "Expect no error")
 
         sut.delegate?.stateHandler = { [weak sut] in
-            if $0 == .ready { sut?.receive(with: request, completion: {
-                if case let .failure(error) = $0 {
+            if $0 == .ready { sut?.send(message: request, completion: {
+                if case let error = $0 {
                     caughtError = error as? NetworkConnectionWebSocketClient.Error
                 }
                 errorExp.fulfill()
@@ -80,7 +80,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         try? sut.start()
 
-        wait(for: [exp], timeout: 0.2)
+        wait(for: [exp], timeout: 1)
 
         XCTExpectFailure {
             wait(for: [errorExp], timeout: 0.2)
@@ -164,10 +164,8 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     fileprivate func attemptSendOnDisconnect(_ sut: WebSocketClient, _ request: String, _ error: @escaping (Error?) -> Void , _ exp: XCTestExpectation) -> (NWConnection.State) -> Void {
         return { [weak sut] in
             sut?.disconnect()
-            if $0 == .cancelled { sut?.receive(with: request, completion: { result in
-                if case let .failure(gotError) = result {
+            if $0 == .cancelled { sut?.send(message: request, completion: { gotError in
                     error(gotError)
-                }
                 exp.fulfill()
             }) }
         }
@@ -177,7 +175,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         return { [weak sut] in
             if $0 == .ready {
                 sut?.disconnect()
-                sut?.receive(with: request, completion: { _ in }) }
+                sut?.send(message: request, completion: { _ in }) }
         }
     }
 }

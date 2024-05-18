@@ -40,12 +40,16 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
         guard receiveHandler != nil else { return }
         guard let data = request.data(using: .utf8) else { return }
 
-        send(data, completion: completion)
+//        send(data, completion: completion)
         receive()
     }
 
     public func send(message: String, completion: @escaping (Swift.Error) -> Void) {
+        guard receiveHandler != nil else { return }
+        guard let data = message.data(using: .utf8) else { return }
 
+        send(data, completion: completion)
+        receive()
     }
 
 
@@ -64,12 +68,12 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
         }
     }
 
-    private func send(_ data: Data, completion: @escaping (ReceiveResult) -> Void) {
+    private func send(_ data: Data, completion: @escaping (Swift.Error) -> Void) {
         let metaData = NWProtocolWebSocket.Metadata(opcode: .text)
         let context = NWConnection.ContentContext(identifier: "text", metadata: [metaData])
         connection.send(content: data, contentContext: context, completion: .contentProcessed({ error in
             if let error = error {
-                completion(.failure(Error.networkError(error)))
+                completion(Error.networkError(error))
             }
         }))
     }
