@@ -32,6 +32,28 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         XCTAssertEqual(state, .ready)
     }
 
+    func test_disconnect_cancelsConnection() {
+        let sut = makeSUT()
+        var state: NWConnection.State?
+
+        let exp = expectation(description: "Wait for ready")
+        sut.stateHandler = { s in
+            if case .cancelled = s {
+                state = s
+                exp.fulfill()
+            }
+        }
+
+        try? sut.start()
+
+        sut.disconnect()
+
+        wait(for: [exp], timeout: 0.2)
+
+        XCTAssertEqual(state, .cancelled)
+    }
+
+
     func test_receive_sentRequestNoError_givesData() {
         let sut: NetworkConnectionWebSocketClient = makeSUT()
         var echo: Data?
