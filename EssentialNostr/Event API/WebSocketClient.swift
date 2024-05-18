@@ -10,6 +10,7 @@ public protocol WebSocketClient: AnyObject {
     var stateHandler: ((_ state: NWConnection.State) -> Void)? { get set }
     var receiveHandler: ((_ result: ReceiveResult) -> Void)? { get set }
 
+    @available(*, deprecated, renamed: "WebSocketDelegate", message: "Use WebSocketDelegate.send and WebSocketDelegate.receive")
     func receive(with request: String, completion: @escaping (ReceiveResult) -> Void)
     func start() throws
     func disconnect()
