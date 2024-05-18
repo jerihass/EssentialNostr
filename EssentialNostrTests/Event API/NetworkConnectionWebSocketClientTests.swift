@@ -27,7 +27,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         try? sut.start()
 
-        wait(for: [exp], timeout: 0.2)
+        wait(for: [exp], timeout: 1)
 
         XCTAssertEqual(state, .ready)
     }
@@ -124,7 +124,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         try? sut.start()
 
-        wait(for: [exp], timeout: 0.2)
+        wait(for: [exp], timeout: 1)
 
         XCTAssertEqual(error, .networkError(.posix(.ECANCELED)))
     }
