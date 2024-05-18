@@ -23,7 +23,9 @@ final public class RemoteEventLoader: EventLoader {
     }
 
     public func load(request: String, completion: @escaping (LoadEventResult) -> Void) {
-        client.receive(with: request) { [weak self] result in
+        client.delegate?.send(message: request, completion: { _ in })
+
+        client.delegate?.receive { [weak self] result in
             guard self != nil else { return }
             switch result {
             case .success(let data):
