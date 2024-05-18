@@ -13,44 +13,21 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         XCTAssertThrowsError(try sut.start(), "Expected error without state handler set")
     }
 
-    func test_start_continuesToReadyStateOnGoodConnection() {
+    func test_start_setsStateToReady() {
         let sut = makeSUT()
-        var state: NWConnection.State?
 
-        let exp = expectation(description: "Wait for ready")
-        sut.delegate?.stateHandler = {
-            if .ready == $0 {
-                state = $0
-                exp.fulfill()
-            }
+        expect(sut, toChangeToState: .ready) {
+            try? sut.start()
         }
-
-        try? sut.start()
-
-        wait(for: [exp], timeout: 1)
-
-        XCTAssertEqual(state, .ready)
     }
 
     func test_disconnect_cancelsConnection() {
         let sut = makeSUT()
-        var state: NWConnection.State?
 
-        let exp = expectation(description: "Wait for ready")
-        sut.delegate?.stateHandler = {
-            if .cancelled == $0 {
-                state = $0
-                exp.fulfill()
-            }
+        expect(sut, toChangeToState: .cancelled) {
+            try? sut.start()
+            sut.disconnect()
         }
-
-        try? sut.start()
-
-        sut.disconnect()
-
-        wait(for: [exp], timeout: 0.2)
-
-        XCTAssertEqual(state, .cancelled)
     }
 
     func test_send_withErrorGivesError() {
@@ -96,6 +73,30 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(delegate, file: file, line: line)
         return sut
+    }
+
+    private func expect(_ sut: WebSocketClient, toChangeToState expected: NWConnection.State, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+        var state: NWConnection.State?
+
+        let exp = expectation(description: "Wait for ready")
+
+        sut.delegate?.stateHandler = {
+            if .ready == $0 {
+                state = $0
+                exp.fulfill()
+            }
+
+            if .cancelled == $0 {
+                state = $0
+                exp.fulfill()
+            }
+        }
+
+        action()
+
+        wait(for: [exp], timeout: 0.2)
+
+        XCTAssertEqual(state, expected)
     }
 
     private func expect(_ sut: WebSocketClient, toReceiveWith expected:  Result<Data, Error>, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
