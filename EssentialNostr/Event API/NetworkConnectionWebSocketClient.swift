@@ -6,8 +6,6 @@ import Foundation
 import Network
 
 public class NetworkConnectionWebSocketClient: WebSocketClient {
-    public var delegate: WebSocketDelegate?
-    
     private let connection: NWConnection
     public var stateHandler: ((_ state: NWConnection.State) -> Void)?
     public var receiveHandler: ((_ result: ReceiveResult) -> Void)?
@@ -42,6 +40,15 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
 
         send(data, completion: completion)
         receive()
+    }
+
+    public func send(message: String, completion: @escaping (Swift.Error) -> Void) {
+
+    }
+
+
+    public func receive(completion: @escaping (ReceiveResult) -> Void) {
+
     }
 
     private func receive() {

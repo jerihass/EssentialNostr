@@ -12,12 +12,14 @@ public protocol WebSocketDelegate: AnyObject {
 
 public protocol WebSocketClient: AnyObject {
     typealias ReceiveResult = Result<Data, Error>
-    var delegate: WebSocketDelegate? { get set }
     var stateHandler: ((_ state: NWConnection.State) -> Void)? { get set }
     var receiveHandler: ((_ result: ReceiveResult) -> Void)? { get set }
 
-    @available(*, deprecated, renamed: "WebSocketDelegate", message: "Use WebSocketDelegate.send and WebSocketDelegate.receive")
+    @available(*, deprecated, renamed: "send", message: "Use send / receive instead")
     func receive(with request: String, completion: @escaping (ReceiveResult) -> Void)
+
+    func send(message: String, completion: @escaping (Swift.Error) -> Void)
+    func receive(completion: @escaping (_ result: ReceiveResult) -> Void)
     func start() throws
     func disconnect()
 }

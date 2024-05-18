@@ -171,13 +171,7 @@ class RemoteEventLoaderTests: XCTestCase {
         waitForExpectations(timeout: 0.1)
     }
 
-    class WebSocketClientSpy: WebSocketClient, WebSocketDelegate {
-        weak var delegate: EssentialNostr.WebSocketDelegate?
-
-        init() {
-            delegate = self
-        }
-
+    class WebSocketClientSpy: WebSocketClient {
         var allRequests = [(request: String, completion: (Result<Data, Error>) -> Void)]()
         var requests: [String] { allRequests.map { $0.request }}
 
@@ -186,9 +180,9 @@ class RemoteEventLoaderTests: XCTestCase {
         private var messages = [Int:String]()
 
         func receive(with request: String, completion: @escaping (ReceiveResult) -> Void) {
-            delegate?.send(message: request, completion: { _ in })
+            send(message: request, completion: { _ in })
 
-            delegate?.receive { [weak self] result in
+            receive { [weak self] result in
                 self?.allRequests.append((request, completion))
             }
         }
