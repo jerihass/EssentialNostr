@@ -137,6 +137,37 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         XCTAssertEqual(error, .networkError(.posix(.ECANCELED)))
     }
 
+    func test_receive_noErrorGivesData() {
+        let sut = makeSUT()
+        let request = makeRequest()
+        let requestData = request.data(using: .utf8)
+        var echo: Data?
+
+        let exp = expectation(description: "Wait for receive error")
+
+        sut.delegate?.stateHandler = { [weak sut] in
+            if $0 == .ready {
+                sut?.send(message: request, completion: { _ in })
+            }
+        }
+
+        try? sut.start()
+
+        sut.receive { result in
+            switch result {
+            case .failure:
+                break
+            case .success(let data):
+                echo = data
+            }
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertEqual(echo, requestData)
+    }
+
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> WebSocketClient {
         let url = URL(string: "wss://127.0.0.1:8080")!
