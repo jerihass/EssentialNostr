@@ -36,34 +36,20 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
         connection.cancel()
     }
 
-    public func receive(with request: String, completion: @escaping (ReceiveResult) -> Void) {
-        guard receiveHandler != nil else { return }
-        guard let data = request.data(using: .utf8) else { return }
-
-//        send(data, completion: completion)
-        receive()
-    }
-
     public func send(message: String, completion: @escaping (Swift.Error) -> Void) {
-        guard receiveHandler != nil else { return }
         guard let data = message.data(using: .utf8) else { return }
 
         send(data, completion: completion)
-        receive()
     }
 
 
     public func receive(completion: @escaping (ReceiveResult) -> Void) {
-
-    }
-
-    private func receive() {
         connection.receiveMessage { content, contentContext, isComplete, error in
             if let content = content, isComplete {
-                self.receiveHandler?(.success(content))
+                completion(.success(content))
             }
             if let error = error {
-                self.receiveHandler?(.failure(Error.networkError(error)))
+               completion(.failure(Error.networkError(error)))
             }
         }
     }

@@ -13,9 +13,6 @@ public protocol WebSocketClient: AnyObject {
     typealias ReceiveResult = Result<Data, Error>
     var delegate: WebSocketDelegate? { get set }
 
-    @available(*, deprecated, renamed: "receive", message: "Use WebSocketClient.receive instead")
-    var receiveHandler: ((_ result: ReceiveResult) -> Void)? { get set }
-
     func send(message: String, completion: @escaping (Swift.Error) -> Void)
     
     func receive(completion: @escaping (_ result: ReceiveResult) -> Void)

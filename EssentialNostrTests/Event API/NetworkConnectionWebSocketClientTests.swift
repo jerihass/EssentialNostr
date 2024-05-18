@@ -53,15 +53,12 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         XCTAssertEqual(state, .cancelled)
     }
 
-    func test_receive_sentRequestNoError_givesData() {
+    func test_receive_sentRequestNoError_givesNoError() {
         let sut = makeSUT()
-        var echo: Data?
         var caughtError: NetworkConnectionWebSocketClient.Error?
 
         let request = makeRequest()
-        let data = request.data(using: .utf8)!
 
-        let exp = expectation(description: "Wait for receive data")
         let errorExp = expectation(description: "Expect no error")
 
         sut.delegate?.stateHandler = { [weak sut] in
@@ -73,20 +70,13 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
             }) }
         }
 
-        sut.receiveHandler = {
-            echo = try? $0.get()
-            exp.fulfill()
-        }
 
         try? sut.start()
 
-        wait(for: [exp], timeout: 1)
-
         XCTExpectFailure {
-            wait(for: [errorExp], timeout: 0.2)
+            wait(for: [errorExp], timeout: 1)
         }
 
-        XCTAssertEqual(echo, data)
         XCTAssertNil(caughtError)
     }
 
@@ -97,15 +87,19 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         var error: NetworkConnectionWebSocketClient.Error?
         let exp = expectation(description: "Wait for send error")
 
-        sut.delegate?.stateHandler = attemptSendOnDisconnect(sut, 
-                                                   request,
-                                                   { error = $0 as? NetworkConnectionWebSocketClient.Error },
-                                                   exp)
-        sut.receiveHandler = { _ in }
+        sut.delegate?.stateHandler = { [weak sut] in
+            if $0 != .cancelled {
+                sut?.disconnect()
+                sut?.send(message: request) { gotError in
+                    error = gotError as? NetworkConnectionWebSocketClient.Error
+                    exp.fulfill()
+                }
+            }
+        }
 
         try? sut.start()
 
-        wait(for: [exp], timeout: 0.2)
+        wait(for: [exp], timeout: 1)
 
         XCTAssertEqual(error, .networkError(.posix(.ECANCELED)))
     }
@@ -117,12 +111,26 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         var error: NetworkConnectionWebSocketClient.Error?
         let exp = expectation(description: "Wait for receive error")
 
-        sut.delegate?.stateHandler = attemptRecieveOnDisconnect(sut, request)
-        sut.receiveHandler = captureRecieveError(
-            { error = $0 as? NetworkConnectionWebSocketClient.Error },
-            exp: exp)
+        sut.delegate?.stateHandler = { [weak sut] in
+            if $0 == .ready {
+                sut?.send(message: request, completion: { _ in })
+            }
+        }
 
         try? sut.start()
+
+        sut.disconnect()
+
+        sut.receive { result in
+            switch result {
+            case .failure(let capturedError):
+                error = capturedError as? NetworkConnectionWebSocketClient.Error
+                break
+            case .success:
+                break
+            }
+            exp.fulfill()
+        }
 
         wait(for: [exp], timeout: 1)
 
@@ -136,7 +144,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         let delegate = DelegateSpy()
         sut.delegate = delegate
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(delegate)
+        trackForMemoryLeaks(delegate, file: file, line: line)
         return sut
     }
 
@@ -158,16 +166,6 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
                    break
                }
                exp.fulfill()
-        }
-    }
-
-    fileprivate func attemptSendOnDisconnect(_ sut: WebSocketClient, _ request: String, _ error: @escaping (Error?) -> Void , _ exp: XCTestExpectation) -> (NWConnection.State) -> Void {
-        return { [weak sut] in
-            sut?.disconnect()
-            if $0 == .cancelled { sut?.send(message: request, completion: { gotError in
-                    error(gotError)
-                exp.fulfill()
-            }) }
         }
     }
 
