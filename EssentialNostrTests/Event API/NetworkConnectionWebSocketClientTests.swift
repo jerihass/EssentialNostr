@@ -56,14 +56,21 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     func test_receive_sentRequestNoError_givesData() {
         let sut: NetworkConnectionWebSocketClient = makeSUT()
         var echo: Data?
+        var caughtError: NetworkConnectionWebSocketClient.Error?
 
         let request = makeRequest()
         let data = request.data(using: .utf8)!
 
         let exp = expectation(description: "Wait for receive data")
+        let errorExp = expectation(description: "Expect no error")
 
         sut.stateHandler = { [weak sut] in
-            if $0 == .ready { sut?.receive(with: request, completion: { _ in }) }
+            if $0 == .ready { sut?.receive(with: request, completion: {
+                if case let .failure(error) = $0 {
+                    caughtError = error as? NetworkConnectionWebSocketClient.Error
+                }
+                errorExp.fulfill()
+            }) }
         }
 
         sut.receiveHandler = {
@@ -75,34 +82,11 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         wait(for: [exp], timeout: 0.2)
 
-        XCTAssertEqual(echo, data)
-    }
-
-    func test_receive_sentRequestNoError_givesNoError() {
-        let sut: NetworkConnectionWebSocketClient = makeSUT()
-        var caughtError: NetworkConnectionWebSocketClient.Error?
-
-        let request = makeRequest()
-
-        let exp = expectation(description: "Expect no error")
-
-        sut.stateHandler = { [weak sut] in
-            if $0 == .ready { sut?.receive(with: request, completion: { 
-                if case let .failure(error) = $0 {
-                    caughtError = error as? NetworkConnectionWebSocketClient.Error
-                }
-                exp.fulfill()
-            }) }
-        }
-
-        sut.receiveHandler = { _ in }
-
-        try? sut.start()
-
         XCTExpectFailure {
-            wait(for: [exp], timeout: 0.3)
+            wait(for: [errorExp], timeout: 0.2)
         }
 
+        XCTAssertEqual(echo, data)
         XCTAssertNil(caughtError)
     }
 
