@@ -125,11 +125,11 @@ class RemoteEventLoaderTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeSUT() -> (sut: RemoteEventLoader, client: WebSocketClientSpy) {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteEventLoader, client: WebSocketClientSpy) {
         let client = WebSocketClientSpy()
         let sut = RemoteEventLoader(client: client)
         trackForMemoryLeaks(sut)
-        trackForMemoryLeaks(client)
+        trackForMemoryLeaks(client, file: file, line: line)
         return (sut, client)
     }
 
