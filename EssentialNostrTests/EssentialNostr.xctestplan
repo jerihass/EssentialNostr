@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "76ADA6E4-8A72-4002-A298-63ACF52E5341",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:EssentialNostr.xcodeproj",
+        "identifier" : "AD51DB582BF42A4E00B5673C",
+        "name" : "EssentialNostrTests"
+      }
+    }
+  ],
+  "version" : 1
+}

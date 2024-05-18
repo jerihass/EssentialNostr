@@ -41,6 +41,7 @@
 		AD7B0B192BF571AE0053793A /* WebSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketClient.swift; sourceTree = "<group>"; };
 		AD7B0B1B2BF5726C0053793A /* RelayMessageMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessageMapper.swift; sourceTree = "<group>"; };
 		AD7B0B1E2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionWebSocketClientTests.swift; sourceTree = "<group>"; };
+		ADB6CEE42BF9540C00EF3B54 /* EssentialNostr.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialNostr.xctestplan; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +93,7 @@
 		AD51DB5D2BF42A4E00B5673C /* EssentialNostrTests */ = {
 			isa = PBXGroup;
 			children = (
+				ADB6CEE42BF9540C00EF3B54 /* EssentialNostr.xctestplan */,
 				AD5B9EBE2BF6CD1700E7D5CD /* Helpers */,
 				AD7B0B1D2BF5A9720053793A /* Event API */,
 			);
