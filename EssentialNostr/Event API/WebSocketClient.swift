@@ -12,7 +12,11 @@ public protocol WebSocketDelegate: AnyObject {
 
 public protocol WebSocketClient: AnyObject {
     typealias ReceiveResult = Result<Data, Error>
+    var delegate: WebSocketDelegate? { get set }
+    @available(*, deprecated, renamed: "WebSocketDelegate.stateHandler", message: "Use WebSocketDelegate instead")
     var stateHandler: ((_ state: NWConnection.State) -> Void)? { get set }
+
+    @available(*, deprecated, renamed: "WebSocketDelegate.receiveHandler", message: "Use WebSocketDelegate instead")
     var receiveHandler: ((_ result: ReceiveResult) -> Void)? { get set }
 
     @available(*, deprecated, renamed: "send", message: "Use send / receive instead")

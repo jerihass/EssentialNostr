@@ -172,6 +172,8 @@ class RemoteEventLoaderTests: XCTestCase {
     }
 
     class WebSocketClientSpy: WebSocketClient {
+        var delegate: EssentialNostr.WebSocketDelegate?
+        
         var allRequests = [(request: String, completion: (Result<Data, Error>) -> Void)]()
         var requests: [String] { allRequests.map { $0.request }}
 
