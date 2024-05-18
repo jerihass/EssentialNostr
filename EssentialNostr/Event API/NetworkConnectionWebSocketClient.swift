@@ -27,8 +27,8 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
     }
 
     public func start() throws {
-        guard stateHandler != nil else { throw Error.stateHandlerNotSet }
-        connection.stateUpdateHandler = stateHandler
+        guard delegate?.stateHandler != nil else { throw Error.stateHandlerNotSet }
+        connection.stateUpdateHandler = delegate?.stateHandler
         connection.start(queue: .main)
     }
 

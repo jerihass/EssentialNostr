@@ -18,7 +18,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         var state: NWConnection.State?
 
         let exp = expectation(description: "Wait for ready")
-        sut.stateHandler = { s in
+        sut.delegate?.stateHandler = { s in
             if case .ready = s {
                 state = s
                 exp.fulfill()
@@ -37,7 +37,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         var state: NWConnection.State?
 
         let exp = expectation(description: "Wait for ready")
-        sut.stateHandler = { s in
+        sut.delegate?.stateHandler = { s in
             if case .cancelled = s {
                 state = s
                 exp.fulfill()
@@ -64,7 +64,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         let exp = expectation(description: "Wait for receive data")
         let errorExp = expectation(description: "Expect no error")
 
-        sut.stateHandler = { [weak sut] in
+        sut.delegate?.stateHandler = { [weak sut] in
             if $0 == .ready { sut?.receive(with: request, completion: {
                 if case let .failure(error) = $0 {
                     caughtError = error as? NetworkConnectionWebSocketClient.Error
@@ -97,7 +97,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         var error: NetworkConnectionWebSocketClient.Error?
         let exp = expectation(description: "Wait for send error")
 
-        sut.stateHandler = attemptSendOnDisconnect(sut, 
+        sut.delegate?.stateHandler = attemptSendOnDisconnect(sut, 
                                                    request,
                                                    { error = $0 as? NetworkConnectionWebSocketClient.Error },
                                                    exp)
@@ -117,7 +117,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         var error: NetworkConnectionWebSocketClient.Error?
         let exp = expectation(description: "Wait for receive error")
 
-        sut.stateHandler = attemptRecieveOnDisconnect(sut, request)
+        sut.delegate?.stateHandler = attemptRecieveOnDisconnect(sut, request)
         sut.receiveHandler = captureRecieveError(
             { error = $0 as? NetworkConnectionWebSocketClient.Error },
             exp: exp)
@@ -133,11 +133,18 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> WebSocketClient {
         let url = URL(string: "wss://127.0.0.1:8080")!
         let sut = NetworkConnectionWebSocketClient(url: url)
+        let delegate = DelegateSpy()
+        sut.delegate = delegate
         trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(delegate)
         return sut
     }
 
-    func makeRequest() -> String {
+    private class DelegateSpy: WebSocketDelegate {
+        var stateHandler: ((NWConnection.State) -> Void)?
+    }
+
+    private func makeRequest() -> String {
         "Request"
     }
 
