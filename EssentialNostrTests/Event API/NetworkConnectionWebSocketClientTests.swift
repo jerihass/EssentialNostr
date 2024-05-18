@@ -35,7 +35,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     func test_receive_sendsRequestToServer() {
         let sut: NetworkConnectionWebSocketClient = makeSUT()
         var echo: Data?
-        let request = "Request"
+        let request = makeRequest()
         let data = request.data(using: .utf8)!
 
         let exp = expectation(description: "Wait for receive data")
@@ -58,7 +58,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
     func test_receive_sendErrorGivesError() {
         let sut: NetworkConnectionWebSocketClient = makeSUT()
-        let request = "Request"
+        let request = makeRequest()
 
         var error: NetworkConnectionWebSocketClient.Error?
 
@@ -75,7 +75,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
     func test_receive_errorGivesError() {
         let sut: NetworkConnectionWebSocketClient = makeSUT()
-        let request = "Request"
+        let request = makeRequest()
 
         var error: NetworkConnectionWebSocketClient.Error?
 
@@ -97,6 +97,10 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         let sut = NetworkConnectionWebSocketClient(url: url)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+
+    func makeRequest() -> String {
+        "Request"
     }
 
     fileprivate func captureRecieveError(_ error: @escaping (NetworkConnectionWebSocketClient.Error?) -> Void, exp: XCTestExpectation) -> ((Result<Data, NetworkConnectionWebSocketClient.Error>) -> Void)? {

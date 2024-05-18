@@ -1,7 +1,4 @@
 //
-//  XCTestCase+MemoryLeakTracking.swift
-//  EssentialNostrTests
-//
 //  Created by Jericho Hasselbush on 5/16/24.
 //
 
