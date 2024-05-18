@@ -54,7 +54,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     }
 
     func test_receive_sentRequestNoError_givesData() {
-        let sut: NetworkConnectionWebSocketClient = makeSUT()
+        let sut = makeSUT()
         var echo: Data?
         var caughtError: NetworkConnectionWebSocketClient.Error?
 
@@ -91,7 +91,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     }
 
     func test_receive_sentRequestError_givesError() {
-        let sut: NetworkConnectionWebSocketClient = makeSUT()
+        let sut = makeSUT()
         let request = makeRequest()
 
         var error: NetworkConnectionWebSocketClient.Error?
@@ -111,14 +111,16 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     }
 
     func test_receive_sentRequestNoError_receiveErrorGivesError() {
-        let sut: NetworkConnectionWebSocketClient = makeSUT()
+        let sut = makeSUT()
         let request = makeRequest()
 
         var error: NetworkConnectionWebSocketClient.Error?
         let exp = expectation(description: "Wait for receive error")
 
         sut.stateHandler = attemptRecieveOnDisconnect(sut, request)
-        sut.receiveHandler = captureRecieveError({ error = $0 }, exp: exp)
+        sut.receiveHandler = captureRecieveError(
+            { error = $0 as? NetworkConnectionWebSocketClient.Error },
+            exp: exp)
 
         try? sut.start()
 
@@ -128,7 +130,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     }
 
     // MARK: - Helpers
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> NetworkConnectionWebSocketClient {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> WebSocketClient {
         let url = URL(string: "wss://127.0.0.1:8080")!
         let sut = NetworkConnectionWebSocketClient(url: url)
         trackForMemoryLeaks(sut, file: file, line: line)
@@ -139,7 +141,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         "Request"
     }
 
-    fileprivate func captureRecieveError(_ error: @escaping (NetworkConnectionWebSocketClient.Error?) -> Void, exp: XCTestExpectation) -> ((Result<Data, NetworkConnectionWebSocketClient.Error>) -> Void)? {
+    fileprivate func captureRecieveError(_ error: @escaping (Error?) -> Void, exp: XCTestExpectation) -> ((Result<Data, Error>) -> Void)? {
         return { result in
                switch result {
                case .failure(let capturedError):
@@ -152,7 +154,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         }
     }
 
-    fileprivate func attemptSendOnDisconnect(_ sut: NetworkConnectionWebSocketClient, _ request: String, _ error: @escaping (Error?) -> Void , _ exp: XCTestExpectation) -> (NWConnection.State) -> Void {
+    fileprivate func attemptSendOnDisconnect(_ sut: WebSocketClient, _ request: String, _ error: @escaping (Error?) -> Void , _ exp: XCTestExpectation) -> (NWConnection.State) -> Void {
         return { [weak sut] in
             sut?.disconnect()
             if $0 == .cancelled { sut?.receive(with: request, completion: { result in
@@ -164,11 +166,24 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         }
     }
 
-    fileprivate func attemptRecieveOnDisconnect(_ sut: NetworkConnectionWebSocketClient, _ request: String) -> (NWConnection.State) -> Void {
+    fileprivate func attemptRecieveOnDisconnect(_ sut: WebSocketClient, _ request: String) -> (NWConnection.State) -> Void {
         return { [weak sut] in
             if $0 == .ready {
                 sut?.disconnect()
                 sut?.receive(with: request, completion: { _ in }) }
         }
+    }
+}
+
+struct Weak<T> {
+    var object: T? {
+        get { storage as? T }
+        set { storage = newValue as AnyObject }
+    }
+
+    weak private var storage: AnyObject?
+
+    init(_ stored: T) {
+        self.object = stored
     }
 }

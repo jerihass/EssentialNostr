@@ -4,6 +4,7 @@
 
 import XCTest
 import EssentialNostr
+import Network
 
 class RemoteEventLoaderTests: XCTestCase {
     func test_init_doesNotRequestWhenCreated() {
@@ -173,7 +174,7 @@ class RemoteEventLoaderTests: XCTestCase {
     class WebSocketClientSpy: WebSocketClient {
         var allRequests = [(request: String, completion: (Result<Data, Error>) -> Void)]()
         var requests: [String] { allRequests.map { $0.request }}
-        func receive(with request: String, completion: @escaping (Result<Data, Error>) -> Void) {
+        func receive(with request: String, completion: @escaping (ReceiveResult) -> Void) {
             allRequests.append((request, completion))
         }
 
@@ -184,6 +185,12 @@ class RemoteEventLoaderTests: XCTestCase {
         func complete(with message: Data, at index: Int = 0) {
             allRequests[index].completion(.success(message))
         }
+
+        // MARK: - Conformance requirement
+        var stateHandler: ((NWConnection.State) -> Void)?
+        var receiveHandler: ((WebSocketClient.ReceiveResult) -> Void)?
+        func start() throws {}
+        func disconnect() {}
     }
 }
 
