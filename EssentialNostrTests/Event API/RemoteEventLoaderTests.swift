@@ -171,11 +171,26 @@ class RemoteEventLoaderTests: XCTestCase {
         waitForExpectations(timeout: 0.1)
     }
 
-    class WebSocketClientSpy: WebSocketClient {
+    class WebSocketClientSpy: WebSocketClient, WebSocketDelegate {
+        weak var delegate: EssentialNostr.WebSocketDelegate?
+
+        init() {
+            delegate = self
+        }
+
         var allRequests = [(request: String, completion: (Result<Data, Error>) -> Void)]()
         var requests: [String] { allRequests.map { $0.request }}
+
+        private var sendIndex: Int = 0
+        private var receiveIndex: Int = 0
+        private var messages = [Int:String]()
+
         func receive(with request: String, completion: @escaping (ReceiveResult) -> Void) {
-            allRequests.append((request, completion))
+            delegate?.send(message: request, completion: { _ in })
+
+            delegate?.receive { [weak self] result in
+                self?.allRequests.append((request, completion))
+            }
         }
 
         func complete(with error: Error, at index: Int = 0) {
@@ -185,6 +200,16 @@ class RemoteEventLoaderTests: XCTestCase {
         func complete(with message: Data, at index: Int = 0) {
             allRequests[index].completion(.success(message))
         }
+
+        func send(message: String, completion: @escaping (Error) -> Void) {
+            messages[sendIndex] = message
+        }
+
+        func receive(completion: @escaping (Result<Data, Error>) -> Void) {
+            guard receiveIndex == sendIndex, let message = messages[receiveIndex] else { return }
+            allRequests.append((message, completion))
+        }
+
 
         // MARK: - Conformance requirement
         var stateHandler: ((NWConnection.State) -> Void)?
