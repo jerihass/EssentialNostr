@@ -34,9 +34,9 @@ public class NetworkConnectionWebSocketClient {
         connection.cancel()
     }
 
-    public func receive(with request: String, completion: @escaping (Error) -> Void) {
+    public func receive(with request: String, completion: @escaping (WebSocketClient.ReceiveResult) -> Void) {
         guard receiveHandler != nil else { return }
-        let data = request.data(using: .utf8)!
+        guard let data = request.data(using: .utf8) else { return }
 
         send(data, completion: completion)
         receive()
@@ -53,12 +53,12 @@ public class NetworkConnectionWebSocketClient {
         }
     }
 
-    private func send(_ data: Data, completion: @escaping (Error) -> Void) {
+    private func send(_ data: Data, completion: @escaping (WebSocketClient.ReceiveResult) -> Void) {
         let metaData = NWProtocolWebSocket.Metadata(opcode: .text)
         let context = NWConnection.ContentContext(identifier: "text", metadata: [metaData])
         connection.send(content: data, contentContext: context, completion: .contentProcessed({ error in
             if let error = error {
-                completion(.networkError(error))
+                completion(.failure(Error.networkError(error)))
             }
         }))
     }

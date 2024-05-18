@@ -53,7 +53,6 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         XCTAssertEqual(state, .cancelled)
     }
 
-
     func test_receive_sentRequestNoError_givesData() {
         let sut: NetworkConnectionWebSocketClient = makeSUT()
         var echo: Data?
@@ -89,7 +88,9 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         sut.stateHandler = { [weak sut] in
             if $0 == .ready { sut?.receive(with: request, completion: { 
-                caughtError = $0
+                if case let .failure(error) = $0 {
+                    caughtError = error as? NetworkConnectionWebSocketClient.Error
+                }
                 exp.fulfill()
             }) }
         }
@@ -112,7 +113,10 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         var error: NetworkConnectionWebSocketClient.Error?
         let exp = expectation(description: "Wait for send error")
 
-        sut.stateHandler = attemptSendOnDisconnect(sut, request, { error = $0 }, exp)
+        sut.stateHandler = attemptSendOnDisconnect(sut, 
+                                                   request,
+                                                   { error = $0 as? NetworkConnectionWebSocketClient.Error },
+                                                   exp)
         sut.receiveHandler = { _ in }
 
         try? sut.start()
@@ -164,11 +168,13 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         }
     }
 
-    fileprivate func attemptSendOnDisconnect(_ sut: NetworkConnectionWebSocketClient, _ request: String, _ error: @escaping (NetworkConnectionWebSocketClient.Error?) -> Void , _ exp: XCTestExpectation) -> (NWConnection.State) -> Void {
+    fileprivate func attemptSendOnDisconnect(_ sut: NetworkConnectionWebSocketClient, _ request: String, _ error: @escaping (Error?) -> Void , _ exp: XCTestExpectation) -> (NWConnection.State) -> Void {
         return { [weak sut] in
             sut?.disconnect()
-            if $0 == .cancelled { sut?.receive(with: request, completion: {
-                error($0)
+            if $0 == .cancelled { sut?.receive(with: request, completion: { result in
+                if case let .failure(gotError) = result {
+                    error(gotError)
+                }
                 exp.fulfill()
             }) }
         }
