@@ -32,9 +32,10 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         XCTAssertEqual(state, .ready)
     }
 
-    func test_receive_sendsRequestToServer() {
+    func test_receive_sentRequestNoError_givesData() {
         let sut: NetworkConnectionWebSocketClient = makeSUT()
         var echo: Data?
+
         let request = makeRequest()
         let data = request.data(using: .utf8)!
 
@@ -56,13 +57,39 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         XCTAssertEqual(echo, data)
     }
 
+    func test_receive_sentRequestNoError_givesNoError() {
+        let sut: NetworkConnectionWebSocketClient = makeSUT()
+        var caughtError: NetworkConnectionWebSocketClient.Error?
+
+        let request = makeRequest()
+
+        let exp = expectation(description: "Expect no error")
+
+        sut.stateHandler = { [weak sut] in
+            if $0 == .ready { sut?.receive(with: request, completion: { 
+                caughtError = $0
+                exp.fulfill()
+            }) }
+        }
+
+        sut.receiveHandler = { _ in }
+
+        try? sut.start()
+
+        XCTExpectFailure {
+            wait(for: [exp], timeout: 0.3)
+        }
+
+        XCTAssertNil(caughtError)
+    }
+
     func test_receive_sentRequestError_givesError() {
         let sut: NetworkConnectionWebSocketClient = makeSUT()
         let request = makeRequest()
 
         var error: NetworkConnectionWebSocketClient.Error?
-
         let exp = expectation(description: "Wait for send error")
+
         sut.stateHandler = attemptSendOnDisconnect(sut, request, { error = $0 }, exp)
         sut.receiveHandler = { _ in }
 
@@ -78,10 +105,9 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         let request = makeRequest()
 
         var error: NetworkConnectionWebSocketClient.Error?
+        let exp = expectation(description: "Wait for receive error")
 
         sut.stateHandler = attemptRecieveOnDisconnect(sut, request)
-
-        let exp = expectation(description: "Wait for receive error")
         sut.receiveHandler = captureRecieveError({ error = $0 }, exp: exp)
 
         try? sut.start()

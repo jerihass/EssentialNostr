@@ -54,7 +54,9 @@ public class NetworkConnectionWebSocketClient {
         let metaData = NWProtocolWebSocket.Metadata(opcode: .text)
         let context = NWConnection.ContentContext(identifier: "text", metadata: [metaData])
         connection.send(content: data, contentContext: context, completion: .contentProcessed({ error in
-            completion(.networkError(error))
+            if let error = error {
+                completion(.networkError(error))
+            }
         }))
     }
 }
