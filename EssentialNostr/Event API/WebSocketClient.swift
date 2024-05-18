@@ -5,7 +5,7 @@
 import Foundation
 import Network
 
-public protocol WebSocketDelegate: AnyObject {
+public protocol WebSocketDelegate {
     var stateHandler: ((_ state: NWConnection.State) -> Void)? { get set }
 }
 

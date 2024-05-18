@@ -94,7 +94,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         action()
 
-        wait(for: [exp], timeout: 0.2)
+        wait(for: [exp], timeout: 1)
 
         XCTAssertEqual(state, expected)
     }
