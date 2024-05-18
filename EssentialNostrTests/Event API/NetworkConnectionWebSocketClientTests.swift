@@ -53,7 +53,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         XCTAssertEqual(state, .cancelled)
     }
 
-    func test_receive_sentRequestNoError_givesNoError() {
+    func test_send_noErrorGivesNoError() {
         let sut = makeSUT()
         var caughtError: NetworkConnectionWebSocketClient.Error?
 
@@ -80,7 +80,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         XCTAssertNil(caughtError)
     }
 
-    func test_receive_sentRequestError_givesError() {
+    func test_send_withErrorGivesError() {
         let sut = makeSUT()
         let request = makeRequest()
 
@@ -104,7 +104,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         XCTAssertEqual(error, .networkError(.posix(.ECANCELED)))
     }
 
-    func test_receive_sentRequestNoError_receiveErrorGivesError() {
+    func test_receive_withErrorGivesError() {
         let sut = makeSUT()
         let request = makeRequest()
 
