@@ -9,8 +9,6 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
     public var delegate: WebSocketDelegate?
 
     private let connection: NWConnection
-    public var stateHandler: ((_ state: NWConnection.State) -> Void)?
-    public var receiveHandler: ((_ result: ReceiveResult) -> Void)?
 
     public enum Error: Swift.Error, Equatable {
         case stateHandlerNotSet
