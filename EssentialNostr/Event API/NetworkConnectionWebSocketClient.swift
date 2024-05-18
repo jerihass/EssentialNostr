@@ -5,7 +5,7 @@
 import Foundation
 import Network
 
-public class NetworkConnectionWebSocketClient {
+public class NetworkConnectionWebSocketClient: WebSocketClient {
     private let connection: NWConnection
     public var stateHandler: ((_ state: NWConnection.State) -> Void)?
     public var receiveHandler: ((_ data: Result<Data, Error>) -> Void)?
@@ -34,7 +34,7 @@ public class NetworkConnectionWebSocketClient {
         connection.cancel()
     }
 
-    public func receive(with request: String, completion: @escaping (WebSocketClient.ReceiveResult) -> Void) {
+    public func receive(with request: String, completion: @escaping (ReceiveResult) -> Void) {
         guard receiveHandler != nil else { return }
         guard let data = request.data(using: .utf8) else { return }
 
@@ -53,7 +53,7 @@ public class NetworkConnectionWebSocketClient {
         }
     }
 
-    private func send(_ data: Data, completion: @escaping (WebSocketClient.ReceiveResult) -> Void) {
+    private func send(_ data: Data, completion: @escaping (ReceiveResult) -> Void) {
         let metaData = NWProtocolWebSocket.Metadata(opcode: .text)
         let context = NWConnection.ContentContext(identifier: "text", metadata: [metaData])
         connection.send(content: data, contentContext: context, completion: .contentProcessed({ error in
