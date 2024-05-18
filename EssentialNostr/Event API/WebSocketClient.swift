@@ -12,6 +12,7 @@ public protocol WebSocketDelegate {
 
 public protocol WebSocketClient: AnyObject {
     typealias ReceiveResult = Result<Data, Error>
+    var delegate: WebSocketDelegate? { get set }
     var stateHandler: ((_ state: NWConnection.State) -> Void)? { get set }
     var receiveHandler: ((_ result: ReceiveResult) -> Void)? { get set }
 
