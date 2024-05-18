@@ -9,6 +9,15 @@
     }
   ],
   "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:EssentialNostr.xcodeproj",
+          "identifier" : "AD51DB502BF42A4D00B5673C",
+          "name" : "EssentialNostr"
+        }
+      ]
+    },
     "testExecutionOrdering" : "random"
   },
   "testTargets" : [
