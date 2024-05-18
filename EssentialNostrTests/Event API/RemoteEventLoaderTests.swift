@@ -10,10 +10,10 @@ class RemoteEventLoaderTests: XCTestCase {
     func test_init_doesNotRequestWhenCreated() {
         let (_, client) = makeSUT()
 
-        XCTAssertTrue(client.requests.isEmpty)
+        XCTAssertTrue(client.sendMessages.isEmpty)
     }
 
-    func test_load_requestEventFromClient() {
+    func test_request_requestsEventFromClient() {
         let request = "Some Request"
         let (sut, client) = makeSUT()
 
@@ -149,8 +149,6 @@ class RemoteEventLoaderTests: XCTestCase {
 
     private func expect(_ sut: RemoteEventLoader, toLoadWith expectedResult: RemoteEventLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
 
-        sut.request("Any")
-
         let exp = expectation(description: "Wait for load completion.")
         sut.load { receivedResult in
             switch (receivedResult, expectedResult) {
@@ -174,21 +172,15 @@ class RemoteEventLoaderTests: XCTestCase {
     }
 
     class WebSocketClientSpy: WebSocketClient {
-        var delegate: EssentialNostr.WebSocketDelegate?
         var sendMessages = [String]()
-        var allRequests = [(request: String, completion: (Result<Data, Error>) -> Void)]()
-        var requests: [String] { allRequests.map { $0.request }}
-
-        private var sendIndex: Int = 0
-        private var receiveIndex: Int = 0
-        private var messages = [Int:String]()
+        var loadCompletions = [(Result<Data, Error>) -> Void]()
 
         func complete(with error: Error, at index: Int = 0) {
-            allRequests[index].completion(.failure(error))
+            loadCompletions[index](.failure(error))
         }
 
         func complete(with message: Data, at index: Int = 0) {
-            allRequests[index].completion(.success(message))
+            loadCompletions[index](.success(message))
         }
 
         func send(message: String, completion: @escaping (Error) -> Void) {
@@ -196,14 +188,11 @@ class RemoteEventLoaderTests: XCTestCase {
         }
 
         func receive(completion: @escaping (Result<Data, Error>) -> Void) {
-            guard receiveIndex == sendIndex else { return }
-            allRequests.append((sendMessages[receiveIndex], completion))
+            loadCompletions.append(completion)
         }
 
-
         // MARK: - Conformance requirement
-        var stateHandler: ((NWConnection.State) -> Void)?
-        var receiveHandler: ((WebSocketClient.ReceiveResult) -> Void)?
+        var delegate: EssentialNostr.WebSocketDelegate?
         func start() throws {}
         func disconnect() {}
     }

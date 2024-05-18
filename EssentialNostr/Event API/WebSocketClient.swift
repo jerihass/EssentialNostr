@@ -12,10 +12,10 @@ public protocol WebSocketDelegate {
 public protocol WebSocketClient: AnyObject {
     typealias ReceiveResult = Result<Data, Error>
     var delegate: WebSocketDelegate? { get set }
-
-    func send(message: String, completion: @escaping (Swift.Error) -> Void)
     
-    func receive(completion: @escaping (_ result: ReceiveResult) -> Void)
     func start() throws
     func disconnect()
+
+    func send(message: String, completion: @escaping (Swift.Error) -> Void)
+    func receive(completion: @escaping (_ result: ReceiveResult) -> Void)
 }

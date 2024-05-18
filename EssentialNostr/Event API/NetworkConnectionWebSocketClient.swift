@@ -42,7 +42,6 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
         send(data, completion: completion)
     }
 
-
     public func receive(completion: @escaping (ReceiveResult) -> Void) {
         connection.receiveMessage { content, contentContext, isComplete, error in
             if let content = content, isComplete {
