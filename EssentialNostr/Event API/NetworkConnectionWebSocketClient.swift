@@ -12,7 +12,7 @@ public class NetworkConnectionWebSocketClient {
 
     public enum Error: Swift.Error, Equatable {
         case stateHandlerNotSet
-        case networkError(NWError?)
+        case networkError(NWError)
     }
 
     public init(url: URL) {
