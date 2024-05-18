@@ -5,9 +5,9 @@
 import Foundation
 import Network
 
-public protocol WebSocketDelegate {
-    func send(message: String, completion: Error)
-    func receive(completion: @escaping (_ content: Data?, _ error: Error) -> Void)
+public protocol WebSocketDelegate: AnyObject {
+    func send(message: String, completion: @escaping (Error) -> Void)
+    func receive(completion: @escaping (_ result: Result<Data, Error>) -> Void)
 }
 
 public protocol WebSocketClient: AnyObject {
