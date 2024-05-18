@@ -36,10 +36,13 @@ public class NetworkConnectionWebSocketClient {
 
     public func receive(with request: String, completion: @escaping (Error) -> Void) {
         guard receiveHandler != nil else { return }
-
         let data = request.data(using: .utf8)!
-        send(data, completion: completion)
 
+        send(data, completion: completion)
+        receive()
+    }
+
+    private func receive() {
         connection.receiveMessage { content, contentContext, isComplete, error in
             if let content = content, isComplete {
                 self.receiveHandler?(.success(content))
