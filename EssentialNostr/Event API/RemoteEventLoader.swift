@@ -5,6 +5,28 @@
 import Foundation
 
 final public class RemoteEventLoader: EventLoader {
+    public func request(_ message: String) {
+        client.send(message: message, completion: { _ in })
+    }
+    
+    public func load(_ completion: @escaping (LoadEventResult) -> Void) {
+        client.receive { [weak self] result in
+            guard self != nil else { return }
+            switch result {
+            case .success(let data):
+                completion(RelayMessageMapper.mapData(data))
+            case .failure:
+                completion(.failure(Error.connectivity))
+            }
+        }
+    }
+    
+@available(*, deprecated, renamed: "request", message: "Event Loader request is now two functions: request and load.")
+    public func load(request: String, completion: @escaping (LoadEventResult) -> Void) {
+        self.request(request)
+        self.load(completion)
+    }
+
     private let client: WebSocketClient
     public typealias Result = LoadEventResult
 
@@ -20,19 +42,5 @@ final public class RemoteEventLoader: EventLoader {
 
     public init(client: WebSocketClient) {
         self.client = client
-    }
-
-    public func load(request: String, completion: @escaping (LoadEventResult) -> Void) {
-        client.send(message: request, completion: { _ in })
-
-        client.receive { [weak self] result in
-            guard self != nil else { return }
-            switch result {
-            case .success(let data):
-                completion(RelayMessageMapper.mapData(data))
-            case .failure:
-                completion(.failure(Error.connectivity))
-            }
-        }
     }
 }

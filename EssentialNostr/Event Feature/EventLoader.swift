@@ -6,5 +6,6 @@ import Foundation
 public typealias LoadEventResult = Result<Event, Error>
 
 public protocol EventLoader {
-    func load(request: String, completion: @escaping (LoadEventResult) -> Void)
+    func request(_ message: String)
+    func load(_ completion: @escaping (LoadEventResult) -> Void)
 }
