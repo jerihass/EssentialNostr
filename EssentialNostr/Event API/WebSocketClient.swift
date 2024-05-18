@@ -13,9 +13,6 @@ public protocol WebSocketClient: AnyObject {
     typealias ReceiveResult = Result<Data, Error>
     var delegate: WebSocketDelegate? { get set }
 
-    @available(*, deprecated, renamed: "delegate.stateHandler", message: "Use WebSocketDelegate instead")
-    var stateHandler: ((_ state: NWConnection.State) -> Void)? { get set }
-
     @available(*, deprecated, renamed: "receive", message: "Use WebSocketClient.receive instead")
     var receiveHandler: ((_ result: ReceiveResult) -> Void)? { get set }
 
