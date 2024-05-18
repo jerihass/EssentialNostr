@@ -18,9 +18,9 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         var state: NWConnection.State?
 
         let exp = expectation(description: "Wait for ready")
-        sut.delegate?.stateHandler = { s in
-            if case .ready = s {
-                state = s
+        sut.delegate?.stateHandler = {
+            if .ready == $0 {
+                state = $0
                 exp.fulfill()
             }
         }
@@ -37,9 +37,9 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         var state: NWConnection.State?
 
         let exp = expectation(description: "Wait for ready")
-        sut.delegate?.stateHandler = { s in
-            if case .cancelled = s {
-                state = s
+        sut.delegate?.stateHandler = {
+            if .cancelled == $0 {
+                state = $0
                 exp.fulfill()
             }
         }
@@ -53,55 +53,17 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         XCTAssertEqual(state, .cancelled)
     }
 
-    func test_send_noErrorGivesNoError() {
-        let sut = makeSUT()
-        var caughtError: NetworkConnectionWebSocketClient.Error?
-
-        let request = makeRequest()
-
-        let errorExp = expectation(description: "Expect no error")
-
-        sut.delegate?.stateHandler = { [weak sut] in
-            if $0 == .ready { sut?.send(message: request, completion: {
-                if case let error = $0 {
-                    caughtError = error as? NetworkConnectionWebSocketClient.Error
-                }
-                errorExp.fulfill()
-            }) }
-        }
-
-
-        try? sut.start()
-
-        XCTExpectFailure {
-            wait(for: [errorExp], timeout: 1)
-        }
-
-        XCTAssertNil(caughtError)
-    }
-
     func test_send_withErrorGivesError() {
         let sut = makeSUT()
-        let request = makeRequest()
 
-        var error: NetworkConnectionWebSocketClient.Error?
-        let exp = expectation(description: "Wait for send error")
-
-        sut.delegate?.stateHandler = { [weak sut] in
-            if $0 != .cancelled {
-                sut?.disconnect()
-                sut?.send(message: request) { gotError in
-                    error = gotError as? NetworkConnectionWebSocketClient.Error
-                    exp.fulfill()
-                }
-            }
+        expect(sut, toCompleteSendWithError: .networkError(.posix(.ECANCELED))) {
+            sut.disconnect()
         }
+    }
 
-        try? sut.start()
-
-        wait(for: [exp], timeout: 1)
-
-        XCTAssertEqual(error, .networkError(.posix(.ECANCELED)))
+    func test_send_noErrorGivesNoError() {
+        let sut = makeSUT()
+        expect(sut, toCompleteSendWithError: .none) { }
     }
 
     func test_receive_withErrorGivesError() {
@@ -110,7 +72,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         sut.delegate?.stateHandler = sendRequestOnReady(sut, request)
 
-        expect(sut, toReceiveWith: .failure(NetworkConnectionWebSocketClient.Error.networkError(.posix(.ECANCELED)))) {
+        expect(sut, toReceiveWith: failure(.networkError(.posix(.ECANCELED)))) {
             sut.disconnect()
         }
     }
@@ -129,7 +91,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> WebSocketClient {
         let url = URL(string: "wss://127.0.0.1:8080")!
         let sut = NetworkConnectionWebSocketClient(url: url)
-        let delegate = DelegateSpy()
+        let delegate = PassthroughDelegate()
         sut.delegate = delegate
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(delegate, file: file, line: line)
@@ -160,6 +122,35 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         wait(for: [exp], timeout: 1)
     }
 
+    func expect(_ sut: WebSocketClient, toCompleteSendWithError expectedError: NetworkConnectionWebSocketClient.Error?, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+        let request = makeRequest()
+        let exp = expectation(description: "Wait for send completion")
+        var error: NetworkConnectionWebSocketClient.Error?
+        sut.delegate?.stateHandler = { _ in }
+
+        try? sut.start()
+
+        action()
+
+        sut.send(message: request) {
+            error = $0 as? NetworkConnectionWebSocketClient.Error
+            exp.fulfill()
+        }
+        if expectedError == .none {
+            XCTExpectFailure {
+                wait(for: [exp], timeout: 1)
+            }
+        } else {
+            wait(for: [exp], timeout: 1)
+        }
+
+        XCTAssertEqual(error, expectedError)
+    }
+
+    private func failure(_ error: NetworkConnectionWebSocketClient.Error) -> Result<Data, Error> {
+        .failure(error)
+    }
+
     private func sendRequestOnReady(_ sut: WebSocketClient, _ request: String) -> (NWConnection.State) -> Void {
         return { [weak sut] in
             if $0 == .ready {
@@ -168,7 +159,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         }
     }
 
-    private class DelegateSpy: WebSocketDelegate {
+    private class PassthroughDelegate: WebSocketDelegate {
         var stateHandler: ((NWConnection.State) -> Void)?
     }
 
