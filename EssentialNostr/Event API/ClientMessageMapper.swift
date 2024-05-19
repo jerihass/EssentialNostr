@@ -16,7 +16,7 @@ public struct Filter {
     let ids: [String]?
     let authors: [String]?
     let kinds: [UInt16]?
-    let tags: [[String]]?
+    let tags: [Tag]?
     let since: Date?
     let until: Date?
     let limit: UInt?
@@ -25,7 +25,7 @@ public struct Filter {
         self.ids = ids
         self.authors = authors
         self.kinds = kinds
-        self.tags = tags
+        self.tags = tags?.compactMap(Tag.init)
         self.since = since
         self.until = until
         self.limit = limit
