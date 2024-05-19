@@ -141,7 +141,7 @@ private struct MessageTag: Encodable {
 }
 
 // Helper struct for dynamic coding keys
-struct DynamicCodingKey: CodingKey {
+private struct DynamicCodingKey: CodingKey {
     var stringValue: String
     var intValue: Int?
 
@@ -190,14 +190,5 @@ extension Array where Element == MessageFilter {
     var json: Data? {
         let encoder = JSONEncoder()
         return try? encoder.encode(self)
-    }
-}
-
-extension Array where Element == String {
-    var stringed: String {
-        if let json = try? JSONEncoder().encode(self), let string = String(data: json, encoding: .utf8) {
-            return string
-        }
-        return ""
     }
 }
