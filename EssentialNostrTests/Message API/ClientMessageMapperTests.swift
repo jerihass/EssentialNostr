@@ -32,7 +32,7 @@ class ClientMessageMapperTests: XCTestCase {
         print("Mapped:  " + mapped)
     }
 
-    func test_map_requestMessageToString2() {
+    func test_map_requestMessageToString_multiple() {
         let sub = "sub1"
         let filters = [Filter(ids: ["id1", "id2"]), Filter(ids: ["id1", "id2"])]
         let request = "[\"REQ\",\"\(sub)\",{\"ids\":[\"id1\",\"id2\"]},{\"ids\":[\"id1\",\"id2\"]}]"
@@ -43,7 +43,7 @@ class ClientMessageMapperTests: XCTestCase {
         print("Mapped:  " + mapped)
     }
 
-    func test_map_requestMessageToString3() {
+    func test_map_requestMessageToString_idAuthKinds() {
         let sub = "sub1"
         let filters = [Filter(ids: ["id1", "id2"], authors: ["auth1"], kinds: [1, 2])]
         let request = "[\"REQ\",\"\(sub)\",{\"ids\":[\"id1\",\"id2\"],\"authors\":[\"auth1\"],\"kinds\":[1,2]}]"
@@ -55,7 +55,7 @@ class ClientMessageMapperTests: XCTestCase {
     }
 
     // MARK: - Helpers
-    
+
     private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (model: Event, data: Data) {
         let event = Event(id: id, pubkey: pubkey, created_at: created_at, kind: kind, tags: tags, content: content, sig: sig)
         let time = created_at.timeIntervalSince1970
