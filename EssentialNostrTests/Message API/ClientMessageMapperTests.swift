@@ -67,6 +67,17 @@ class ClientMessageMapperTests: XCTestCase {
         print("Mapped:  " + mapped)
     }
 
+    func test_map_requestMessageToString_tags() {
+        let sub = "sub1"
+        let filters = [Filter(tags: [["e", "eventID_1", "eventID_2"],["p", "pubkey_1", "pubkey_2"]])]
+        let request = "[\"REQ\",\"\(sub)\",{\"#e\":[\"eventID_1\",\"eventID_2\"],\"#p\":[\"pubkey_1\",\"pubkey_2\"]}]"
+        let requestMessage = ClientMessage.Message.request(sub: sub, filters: filters)
+        let mapped = ClientMessageMapper.mapMessage(requestMessage)
+        XCTAssertTrue(areJSONEqual(mapped.data(using: .utf8)!, request.data(using: .utf8)!))
+        print("Request: " + request)
+        print("Mapped:  " + mapped)
+    }
+
     // MARK: - Helpers
 
     private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (model: Event, data: Data) {
