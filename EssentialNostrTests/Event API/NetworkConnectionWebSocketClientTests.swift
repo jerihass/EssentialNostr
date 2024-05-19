@@ -190,15 +190,3 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     }
 }
 
-struct Weak<T> {
-    var object: T? {
-        get { storage as? T }
-        set { storage = newValue as AnyObject }
-    }
-
-    weak private var storage: AnyObject?
-
-    init(_ stored: T) {
-        self.object = stored
-    }
-}
