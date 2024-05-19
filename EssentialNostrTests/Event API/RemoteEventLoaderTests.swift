@@ -157,7 +157,7 @@ class RemoteEventLoaderTests: XCTestCase {
 
     private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (model: Event, data: Data) {
         let event = Event(id: id, pubkey: pubkey, created_at: created_at, kind: kind, tags: tags, content: content, sig: sig)
-        let time = created_at.timeIntervalSince1970
+        let time = Int(created_at.timeIntervalSince1970)
         let tagString = tags.stringed
 
         let eventJSON = "[\"EVENT\",\"sub1\",{\"id\":\"\(id)\",\"pubkey\":\"\(pubkey)\",\"created_at\":\(time),\"kind\":\(kind),\"tags\":\(tagString),\"content\":\"\(content)\",\"sig\":\"\(sig)\"}]"
