@@ -7,7 +7,7 @@ import EssentialNostr
 import Network
 
 final class EssentialNostrAPIEndToEndTests: XCTestCase {
-    func test_endToEndTestServerSendsRequest() throws {
+    func test_endToEndTestServer_retrievesExpectedEvents() throws {
 
         let url = URL(string: "ws://127.0.0.1:8080")!
         let client = NetworkConnectionWebSocketClient(url: url)
