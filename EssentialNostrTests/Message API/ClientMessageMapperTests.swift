@@ -5,10 +5,23 @@
 import XCTest
 import EssentialNostr
 
+
+struct Filter: Encodable {
+    let ids: [String]
+}
+
+extension Array where Element == Filter {
+    var json: Data? {
+        let encoder = JSONEncoder()
+        return try? encoder.encode(self)
+    }
+}
+
 struct ClientMessage {
     enum Message {
         case close(sub: String)
         case event(event: Event)
+        case request(sub: String, filters: [Filter])
     }
 }
 
@@ -21,6 +34,12 @@ final class ClientMessageMapper {
             let local = MessageEvent(event)
             if let eventJSON = local.json, let string = String(data: eventJSON, encoding: .utf8) {
                 return "[\"EVENT\",\(string)]"
+            }
+        case let .request(sub, filters):
+            if let filterJSON = filters.json, let string = String(data: filterJSON, encoding: .utf8) {
+                var trimmed = string
+                trimmed = trimmed.trimmingCharacters(in: ["[","]"])
+                return "[\"REQ\",\"\(sub)\",\(trimmed)]"
             }
         }
         return ""
@@ -68,6 +87,17 @@ class ClientMessageMapperTests: XCTestCase {
         XCTAssertTrue(areJSONEqual(mapped.data(using: .utf8)!, event.data))
     }
 
+    func test_map_filterMessageToString() {
+        let sub = "sub1"
+        let filters = [Filter(ids: ["id1", "id2"])]
+        let request = "[\"REQ\",\"\(sub)\",{\"ids\":[\"id1\",\"id2\"]}]"
+        print("Request: " + request)
+        let requestMessage = ClientMessage.Message.request(sub: sub, filters: filters)
+        let mapped = ClientMessageMapper.mapMessage(requestMessage)
+        print("Mapped: " + mapped)
+        XCTAssertTrue(areJSONEqual(mapped.data(using: .utf8)!, request.data(using: .utf8)!))
+    }
+
     private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (model: Event, data: Data) {
         let event = Event(id: id, pubkey: pubkey, created_at: created_at, kind: kind, tags: tags, content: content, sig: sig)
         let time = created_at.timeIntervalSince1970
@@ -85,6 +115,7 @@ class ClientMessageMapperTests: XCTestCase {
 
         guard let sortedJSONData1 = try? JSONSerialization.data(withJSONObject: jsonObject1, options: .sortedKeys),
               let sortedJSONData2 = try? JSONSerialization.data(withJSONObject: jsonObject2, options: .sortedKeys) else {
+
             return false
         }
 
