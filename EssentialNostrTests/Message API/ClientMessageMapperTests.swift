@@ -54,6 +54,19 @@ class ClientMessageMapperTests: XCTestCase {
         print("Mapped:  " + mapped)
     }
 
+    func test_map_requestMessageToString_sinceUntilLimit() {
+        let sub = "sub1"
+        let since: Date = .distantPast
+        let until: Date = .now
+        let filters = [Filter(since: since, until: until, limit: 10)]
+        let request = "[\"REQ\",\"\(sub)\",{\"since\":\(since.timeIntervalSince1970),\"until\":\(until.timeIntervalSince1970),\"limit\":10}]"
+        let requestMessage = ClientMessage.Message.request(sub: sub, filters: filters)
+        let mapped = ClientMessageMapper.mapMessage(requestMessage)
+        XCTAssertTrue(areJSONEqual(mapped.data(using: .utf8)!, request.data(using: .utf8)!))
+        print("Request: " + request)
+        print("Mapped:  " + mapped)
+    }
+
     // MARK: - Helpers
 
     private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (model: Event, data: Data) {
