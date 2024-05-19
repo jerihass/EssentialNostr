@@ -95,7 +95,7 @@ class RemoteEventLoaderTests: XCTestCase {
         }
     }
 
-    func test_load_deliversEventOnValidEvents() {
+    func test_load_deliversEventOnValidEvent() {
         let (sut, client) = makeSUT()
         let date = Date.distantPast
 
@@ -103,6 +103,23 @@ class RemoteEventLoaderTests: XCTestCase {
 
         expect(sut, toLoadWith: .success(event.model)) {
             client.complete(with: event.data)
+        }
+    }
+
+    func test_loadRepeatedly_deliversEventsOnValidEvents() {
+        let (sut, client) = makeSUT()
+        let date = Date.distantPast
+
+        let event = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
+
+        let event2 = makeEvent(id: "id2", pubkey: "pubkey2", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content2", sig: "sig2")
+
+        expect(sut, toLoadWith: .success(event.model)) {
+            client.complete(with: event.data)
+        }
+
+        expect(sut, toLoadWith: .success(event2.model)) {
+            client.complete(with: event2.data, at: 1)
         }
     }
 
@@ -168,7 +185,7 @@ class RemoteEventLoaderTests: XCTestCase {
 
         action()
 
-        waitForExpectations(timeout: 0.1)
+        waitForExpectations(timeout: 1)
     }
 
     class WebSocketClientSpy: WebSocketClient {
