@@ -59,7 +59,7 @@ class ClientMessageMapperTests: XCTestCase {
         let since: Date = .distantPast
         let until: Date = .now
         let filters = [Filter(since: since, until: until, limit: 10)]
-        let request = "[\"REQ\",\"\(sub)\",{\"since\":\(since.timeIntervalSince1970),\"until\":\(until.timeIntervalSince1970),\"limit\":10}]"
+        let request = "[\"REQ\",\"\(sub)\",{\"since\":\(Int(since.timeIntervalSince1970)),\"until\":\(Int(until.timeIntervalSince1970)),\"limit\":10}]"
         let requestMessage = ClientMessage.Message.request(sub: sub, filters: filters)
         let mapped = ClientMessageMapper.mapMessage(requestMessage)
         XCTAssertTrue(areJSONEqual(mapped.data(using: .utf8)!, request.data(using: .utf8)!))
@@ -82,7 +82,7 @@ class ClientMessageMapperTests: XCTestCase {
         let sub = "sub1"
         let since = Date.now
         let filters = [Filter(kinds: [1,2], tags: [["e", "eventID_1", "eventID_2"]], since: since)]
-        let request = "[\"REQ\",\"\(sub)\",{\"kinds\":[1,2],\"#e\":[\"eventID_1\",\"eventID_2\"],\"since\":\(since.timeIntervalSince1970)}]"
+        let request = "[\"REQ\",\"\(sub)\",{\"kinds\":[1,2],\"#e\":[\"eventID_1\",\"eventID_2\"],\"since\":\(Int(since.timeIntervalSince1970))}]"
         let requestMessage = ClientMessage.Message.request(sub: sub, filters: filters)
         let mapped = ClientMessageMapper.mapMessage(requestMessage)
         XCTAssertTrue(areJSONEqual(mapped.data(using: .utf8)!, request.data(using: .utf8)!))

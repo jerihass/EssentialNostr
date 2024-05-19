@@ -120,11 +120,11 @@ private struct MessageFilter: Encodable {
     let authors: [String]?
     let kinds: [UInt16]?
     let tags: [MessageTag]?
-    let since: Double?
-    let until: Double?
+    let since: Int?
+    let until: Int?
     let limit: UInt?
 
-    init(ids: [String]? = nil, authors: [String]? = nil, kinds: [UInt16]? = nil, tags: [[String]]? = nil, since: Double? = nil, until: Double? = nil, limit: UInt? = nil) {
+    init(ids: [String]? = nil, authors: [String]? = nil, kinds: [UInt16]? = nil, tags: [[String]]? = nil, since: Int? = nil, until: Int? = nil, limit: UInt? = nil) {
         self.ids = ids
         self.authors = authors
         self.kinds = kinds
@@ -139,8 +139,12 @@ private struct MessageFilter: Encodable {
         authors = filter.authors
         kinds = filter.kinds
         tags = filter.tags?.compactMap(MessageTag.init)
-        since = filter.since?.timeIntervalSince1970
-        until = filter.until?.timeIntervalSince1970
+        if let s = filter.since?.timeIntervalSince1970 {
+            since = Int(s)
+        } else { since = nil }
+        if let u = filter.until?.timeIntervalSince1970 {
+            until = Int(u)
+        } else { until = nil }
         limit = filter.limit
     }
 }
