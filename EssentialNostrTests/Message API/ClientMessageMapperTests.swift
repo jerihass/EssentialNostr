@@ -7,7 +7,23 @@ import EssentialNostr
 
 
 struct Filter: Encodable {
-    let ids: [String]
+    let ids: [String]?
+    let authors: [String]?
+    let kinds: [UInt16]?
+    let tags: [[String]]?
+    let since: Date?
+    let until: Date?
+    let limit: UInt?
+
+    init(ids: [String]? = nil, authors: [String]? = nil, kinds: [UInt16]? = nil, tags: [[String]]? = nil, since: Date? = nil, until: Date? = nil, limit: UInt? = nil) {
+        self.ids = ids
+        self.authors = authors
+        self.kinds = kinds
+        self.tags = tags
+        self.since = since
+        self.until = until
+        self.limit = limit
+    }
 }
 
 extension Array where Element == Filter {
@@ -87,7 +103,7 @@ class ClientMessageMapperTests: XCTestCase {
         XCTAssertTrue(areJSONEqual(mapped.data(using: .utf8)!, event.data))
     }
 
-    func test_map_filterMessageToString() {
+    func test_map_requestMessageToString() {
         let sub = "sub1"
         let filters = [Filter(ids: ["id1", "id2"])]
         let request = "[\"REQ\",\"\(sub)\",{\"ids\":[\"id1\",\"id2\"]}]"
@@ -98,10 +114,21 @@ class ClientMessageMapperTests: XCTestCase {
         print("Mapped:  " + mapped)
     }
 
-    func test_map_filterMessageToString2() {
+    func test_map_requestMessageToString2() {
         let sub = "sub1"
         let filters = [Filter(ids: ["id1", "id2"]), Filter(ids: ["id1", "id2"])]
         let request = "[\"REQ\",\"\(sub)\",{\"ids\":[\"id1\",\"id2\"]},{\"ids\":[\"id1\",\"id2\"]}]"
+        let requestMessage = ClientMessage.Message.request(sub: sub, filters: filters)
+        let mapped = ClientMessageMapper.mapMessage(requestMessage)
+        XCTAssertTrue(areJSONEqual(mapped.data(using: .utf8)!, request.data(using: .utf8)!))
+        print("Request: " + request)
+        print("Mapped:  " + mapped)
+    }
+
+    func test_map_requestMessageToString3() {
+        let sub = "sub1"
+        let filters = [Filter(ids: ["id1", "id2"], authors: ["auth1"], kinds: [1, 2])]
+        let request = "[\"REQ\",\"\(sub)\",{\"ids\":[\"id1\",\"id2\"],\"authors\":[\"auth1\"],\"kinds\":[1,2]}]"
         let requestMessage = ClientMessage.Message.request(sub: sub, filters: filters)
         let mapped = ClientMessageMapper.mapMessage(requestMessage)
         XCTAssertTrue(areJSONEqual(mapped.data(using: .utf8)!, request.data(using: .utf8)!))
