@@ -165,7 +165,11 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     }
 
     private func makeRequest() -> String {
-        "Request"
+        let filter = Filter(kinds: [1], since: .now)
+        let sub = "mySub"
+
+        let request = ClientMessage.Message.request(sub: sub, filters: [filter])
+        return ClientMessageMapper.mapMessage(request)
     }
 
     fileprivate func captureRecieveError(_ error: @escaping (Error?) -> Void, exp: XCTestExpectation) -> ((Result<Data, Error>) -> Void)? {
