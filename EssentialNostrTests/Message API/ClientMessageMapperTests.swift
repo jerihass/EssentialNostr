@@ -91,11 +91,22 @@ class ClientMessageMapperTests: XCTestCase {
         let sub = "sub1"
         let filters = [Filter(ids: ["id1", "id2"])]
         let request = "[\"REQ\",\"\(sub)\",{\"ids\":[\"id1\",\"id2\"]}]"
-        print("Request: " + request)
         let requestMessage = ClientMessage.Message.request(sub: sub, filters: filters)
         let mapped = ClientMessageMapper.mapMessage(requestMessage)
-        print("Mapped: " + mapped)
         XCTAssertTrue(areJSONEqual(mapped.data(using: .utf8)!, request.data(using: .utf8)!))
+        print("Request: " + request)
+        print("Mapped:  " + mapped)
+    }
+
+    func test_map_filterMessageToString2() {
+        let sub = "sub1"
+        let filters = [Filter(ids: ["id1", "id2"]), Filter(ids: ["id1", "id2"])]
+        let request = "[\"REQ\",\"\(sub)\",{\"ids\":[\"id1\",\"id2\"]},{\"ids\":[\"id1\",\"id2\"]}]"
+        let requestMessage = ClientMessage.Message.request(sub: sub, filters: filters)
+        let mapped = ClientMessageMapper.mapMessage(requestMessage)
+        XCTAssertTrue(areJSONEqual(mapped.data(using: .utf8)!, request.data(using: .utf8)!))
+        print("Request: " + request)
+        print("Mapped:  " + mapped)
     }
 
     private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (model: Event, data: Data) {
