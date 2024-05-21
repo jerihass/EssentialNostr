@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		AD3FFA0D2BFC332500467B85 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5B9EBF2BF6CD2800E7D5CD /* XCTestCase+MemoryLeakTracking.swift */; };
+		AD3FFA152BFC3E7F00467B85 /* KeypairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3FFA142BFC3E7F00467B85 /* KeypairTests.swift */; };
+		AD3FFA1D2BFC419B00467B85 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = AD3FFA1C2BFC419B00467B85 /* secp256k1 */; };
 		AD51DB5A2BF42A4E00B5673C /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB692BF42A7100B5673C /* Event.swift */; };
 		AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */; };
@@ -45,6 +47,7 @@
 /* Begin PBXFileReference section */
 		AD3FFA0E2BFC341900467B85 /* EssentialNostrAPIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialNostrAPIEndToEndTests.xctestplan; sourceTree = "<group>"; };
 		AD3FFA112BFC389700467B85 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
+		AD3FFA142BFC3E7F00467B85 /* KeypairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypairTests.swift; sourceTree = "<group>"; };
 		AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialNostr.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD51DB592BF42A4E00B5673C /* EssentialNostrTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostrTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD51DB692BF42A7100B5673C /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
@@ -69,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD3FFA1D2BFC419B00467B85 /* secp256k1 in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +95,28 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AD3FFA122BFC3E1F00467B85 /* Keys */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Keys;
+			sourceTree = "<group>";
+		};
+		AD3FFA132BFC3E4100467B85 /* Keys */ = {
+			isa = PBXGroup;
+			children = (
+				AD3FFA142BFC3E7F00467B85 /* KeypairTests.swift */,
+			);
+			path = Keys;
+			sourceTree = "<group>";
+		};
+		AD3FFA172BFC417600467B85 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AD51DB472BF42A4D00B5673C = {
 			isa = PBXGroup;
 			children = (
@@ -99,6 +125,7 @@
 				AD51DB5D2BF42A4E00B5673C /* EssentialNostrTests */,
 				ADB6CEEA2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests */,
 				AD51DB522BF42A4E00B5673C /* Products */,
+				AD3FFA172BFC417600467B85 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -115,6 +142,7 @@
 		AD51DB532BF42A4E00B5673C /* EssentialNostr */ = {
 			isa = PBXGroup;
 			children = (
+				AD3FFA122BFC3E1F00467B85 /* Keys */,
 				AD51DB702BF433D900B5673C /* Event API */,
 				AD51DB6D2BF42C4600B5673C /* Event Feature */,
 			);
@@ -125,9 +153,10 @@
 			isa = PBXGroup;
 			children = (
 				ADB6CEE42BF9540C00EF3B54 /* EssentialNostr.xctestplan */,
+				AD3FFA132BFC3E4100467B85 /* Keys */,
 				AD5B9EBE2BF6CD1700E7D5CD /* Helpers */,
-				ADE7026B2BF98D4B0066AC13 /* Message API */,
 				AD7B0B1D2BF5A9720053793A /* Event API */,
+				ADE7026B2BF98D4B0066AC13 /* Message API */,
 			);
 			path = EssentialNostrTests;
 			sourceTree = "<group>";
@@ -215,6 +244,9 @@
 			dependencies = (
 			);
 			name = EssentialNostr;
+			packageProductDependencies = (
+				AD3FFA1C2BFC419B00467B85 /* secp256k1 */,
+			);
 			productName = EssentialNostr;
 			productReference = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */;
 			productType = "com.apple.product-type.framework";
@@ -233,6 +265,8 @@
 				AD51DB5C2BF42A4E00B5673C /* PBXTargetDependency */,
 			);
 			name = EssentialNostrTests;
+			packageProductDependencies = (
+			);
 			productName = EssentialNostrTests;
 			productReference = AD51DB592BF42A4E00B5673C /* EssentialNostrTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -286,6 +320,9 @@
 				Base,
 			);
 			mainGroup = AD51DB472BF42A4D00B5673C;
+			packageReferences = (
+				AD3FFA162BFC40E900467B85 /* XCRemoteSwiftPackageReference "secp256k1" */,
+			);
 			productRefGroup = AD51DB522BF42A4E00B5673C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -341,6 +378,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD3FFA152BFC3E7F00467B85 /* KeypairTests.swift in Sources */,
 				AD51DB6F2BF42CCD00B5673C /* RemoteEventLoaderTests.swift in Sources */,
 				ADE7026D2BF98D850066AC13 /* ClientMessageMapperTests.swift in Sources */,
 				AD7B0B1F2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift in Sources */,
@@ -688,6 +726,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		AD3FFA162BFC40E900467B85 /* XCRemoteSwiftPackageReference "secp256k1" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/GigaBitcoin/secp256k1.swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.17.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AD3FFA1C2BFC419B00467B85 /* secp256k1 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AD3FFA162BFC40E900467B85 /* XCRemoteSwiftPackageReference "secp256k1" */;
+			productName = secp256k1;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = AD51DB482BF42A4D00B5673C /* Project object */;
 }
