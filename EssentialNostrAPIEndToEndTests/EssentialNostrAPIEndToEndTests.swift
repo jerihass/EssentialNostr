@@ -29,7 +29,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
 
         switch receivedResult {
         case let .success(event)?:
-            XCTAssertEqual(event.id, "id1")
+            XCTAssertEqual(event.id, "eventID")
         case let .failure(error)?:
             XCTFail("Expected at successful event result, got \(error) instead.")
         default:
@@ -37,7 +37,6 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         }
     }
 
-    // use this test on valid nostr server
     func test_endToEndTestServer_badEventJSONGivesErrorReply() throws {
         let url = URL(string: "ws://127.0.0.1:8080")!
         let client = NetworkConnectionWebSocketClient(url: url)
@@ -68,7 +67,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
             print(error)
             XCTAssertNotNil(error, "Expected Error")
         default:
-            XCTFail("Expected successful event result, got no result instead.")
+            XCTFail("Expected error response, got no result instead.")
         }
     }
 
