@@ -3,34 +3,7 @@
 //
 
 import XCTest
-
-extension Data {
-    var hex: String {
-        var out: String = ""
-        for item in self {
-            if item <= 15 { out += "0" }
-            out += String(item, radix: 16)
-        }
-        return out
-    }
-}
-
-extension String {
-    var bytes: Data? {
-        guard self.count % 2 == 0 else { return nil }
-        // check all values between 0-9a-f
-        var bytes = [UInt8]()
-        var index = self.startIndex
-            for _ in 0..<self.count / 2 {
-                let nextIndex = self.index(index, offsetBy: 2)
-                let byteString = self[index..<nextIndex]
-                guard let byte = UInt8(byteString, radix: 16) else { return nil }
-                bytes.append(byte)
-                index = nextIndex
-            }
-        return Data(bytes)
-    }
-}
+import EssentialNostr
 
 class DataHexEncodingTests: XCTestCase {
     func test_hex_converts8BitToHex() {
@@ -43,5 +16,13 @@ class DataHexEncodingTests: XCTestCase {
         let hex = "ff11000fff"
         let out = hex.bytes
         XCTAssertEqual(out, Data([255, 17, 0, 15, 255]))
+    }
+
+    func test_hex_toBech32() {
+        let data = Data([255, 255, 255, 255, 255])
+        let chars = data.hex
+        let charData = Data(chars.utf8)
+        let encoded = Bech32.encode("test", baseEightData: charData)
+        print(encoded)
     }
 }

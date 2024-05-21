@@ -13,6 +13,8 @@
 		AD3FFA1F2BFC486E00467B85 /* Helpers+NostrTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3FFA1E2BFC486E00467B85 /* Helpers+NostrTypes.swift */; };
 		AD3FFA212BFC4B0D00467B85 /* BaseEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3FFA202BFC4B0D00467B85 /* BaseEvent.swift */; };
 		AD3FFA232BFD084300467B85 /* DataHexEncodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3FFA222BFD084300467B85 /* DataHexEncodingTests.swift */; };
+		AD3FFA282BFD300B00467B85 /* Bech32.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3FFA272BFD300B00467B85 /* Bech32.swift */; };
+		AD3FFA2A2BFD381B00467B85 /* Data+Encodings.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3FFA292BFD381B00467B85 /* Data+Encodings.swift */; };
 		AD51DB5A2BF42A4E00B5673C /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB692BF42A7100B5673C /* Event.swift */; };
 		AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */; };
@@ -54,6 +56,8 @@
 		AD3FFA1E2BFC486E00467B85 /* Helpers+NostrTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Helpers+NostrTypes.swift"; sourceTree = "<group>"; };
 		AD3FFA202BFC4B0D00467B85 /* BaseEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseEvent.swift; sourceTree = "<group>"; };
 		AD3FFA222BFD084300467B85 /* DataHexEncodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataHexEncodingTests.swift; sourceTree = "<group>"; };
+		AD3FFA272BFD300B00467B85 /* Bech32.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bech32.swift; sourceTree = "<group>"; };
+		AD3FFA292BFD381B00467B85 /* Data+Encodings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "Data+Encodings.swift"; path = "EssentialNostrTests/Keys/Data+Encodings.swift"; sourceTree = SOURCE_ROOT; };
 		AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialNostr.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD51DB592BF42A4E00B5673C /* EssentialNostrTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostrTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD51DB692BF42A7100B5673C /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
@@ -104,6 +108,8 @@
 		AD3FFA122BFC3E1F00467B85 /* Keys */ = {
 			isa = PBXGroup;
 			children = (
+				AD3FFA292BFD381B00467B85 /* Data+Encodings.swift */,
+				AD3FFA272BFD300B00467B85 /* Bech32.swift */,
 			);
 			path = Keys;
 			sourceTree = "<group>";
@@ -373,7 +379,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD8ED5FD2BFA580A00B9ED43 /* ClientMessageMapper.swift in Sources */,
+				AD3FFA2A2BFD381B00467B85 /* Data+Encodings.swift in Sources */,
 				AD51DB722BF433E500B5673C /* RemoteEventLoader.swift in Sources */,
+				AD3FFA282BFD300B00467B85 /* Bech32.swift in Sources */,
 				AD8ED5FF2BFA7E9900B9ED43 /* ClientMessage.swift in Sources */,
 				AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */,
 				AD7B0B1A2BF571AE0053793A /* WebSocketClient.swift in Sources */,
