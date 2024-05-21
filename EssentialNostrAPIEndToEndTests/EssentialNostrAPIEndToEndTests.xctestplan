@@ -1,0 +1,25 @@
+{
+  "configurations" : [
+    {
+      "id" : "E52B9E09-7B73-44FF-825D-1C1BC314AC6B",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:EssentialNostr.xcodeproj",
+        "identifier" : "ADB6CEE82BF9557600EF3B54",
+        "name" : "EssentialNostrAPIEndToEndTests"
+      }
+    }
+  ],
+  "version" : 1
+}
