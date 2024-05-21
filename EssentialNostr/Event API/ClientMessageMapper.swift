@@ -49,7 +49,7 @@ public final class ClientMessageMapper {
     private struct MessageEvent: Encodable {
         let id: String
         let pubkey: String
-        let created_at: Double
+        let created_at: Int
         let kind: UInt16
         let tags: [[String]]
         let content: String
@@ -58,7 +58,7 @@ public final class ClientMessageMapper {
         init(_ event: Event) {
             id = event.id
             pubkey = event.pubkey
-            created_at = event.created_at.timeIntervalSince1970
+            created_at = Int(event.created_at.timeIntervalSince1970)
             kind = event.kind
             tags = event.tags
             content = event.content
