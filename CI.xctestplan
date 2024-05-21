@@ -1,0 +1,41 @@
+{
+  "configurations" : [
+    {
+      "id" : "A39AE9E2-7052-473E-98B4-31B6493941C4",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:EssentialNostr.xcodeproj",
+          "identifier" : "AD51DB502BF42A4D00B5673C",
+          "name" : "EssentialNostr"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:EssentialNostr.xcodeproj",
+        "identifier" : "ADB6CEE82BF9557600EF3B54",
+        "name" : "EssentialNostrAPIEndToEndTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:EssentialNostr.xcodeproj",
+        "identifier" : "AD51DB582BF42A4E00B5673C",
+        "name" : "EssentialNostrTests"
+      }
+    }
+  ],
+  "version" : 1
+}
