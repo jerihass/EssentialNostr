@@ -9,14 +9,8 @@ import Network
 final class EssentialNostrAPIEndToEndTests: XCTestCase {
     // Use this test on local echo server modified for event canned responses
     func test_endToEndTestServer_retrievesExpectedEvents() throws {
-        let url = URL(string: "ws://127.0.0.1:8080")!
-        let client = NetworkConnectionWebSocketClient(url: url)
-        let delegate = Delegate()
-        delegate.stateHandler = { _ in }
-        client.delegate = delegate
-        let loader = RemoteEventLoader(client: client)
+        let loader = makeSUT()
 
-        try client.start()
         loader.request("EVENT_REQUEST")
         var receivedResult: LoadEventResult?
 
@@ -38,15 +32,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
     }
 
     func test_endToEndTestServer_badEventJSONGivesErrorReply() throws {
-        let url = URL(string: "ws://127.0.0.1:8080")!
-        let client = NetworkConnectionWebSocketClient(url: url)
-        let delegate = Delegate()
-        delegate.stateHandler = { _ in }
-        client.delegate = delegate
-        let loader = RemoteEventLoader(client: client)
-
-        try client.start()
-
+        let loader = makeSUT()
         let event = Event(id: "bdID", pubkey: "npub1el277q4kesp8vhs7rq6qkwnhpxfp345u7tnuxykwr67d9wg0wvyslam5n0", created_at: .now, kind: 1, tags: [], content: "Test", sig: "badsig")
         let message = ClientMessage.Message.event(event: event)
 
@@ -69,6 +55,23 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         default:
             XCTFail("Expected error response, got no result instead.")
         }
+    }
+
+    // MARK: - Helpers
+
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> RemoteEventLoader {
+        let url = URL(string: "ws://127.0.0.1:8080")!
+        let client = NetworkConnectionWebSocketClient(url: url)
+        let delegate = Delegate()
+        delegate.stateHandler = { _ in }
+        client.delegate = delegate
+        let loader = RemoteEventLoader(client: client)
+        trackForMemoryLeaks(client, file: file, line: line)
+        trackForMemoryLeaks(loader, file: file, line: line)
+
+        try? client.start()
+
+        return loader
     }
 
     class Delegate: WebSocketDelegate {
