@@ -11,6 +11,7 @@
 		AD3FFA152BFC3E7F00467B85 /* KeypairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3FFA142BFC3E7F00467B85 /* KeypairTests.swift */; };
 		AD3FFA1D2BFC419B00467B85 /* secp256k1 in Frameworks */ = {isa = PBXBuildFile; productRef = AD3FFA1C2BFC419B00467B85 /* secp256k1 */; };
 		AD3FFA1F2BFC486E00467B85 /* Helpers+NostrTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3FFA1E2BFC486E00467B85 /* Helpers+NostrTypes.swift */; };
+		AD3FFA212BFC4B0D00467B85 /* BaseEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3FFA202BFC4B0D00467B85 /* BaseEvent.swift */; };
 		AD51DB5A2BF42A4E00B5673C /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB692BF42A7100B5673C /* Event.swift */; };
 		AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */; };
@@ -50,6 +51,7 @@
 		AD3FFA112BFC389700467B85 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		AD3FFA142BFC3E7F00467B85 /* KeypairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypairTests.swift; sourceTree = "<group>"; };
 		AD3FFA1E2BFC486E00467B85 /* Helpers+NostrTypes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Helpers+NostrTypes.swift"; sourceTree = "<group>"; };
+		AD3FFA202BFC4B0D00467B85 /* BaseEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseEvent.swift; sourceTree = "<group>"; };
 		AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialNostr.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD51DB592BF42A4E00B5673C /* EssentialNostrTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostrTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD51DB692BF42A7100B5673C /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
@@ -169,6 +171,7 @@
 				AD51DB692BF42A7100B5673C /* Event.swift */,
 				AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */,
 				AD8ED5FE2BFA7E9900B9ED43 /* ClientMessage.swift */,
+				AD3FFA202BFC4B0D00467B85 /* BaseEvent.swift */,
 			);
 			path = "Event Feature";
 			sourceTree = "<group>";
@@ -373,6 +376,7 @@
 				AD7B0B1A2BF571AE0053793A /* WebSocketClient.swift in Sources */,
 				AD7B0B1C2BF5726C0053793A /* RelayMessageMapper.swift in Sources */,
 				AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */,
+				AD3FFA212BFC4B0D00467B85 /* BaseEvent.swift in Sources */,
 				AD5B9EBD2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

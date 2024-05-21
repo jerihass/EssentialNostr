@@ -4,14 +4,7 @@
 
 import XCTest
 import secp256k1
-
-struct BaseEvent {
-    public let pubkey: String
-    public let created_at: Date
-    public let kind: UInt16
-    public let tags: [[String]]
-    public let content: String
-}
+import EssentialNostr
 
 class Keypair {
     let privateKey: secp256k1.Signing.PrivateKey
@@ -30,13 +23,13 @@ class KeypairTests: XCTestCase {
     }
 
     func test_sha256_eventJSONdata() {
-        let data = baseEvent(pubkey: "badpubkey", created_at: .now, kind: 1, tags: [["e"]], content: "content")
+        let data = baseEventJSONData(pubkey: "badpubkey", created_at: .now, kind: 1, tags: [["e"]], content: "content")
         let eventID = SHA256.hash(data: data)
         XCTAssertEqual(eventID.bytes.count, 32)
     }
 }
 
-private func baseEvent(pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String) -> Data {
+private func baseEventJSONData(pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String) -> Data {
     let event = BaseEvent(pubkey: pubkey, created_at: created_at, kind: kind, tags: tags, content: content)
     let time = Int(created_at.timeIntervalSince1970)
     let tagString = tags.stringed
