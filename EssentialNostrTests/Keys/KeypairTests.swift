@@ -4,6 +4,7 @@
 
 import XCTest
 import secp256k1
+import CryptoKit
 import EssentialNostr
 
 class Keypair {
@@ -24,8 +25,18 @@ class KeypairTests: XCTestCase {
 
     func test_sha256_eventJSONdata() {
         let data = baseEventJSONData(pubkey: "badpubkey", created_at: .now, kind: 1, tags: [["e"]], content: "content")
-        let eventID = SHA256.hash(data: data)
+        let eventID = CryptoKit.SHA256.hash(data: data)
         XCTAssertEqual(eventID.bytes.count, 32)
+    }
+
+    func test_() {
+        let json = """
+        [0,"17538dc2a62769d09443f18c37cbe358fab5bbf981173542aa7c5ff171ed77c4",1716341530,1,[["t","asknostr"]],"Anyone have experience installing a whole house carbon (or otherwise) water filtration system? \\n\\n\\n#asknostr"]
+        """.data(using: .utf8)!
+        let hash = CryptoKit.SHA256.hash(data: json)
+        let hex = Data(hash.bytes).hex
+        print(hex)
+        XCTAssertEqual(hex, "f97819289cf0bcfb727ded99dc2ebc04d60fe9e4be0097e84fce8d1cc7f252b7")
     }
 }
 
