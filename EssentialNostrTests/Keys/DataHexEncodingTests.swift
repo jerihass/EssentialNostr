@@ -22,7 +22,7 @@ class DataHexEncodingTests: XCTestCase {
         let data = Data([255, 255, 255, 255, 255])
         let chars = data.hex
         let charData = Data(chars.utf8)
-        let encoded = Bech32.encode("test", baseEightData: charData)
-        print(encoded)
+        let encoded = Bech32.encode("npub", baseEightData: charData)
+        XCTAssertTrue(encoded.starts(with: "npub"))
     }
 }
