@@ -337,6 +337,7 @@
 			mainGroup = AD51DB472BF42A4D00B5673C;
 			packageReferences = (
 				AD3FFA162BFC40E900467B85 /* XCRemoteSwiftPackageReference "secp256k1" */,
+				AD3FFA242BFD2ED900467B85 /* XCRemoteSwiftPackageReference "Bech32.swift" */,
 			);
 			productRefGroup = AD51DB522BF42A4E00B5673C /* Products */;
 			projectDirPath = "";
@@ -754,6 +755,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.17.0;
+			};
+		};
+		AD3FFA242BFD2ED900467B85 /* XCRemoteSwiftPackageReference "Bech32.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tesseract-one/Bech32.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
