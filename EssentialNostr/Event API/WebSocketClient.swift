@@ -5,8 +5,13 @@
 import Foundation
 import Network
 
+public enum WebSocketDelegateState {
+    case ready
+    case cancelled
+}
+
 public protocol WebSocketDelegate {
-    var stateHandler: ((_ state: NWConnection.State) -> Void)? { get set }
+    var stateHandler: ((_ state: WebSocketDelegateState) -> Void)? { get set }
 }
 
 public protocol WebSocketClient: AnyObject {

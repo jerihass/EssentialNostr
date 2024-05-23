@@ -6,7 +6,6 @@ import XCTest
 import Network
 import EssentialNostr
 
-
 class NetworkConnectionWebSocketClientTests: XCTestCase {
     func test_throwsError_withoutStateHandlerSetOnStart() {
         let sut = makeSUT()
@@ -82,12 +81,12 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         sut.delegate?.stateHandler = {
             if .ready == $0 {
-                state = $0
+                state = .ready
                 exp.fulfill()
             }
 
             if .cancelled == $0 {
-                state = $0
+                state = .cancelled
                 exp.fulfill()
             }
         }
@@ -152,7 +151,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         .failure(error)
     }
 
-    private func sendRequestOnReady(_ sut: WebSocketClient, _ request: String) -> (NWConnection.State) -> Void {
+    private func sendRequestOnReady(_ sut: WebSocketClient, _ request: String) -> (WebSocketDelegateState) -> Void {
         return { [weak sut] in
             if $0 == .ready {
                 sut?.send(message: request, completion: { _ in })
@@ -161,7 +160,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     }
 
     private class PassthroughDelegate: WebSocketDelegate {
-        var stateHandler: ((NWConnection.State) -> Void)?
+        var stateHandler: ((WebSocketDelegateState) -> Void)?
     }
 
     private func makeRequest() -> String {

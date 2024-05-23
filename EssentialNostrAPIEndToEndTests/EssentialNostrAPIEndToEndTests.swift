@@ -75,6 +75,6 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
     }
 
     class Delegate: WebSocketDelegate {
-        var stateHandler: ((NWConnection.State) -> Void)?
+        var stateHandler: ((WebSocketDelegateState) -> Void)?
     }
 }

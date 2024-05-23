@@ -5,6 +5,29 @@
 import Foundation
 import Network
 
+class NWConnectionWebSocketDelegate {
+    static func map(_ handler: @escaping (WebSocketDelegateState) -> Void) -> ((NWConnection.State) -> Void) {
+        { state in
+            switch state {
+            case .ready:
+                handler(.ready)
+            case .setup:
+                break
+            case .waiting(_):
+                break
+            case .preparing:
+                break
+            case .failed(_):
+                break
+            case .cancelled:
+                handler(.cancelled)
+            @unknown default:
+                break
+            }
+        }
+    }
+}
+
 public class NetworkConnectionWebSocketClient: WebSocketClient {
     public var delegate: WebSocketDelegate?
 
@@ -25,8 +48,8 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
     }
 
     public func start() throws {
-        guard delegate?.stateHandler != nil else { throw Error.stateHandlerNotSet }
-        connection.stateUpdateHandler = delegate?.stateHandler
+        guard let stateHandler = delegate?.stateHandler else { throw Error.stateHandlerNotSet }
+        connection.stateUpdateHandler = NWConnectionWebSocketDelegate.map(stateHandler)
         connection.start(queue: .main)
     }
 
