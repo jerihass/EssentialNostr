@@ -209,8 +209,7 @@ class RemoteEventLoaderTests: XCTestCase {
         }
 
         // MARK: - Conformance requirement
-        var delegate: EssentialNostr.WebSocketDelegate?
-        func start() throws {}
+        func start() {}
         func disconnect() {}
     }
 }

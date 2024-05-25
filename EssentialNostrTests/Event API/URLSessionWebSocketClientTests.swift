@@ -6,28 +6,6 @@ import XCTest
 import EssentialNostr
 
 class URLSessionWebSocketClientTests: XCTestCase {
-    func test_throwsError_withoutStateHandlerSetOnStart() {
-        let (sut, _) = makeSUT()
-        XCTAssertThrowsError(try sut.start(), "Expected error without state handler set")
-    }
-
-    func test_start_setsStateToReady() {
-        let (sut, _) = makeSUT()
-
-        expect(sut, toChangeToState: .ready) {
-            try? sut.start()
-        }
-    }
-
-    func test_disconnect_cancelsConnection() {
-        let (sut, _) = makeSUT()
-        try? sut.start()
-
-        expect(sut, toChangeToState: .cancelled) {
-            sut.disconnect()
-        }
-    }
-
     func test_send_withErrorGivesError() {
         let (sut, _) = makeSUT()
 
@@ -43,9 +21,6 @@ class URLSessionWebSocketClientTests: XCTestCase {
 
     func test_receive_withErrorGivesError() {
         let (sut, _) = makeSUT()
-        let request = makeRequest()
-
-        sut.delegate?.stateHandler = sendRequestOnReady(sut, request)
 
         expect(sut, toReceiveWith: .failure(URLSessionWebSocketClient.Error.receiveError)) {
             sut.disconnect()
@@ -56,8 +31,6 @@ class URLSessionWebSocketClientTests: XCTestCase {
         let (sut, _) = makeSUT()
         let request = makeRequest()
         let requestData = request.data(using: .utf8)!
-        sut.delegate?.stateHandler = { _ in }
-        try sut.start()
 
         expect(sut, toReceiveWith: .success(requestData)) {
             sut.send(message: request, completion: { _ in })
@@ -70,50 +43,15 @@ class URLSessionWebSocketClientTests: XCTestCase {
         let url = URL(string: "ws://127.0.0.1:8080")!
         let session = URLSession(configuration: .ephemeral)
         let sut = URLSessionWebSocketClient(session: session, url: url)
-        let delegate = URLSessionWSDelegate()
-        sut.delegate = delegate
         return (sut, session)
-    }
-
-    private func sendRequestOnReady(_ sut: URLSessionWebSocketClient, _ request: String) -> (WebSocketDelegateState) -> Void {
-        return { [weak sut] in
-            if $0 == .ready {
-                sut?.send(message: request, completion: { _ in })
-            }
-        }
-    }
-
-    private func expect(_ sut: URLSessionWebSocketClient, toChangeToState expected: WebSocketDelegateState, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
-        var state: WebSocketDelegateState?
-
-        let exp = expectation(description: "Wait for ready")
-
-        sut.delegate?.stateHandler = {
-            if .ready == $0 {
-                state = .ready
-                exp.fulfill()
-            }
-
-            if .cancelled == $0 {
-                state = .cancelled
-                exp.fulfill()
-            }
-        }
-
-        action()
-
-        wait(for: [exp], timeout: 1)
-
-        XCTAssertEqual(state, expected, file: file, line: line)
     }
 
     func expect(_ sut: URLSessionWebSocketClient, toCompleteSendWithError expectedError: URLSessionWebSocketClient.Error?, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
         let request = makeRequest()
         let exp = expectation(description: "Wait for send completion")
         var error: URLSessionWebSocketClient.Error?
-        sut.delegate?.stateHandler = { _ in }
 
-        try? sut.start()
+        sut.start()
 
         action()
 
@@ -135,7 +73,7 @@ class URLSessionWebSocketClientTests: XCTestCase {
     private func expect(_ sut: URLSessionWebSocketClient, toReceiveWith expected:  Result<Data, Error>, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait for receive error")
 
-        try? sut.start()
+        sut.start()
 
         action()
 
