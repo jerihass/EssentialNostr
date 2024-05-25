@@ -26,7 +26,7 @@ class URLSessionWebSocketClient {
     func start() throws {
         guard let stateHandler = delegate?.stateHandler else { throw Error.stateHandlerNotSet }
         stateHandler(.ready)
-        let task = session.webSocketTask(with: url)
+        _ = session.webSocketTask(with: url)
 
     }
 }
@@ -37,6 +37,13 @@ class URLSessionWebSocketClientTests: XCTestCase {
         XCTAssertThrowsError(try sut.start(), "Expected error without state handler set")
     }
 
+    func test_start_setsStateToReady() {
+        let (sut, _) = makeSUT()
+
+        expect(sut, toChangeToState: .ready) {
+            try? sut.start()
+        }
+    }
     // MARK: - Helpers
 
     func makeSUT() -> (sut: URLSessionWebSocketClient, task: URLSession) {
