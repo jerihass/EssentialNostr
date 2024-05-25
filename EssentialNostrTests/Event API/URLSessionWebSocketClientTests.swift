@@ -27,7 +27,10 @@ class URLSessionWebSocketClient {
         guard let stateHandler = delegate?.stateHandler else { throw Error.stateHandlerNotSet }
         stateHandler(.ready)
         _ = session.webSocketTask(with: url)
+    }
 
+    func disconnect() {
+        delegate?.stateHandler?(.cancelled)
     }
 }
 
@@ -42,6 +45,15 @@ class URLSessionWebSocketClientTests: XCTestCase {
 
         expect(sut, toChangeToState: .ready) {
             try? sut.start()
+        }
+    }
+
+    func test_disconnect_cancelsConnection() {
+        let (sut, _) = makeSUT()
+        try? sut.start()
+
+        expect(sut, toChangeToState: .cancelled) {
+            sut.disconnect()
         }
     }
     // MARK: - Helpers
@@ -76,6 +88,6 @@ class URLSessionWebSocketClientTests: XCTestCase {
 
         wait(for: [exp], timeout: 1)
 
-        XCTAssertEqual(state, expected)
+        XCTAssertEqual(state, expected, file: file, line: line)
     }
 }
