@@ -19,6 +19,7 @@ class URLSessionWebSocketClient {
     public enum Error: Swift.Error, Equatable {
         case stateHandlerNotSet
         case sendError
+        case receiveError
     }
 
     init(session: URLSession, url: URL) {
@@ -43,6 +44,10 @@ class URLSessionWebSocketClient {
             completion(Error.sendError)
             return
         }
+    }
+
+    func receive(completion: @escaping (_ result: Result<Data, Error>) -> Void) {
+        completion(.failure(Error.receiveError))
     }
 }
 
@@ -82,6 +87,17 @@ class URLSessionWebSocketClientTests: XCTestCase {
         expect(sut, toCompleteSendWithError: .none) { }
     }
 
+    func test_receive_withErrorGivesError() {
+        let (sut, _) = makeSUT()
+        let request = makeRequest()
+
+        sut.delegate?.stateHandler = sendRequestOnReady(sut, request)
+
+        expect(sut, toReceiveWith: .failure(URLSessionWebSocketClient.Error.receiveError)) {
+            sut.disconnect()
+        }
+    }
+
     // MARK: - Helpers
 
     func makeSUT() -> (sut: URLSessionWebSocketClient, task: URLSession) {
@@ -91,6 +107,14 @@ class URLSessionWebSocketClientTests: XCTestCase {
         let delegate = URLSessionWSDelegate()
         sut.delegate = delegate
         return (sut, session)
+    }
+
+    private func sendRequestOnReady(_ sut: URLSessionWebSocketClient, _ request: String) -> (WebSocketDelegateState) -> Void {
+        return { [weak sut] in
+            if $0 == .ready {
+                sut?.send(message: request, completion: { _ in })
+            }
+        }
     }
 
     private func expect(_ sut: URLSessionWebSocketClient, toChangeToState expected: WebSocketDelegateState, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
@@ -152,7 +176,7 @@ class URLSessionWebSocketClientTests: XCTestCase {
         sut.receive { result in
             switch (result, expected) {
             case let (.failure(capturedError), .failure(expectedError)):
-                let capturedError = capturedError as? URLSessionWebSocketClient.Error
+                let capturedError = capturedError as URLSessionWebSocketClient.Error
                 let expectedError = expectedError as? URLSessionWebSocketClient.Error
                 XCTAssertEqual(capturedError, expectedError)
             case let(.success(capturedData), .success(expectedData)):
