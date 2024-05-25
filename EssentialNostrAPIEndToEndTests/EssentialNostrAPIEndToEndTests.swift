@@ -61,8 +61,9 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
 
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> RemoteEventLoader {
         let url = URL(string: "ws://127.0.0.1:8080")!
-        let client = NetworkConnectionWebSocketClient(url: url)
-        let delegate = Delegate()
+        let session = URLSession(configuration: .ephemeral)
+        let client = URLSessionWebSocketClient(session: session, url: url)
+        var delegate = URLSessionWSDelegate()
         delegate.stateHandler = { _ in }
         client.delegate = delegate
         let loader = RemoteEventLoader(client: client)
@@ -72,9 +73,5 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         try? client.start()
 
         return loader
-    }
-
-    class Delegate: WebSocketDelegate {
-        var stateHandler: ((WebSocketDelegateState) -> Void)?
     }
 }
