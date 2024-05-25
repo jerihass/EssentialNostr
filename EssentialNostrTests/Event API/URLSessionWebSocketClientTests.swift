@@ -16,6 +16,7 @@ class URLSessionWebSocketClient {
 
     public enum Error: Swift.Error, Equatable {
         case stateHandlerNotSet
+        case sendError
     }
 
     init(session: URLSession, url: URL) {
@@ -31,6 +32,10 @@ class URLSessionWebSocketClient {
 
     func disconnect() {
         delegate?.stateHandler?(.cancelled)
+    }
+
+    func send(message: String, completion: @escaping (Swift.Error) -> Void) {
+        completion(Error.sendError)
     }
 }
 
@@ -56,6 +61,15 @@ class URLSessionWebSocketClientTests: XCTestCase {
             sut.disconnect()
         }
     }
+
+    func test_send_withErrorGivesError() {
+        let (sut, _) = makeSUT()
+
+        expect(sut, toCompleteSendWithError: .sendError) {
+            sut.disconnect()
+        }
+    }
+
     // MARK: - Helpers
 
     func makeSUT() -> (sut: URLSessionWebSocketClient, task: URLSession) {
@@ -89,5 +103,38 @@ class URLSessionWebSocketClientTests: XCTestCase {
         wait(for: [exp], timeout: 1)
 
         XCTAssertEqual(state, expected, file: file, line: line)
+    }
+
+    func expect(_ sut: URLSessionWebSocketClient, toCompleteSendWithError expectedError: URLSessionWebSocketClient.Error?, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+        let request = makeRequest()
+        let exp = expectation(description: "Wait for send completion")
+        var error: URLSessionWebSocketClient.Error?
+        sut.delegate?.stateHandler = { _ in }
+
+        try? sut.start()
+
+        action()
+
+        sut.send(message: request) {
+            error = $0 as? URLSessionWebSocketClient.Error
+            exp.fulfill()
+        }
+        if expectedError == .none {
+            XCTExpectFailure {
+                wait(for: [exp], timeout: 1)
+            }
+        } else {
+            wait(for: [exp], timeout: 1)
+        }
+
+        XCTAssertEqual(error, expectedError)
+    }
+
+    private func makeRequest() -> String {
+        let filter = Filter(kinds: [1], since: .now)
+        let sub = "mySub"
+
+        let request = ClientMessage.Message.request(sub: sub, filters: [filter])
+        return ClientMessageMapper.mapMessage(request)
     }
 }
