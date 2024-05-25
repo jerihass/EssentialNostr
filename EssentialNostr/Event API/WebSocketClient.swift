@@ -5,10 +5,20 @@
 import Foundation
 import Network
 
+public enum WebSocketDelegateState {
+    case ready
+    case cancelled
+}
+
+public protocol WebSocketDelegate {
+    var stateHandler: ((_ state: WebSocketDelegateState) -> Void)? { get set }
+}
+
 public protocol WebSocketClient: AnyObject {
     typealias ReceiveResult = Result<Data, Error>
-
-    func start()
+    var delegate: WebSocketDelegate? { get set }
+    
+    func start() throws
     func disconnect()
 
     func send(message: String, completion: @escaping (Swift.Error) -> Void)
