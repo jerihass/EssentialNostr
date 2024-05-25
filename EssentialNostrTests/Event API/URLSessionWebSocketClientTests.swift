@@ -28,10 +28,11 @@ class URLSessionWebSocketClient {
     }
 
     func start() throws {
-        delegate?.state = .ready
         guard let stateHandler = delegate?.stateHandler else { throw Error.stateHandlerNotSet }
+        delegate?.state = .ready
         stateHandler(.ready)
         self.task = session.webSocketTask(with: url)
+        task?.resume()
     }
 
     func disconnect() {
@@ -44,10 +45,33 @@ class URLSessionWebSocketClient {
             completion(Error.sendError)
             return
         }
+        task?.send(.string(message)) {
+            if let error = $0 {
+                completion(error)
+            }
+        }
     }
 
-    func receive(completion: @escaping (_ result: Result<Data, Error>) -> Void) {
-        completion(.failure(Error.receiveError))
+    func receive(completion: @escaping (_ result: Result<Data, Swift.Error>) -> Void) {
+        guard delegate?.state == .ready else {
+            completion(.failure(Error.receiveError))
+            return
+        }
+        task?.receive { result in
+            switch result {
+            case let .failure(error):
+                completion(.failure(error))
+            case let .success(message):
+                switch message {
+                case let .data(data):
+                    completion(.success(data))
+                case let .string(string):
+                    completion(.success(string.data(using: .utf8)!))
+                @unknown default:
+                    break
+                }
+            }
+        }
     }
 }
 
@@ -98,10 +122,22 @@ class URLSessionWebSocketClientTests: XCTestCase {
         }
     }
 
+    func test_receive_noErrorGivesData() throws {
+        let (sut, _) = makeSUT()
+        let request = makeRequest()
+        let requestData = request.data(using: .utf8)!
+        sut.delegate?.stateHandler = { _ in }
+        try sut.start()
+
+        expect(sut, toReceiveWith: .success(requestData)) {
+            sut.send(message: request, completion: { _ in })
+        }
+    }
+
     // MARK: - Helpers
 
     func makeSUT() -> (sut: URLSessionWebSocketClient, task: URLSession) {
-        let url = URL(string: "wss://127.0.0.1/")!
+        let url = URL(string: "ws://127.0.0.1:8080")!
         let session = URLSession(configuration: .ephemeral)
         let sut = URLSessionWebSocketClient(session: session, url: url)
         let delegate = URLSessionWSDelegate()
@@ -176,13 +212,13 @@ class URLSessionWebSocketClientTests: XCTestCase {
         sut.receive { result in
             switch (result, expected) {
             case let (.failure(capturedError), .failure(expectedError)):
-                let capturedError = capturedError as URLSessionWebSocketClient.Error
+                let capturedError = capturedError as? URLSessionWebSocketClient.Error
                 let expectedError = expectedError as? URLSessionWebSocketClient.Error
-                XCTAssertEqual(capturedError, expectedError)
+                XCTAssertEqual(capturedError, expectedError, file: file, line: line)
             case let(.success(capturedData), .success(expectedData)):
                 XCTAssertEqual(capturedData, expectedData)
             default:
-                XCTFail("Expected \(expected), got \(result) instead.")
+                XCTFail("Expected \(expected), got \(result) instead.", file: file, line: line)
             }
             exp.fulfill()
         }
