@@ -160,6 +160,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     }
 
     private class PassthroughDelegate: WebSocketDelegate {
+        var state: EssentialNostr.WebSocketDelegateState = .cancelled
         var stateHandler: ((WebSocketDelegateState) -> Void)?
     }
 

@@ -11,6 +11,7 @@ public enum WebSocketDelegateState {
 }
 
 public protocol WebSocketDelegate {
+    var state: WebSocketDelegateState { get set }
     var stateHandler: ((_ state: WebSocketDelegateState) -> Void)? { get set }
 }
 

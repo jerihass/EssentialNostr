@@ -10,10 +10,10 @@ struct URLSessionWSDelegate: WebSocketDelegate {
     var stateHandler: ((EssentialNostr.WebSocketDelegateState) -> Void)?
 }
 
-class URLSessionWebSocketClient {
+class URLSessionWebSocketClient: WebSocketClient {
     let url: URL
     let session: URLSession
-    var delegate: URLSessionWSDelegate?
+    var delegate: WebSocketDelegate?
     var task: URLSessionWebSocketTask?
 
     public enum Error: Swift.Error, Equatable {
