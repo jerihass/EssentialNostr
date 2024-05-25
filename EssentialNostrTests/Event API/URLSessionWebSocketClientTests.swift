@@ -6,6 +6,7 @@ import XCTest
 import EssentialNostr
 
 struct URLSessionWSDelegate: WebSocketDelegate {
+    var state: WebSocketDelegateState = .cancelled
     var stateHandler: ((EssentialNostr.WebSocketDelegateState) -> Void)?
 }
 
@@ -13,6 +14,7 @@ class URLSessionWebSocketClient {
     let url: URL
     let session: URLSession
     var delegate: URLSessionWSDelegate?
+    var task: URLSessionWebSocketTask?
 
     public enum Error: Swift.Error, Equatable {
         case stateHandlerNotSet
@@ -25,17 +27,22 @@ class URLSessionWebSocketClient {
     }
 
     func start() throws {
+        delegate?.state = .ready
         guard let stateHandler = delegate?.stateHandler else { throw Error.stateHandlerNotSet }
         stateHandler(.ready)
-        _ = session.webSocketTask(with: url)
+        self.task = session.webSocketTask(with: url)
     }
 
     func disconnect() {
+        delegate?.state = .cancelled
         delegate?.stateHandler?(.cancelled)
     }
 
     func send(message: String, completion: @escaping (Swift.Error) -> Void) {
-        completion(Error.sendError)
+        guard delegate?.state == .ready else {
+            completion(Error.sendError)
+            return
+        }
     }
 }
 
@@ -68,6 +75,11 @@ class URLSessionWebSocketClientTests: XCTestCase {
         expect(sut, toCompleteSendWithError: .sendError) {
             sut.disconnect()
         }
+    }
+
+    func test_send_noErrorGivesNoError() {
+        let (sut, _) = makeSUT()
+        expect(sut, toCompleteSendWithError: .none) { }
     }
 
     // MARK: - Helpers
@@ -127,7 +139,31 @@ class URLSessionWebSocketClientTests: XCTestCase {
             wait(for: [exp], timeout: 1)
         }
 
-        XCTAssertEqual(error, expectedError)
+        XCTAssertEqual(error, expectedError, file: file, line: line)
+    }
+
+    private func expect(_ sut: URLSessionWebSocketClient, toReceiveWith expected:  Result<Data, Error>, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+        let exp = expectation(description: "Wait for receive error")
+
+        try? sut.start()
+
+        action()
+
+        sut.receive { result in
+            switch (result, expected) {
+            case let (.failure(capturedError), .failure(expectedError)):
+                let capturedError = capturedError as? URLSessionWebSocketClient.Error
+                let expectedError = expectedError as? URLSessionWebSocketClient.Error
+                XCTAssertEqual(capturedError, expectedError)
+            case let(.success(capturedData), .success(expectedData)):
+                XCTAssertEqual(capturedData, expectedData)
+            default:
+                XCTFail("Expected \(expected), got \(result) instead.")
+            }
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
     }
 
     private func makeRequest() -> String {
