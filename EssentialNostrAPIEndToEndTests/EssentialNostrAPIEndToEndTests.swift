@@ -31,6 +31,29 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         }
     }
 
+    func test_endToEndTestServer_retrievesTwoExpectedEvents() throws {
+        let loader = makeSUT()
+
+        loader.request("EVENT_REQUEST_TWO")
+        var receivedResult = [LoadEventResult]()
+
+        let exp = expectation(description: "Wait for load completion")
+        loader.load { result in
+            receivedResult.append(result)
+            if ((try? result.get()) != nil) {
+                loader.load {
+                    receivedResult.append($0)
+                    exp.fulfill()
+                }
+            }
+        }
+
+        wait(for: [exp], timeout: 3.0)
+
+        XCTAssertEqual(receivedResult.count, 2)
+        XCTAssertEqual(receivedResult.compactMap { try? $0.get().id }, ["eventID", "eventID"])
+    }
+
     func test_endToEndTestServer_badEventJSONGivesErrorReply() throws {
         let loader = makeSUT()
         let event = Event(id: "bdID", pubkey: "npub1el277q4kesp8vhs7rq6qkwnhpxfp345u7tnuxykwr67d9wg0wvyslam5n0", created_at: .now, kind: 1, tags: [], content: "Test", sig: "badsig")
