@@ -60,7 +60,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
     // MARK: - Helpers
 
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> RemoteEventLoader {
-        let url = URL(string: "wss://127.0.0.1:4433")!
+        let url = URL(string: "ws://127.0.0.1:8080")!
         let client = NetworkConnectionWebSocketClient(url: url)
         client.stateHandler = { _ in }
         let loader = RemoteEventLoader(client: client)
