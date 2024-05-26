@@ -32,7 +32,7 @@ final public class RemoteEventLoader: EventLoader {
 
     private var events = [Event]()
     func receive(_ completion: @escaping (LoadEventResult) -> Void) {
-        client.receive { [weak self] result in
+        client.receive { [weak self] result, isComplete in
             guard self != nil else { return }
             switch result {
             case .success(let data):
@@ -49,7 +49,7 @@ final public class RemoteEventLoader: EventLoader {
                             completion(.failure(error))
                         }
                     }
-                }
+                } else { completion(.success(self?.events ?? []))}
             case .failure:
                 completion(.failure(Error.connectivity))
             }

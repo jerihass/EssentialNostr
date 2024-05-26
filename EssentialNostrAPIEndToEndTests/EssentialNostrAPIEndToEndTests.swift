@@ -22,8 +22,8 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         wait(for: [exp], timeout: 3.0)
 
         switch receivedResult {
-        case let .success(event)?:
-            XCTAssertEqual(event.id, "eventID")
+        case let .success(events)?:
+            XCTAssertEqual(events.first?.id, "eventID")
         case let .failure(error)?:
             XCTFail("Expected at successful event result, got \(error) instead.")
         default:
@@ -40,18 +40,35 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         let exp = expectation(description: "Wait for load completion")
         loader.load { result in
             receivedResult.append(result)
-            if ((try? result.get()) != nil) {
-                loader.load {
-                    receivedResult.append($0)
-                    exp.fulfill()
-                }
-            }
+            exp.fulfill()
         }
 
         wait(for: [exp], timeout: 3.0)
 
-        XCTAssertEqual(receivedResult.count, 2)
-        XCTAssertEqual(receivedResult.compactMap { try? $0.get().id }, ["eventID", "eventID"])
+        let events = try? receivedResult.first?.get()
+        let ids = events?.compactMap { $0.id }
+        XCTAssertEqual(receivedResult.count, 1)
+        XCTAssertEqual(ids, ["eventID", "eventID"])
+    }
+
+    func test_endToEndTestServer_sendsEvents() throws {
+        let loader = makeSUT()
+
+        loader.request("UNTERMINATED_REQUEST")
+        var receivedResult = [LoadEventResult]()
+
+        let exp = expectation(description: "Wait for load completion")
+        loader.load { result in
+            receivedResult.append(result)
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 3.0)
+
+        let events = try? receivedResult.first?.get()
+        let ids = events?.compactMap { $0.id }
+        XCTAssertEqual(receivedResult.count, 1)
+        XCTAssertEqual(ids, ["eventID"])
     }
 
     func test_endToEndTestServer_badEventJSONGivesErrorReply() throws {

@@ -18,5 +18,5 @@ public protocol WebSocketClient: AnyObject {
     func disconnect()
 
     func send(message: String, completion: @escaping (Swift.Error) -> Void)
-    func receive(completion: @escaping (_ result: ReceiveResult) -> Void)
+    func receive(completion: @escaping (_ result: ReceiveResult, _ isComplete: Bool) -> Void)
 }

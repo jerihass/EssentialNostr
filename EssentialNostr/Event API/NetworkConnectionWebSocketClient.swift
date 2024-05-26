@@ -33,6 +33,7 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
     private let connection: NWConnection
 
     public enum Error: Swift.Error, Equatable {
+        case invalidResponse
         case stateHandlerNotSet
         case networkError(NWError)
     }
@@ -64,13 +65,16 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
         send(data, completion: completion)
     }
 
-    public func receive(completion: @escaping (ReceiveResult) -> Void) {
+    public func receive(completion: @escaping (ReceiveResult, Bool) -> Void) {
         connection.receiveMessage { content, contentContext, isComplete, error in
             if let content = content, isComplete {
-                completion(.success(content))
+                completion(.success(content), isComplete)
+            }
+            if content == nil, isComplete {
+                completion(.success(.none), isComplete)
             }
             if let error = error {
-               completion(.failure(Error.networkError(error)))
+                completion(.failure(Error.networkError(error)), isComplete)
             }
         }
     }

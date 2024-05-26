@@ -227,19 +227,19 @@ class RemoteEventLoaderTests: XCTestCase {
 
     class WebSocketClientSpy: WebSocketClient {
         var sendMessages = [String]()
-        var loadCompletions = [(Result<Data?, Error>) -> Void]()
+        var loadCompletions = [(Result<Data?, Error>, Bool) -> Void]()
 
         func complete(with error: Error, at index: Int = 0) {
-            loadCompletions[index](.failure(error))
+            loadCompletions[index](.failure(error), true)
         }
 
         func complete(with message: Data?, at index: Int = 0) {
-            loadCompletions[index](.success(message))
+            loadCompletions[index](.success(message), true)
         }
 
         func complete(with messages: [Data?], startingAt index: Int = 0) {
             for (i, message) in messages.enumerated() {
-                loadCompletions[index + i](.success(message))
+                loadCompletions[index + i](.success(message), true)
             }
         }
 
@@ -247,7 +247,7 @@ class RemoteEventLoaderTests: XCTestCase {
             sendMessages.append(message)
         }
 
-        func receive(completion: @escaping (Result<Data?, Error>) -> Void) {
+        func receive(completion: @escaping (Result<Data?, Error>, Bool) -> Void) {
             loadCompletions.append(completion)
         }
 
