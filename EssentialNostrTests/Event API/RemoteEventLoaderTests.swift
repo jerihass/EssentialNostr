@@ -106,6 +106,22 @@ class RemoteEventLoaderTests: XCTestCase {
         }
     }
 
+    func test_load_deliversEventsOnValidEventUntilEOSE() {
+        let (sut, client) = makeSUT()
+        let date = Date.distantPast
+
+        let event = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
+
+        expect(sut, toLoadWith: .success(event.model)) {
+            client.complete(with: event.data)
+        }
+
+        expect(sut, toLoadWith: failure(.eose(sub: "sub1"))) {
+            let eoseMessage = Data("[\"EOSE\",\"sub1\"]".utf8)
+            client.complete(with: eoseMessage, at: 1)
+        }
+    }
+
     func test_loadRepeatedly_deliversEventsOnValidEvents() {
         let (sut, client) = makeSUT()
         let date = Date.distantPast
@@ -190,13 +206,13 @@ class RemoteEventLoaderTests: XCTestCase {
 
     class WebSocketClientSpy: WebSocketClient {
         var sendMessages = [String]()
-        var loadCompletions = [(Result<Data, Error>) -> Void]()
+        var loadCompletions = [(Result<Data?, Error>) -> Void]()
 
         func complete(with error: Error, at index: Int = 0) {
             loadCompletions[index](.failure(error))
         }
 
-        func complete(with message: Data, at index: Int = 0) {
+        func complete(with message: Data?, at index: Int = 0) {
             loadCompletions[index](.success(message))
         }
 
@@ -204,7 +220,7 @@ class RemoteEventLoaderTests: XCTestCase {
             sendMessages.append(message)
         }
 
-        func receive(completion: @escaping (Result<Data, Error>) -> Void) {
+        func receive(completion: @escaping (Result<Data?, Error>) -> Void) {
             loadCompletions.append(completion)
         }
 

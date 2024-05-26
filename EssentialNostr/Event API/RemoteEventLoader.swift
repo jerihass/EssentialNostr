@@ -31,7 +31,9 @@ final public class RemoteEventLoader: EventLoader {
             guard self != nil else { return }
             switch result {
             case .success(let data):
-                completion(RelayMessageMapper.mapData(data))
+                if let data = data {
+                    completion(RelayMessageMapper.mapData(data))
+                }
             case .failure:
                 completion(.failure(Error.connectivity))
             }
