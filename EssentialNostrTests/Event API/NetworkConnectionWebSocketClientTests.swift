@@ -65,7 +65,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> WebSocketClient {
-        let url = URL(string: "wss://127.0.0.1:8080")!
+        let url = URL(string: "wss://127.0.0.1:4433")!
         let sut = NetworkConnectionWebSocketClient(url: url)
         let delegate = PassthroughDelegate()
         sut.delegate = delegate

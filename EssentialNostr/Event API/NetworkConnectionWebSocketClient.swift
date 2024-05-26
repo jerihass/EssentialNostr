@@ -40,7 +40,9 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
 
     public init(url: URL) {
         let endpoint = NWEndpoint.url(url)
-        let parameters = NWParameters(tls: nil )
+        let tlsOptions = NWProtocolTLS.Options()
+        let tcpOptions = NWProtocolTCP.Options()
+        let parameters = NWParameters(tls: tlsOptions, tcp: tcpOptions)
         let options = NWProtocolWebSocket.Options()
         parameters.defaultProtocolStack.applicationProtocols.insert(options, at: 0)
         let connection = NWConnection(to: endpoint, using: parameters)
