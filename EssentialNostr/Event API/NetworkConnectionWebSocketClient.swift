@@ -5,7 +5,7 @@
 import Foundation
 import Network
 
-class NWConnectionWebSocketDelegate {
+class NWConnectionWebSocketStateMapper {
     static func map(_ handler: @escaping (WebSocketDelegateState) -> Void) -> ((NWConnection.State) -> Void) {
         { state in
             switch state {
@@ -50,7 +50,7 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
 
     public func start() throws {
         guard let stateHandler = stateHandler else { throw Error.stateHandlerNotSet }
-        connection.stateUpdateHandler = NWConnectionWebSocketDelegate.map(stateHandler)
+        connection.stateUpdateHandler = NWConnectionWebSocketStateMapper.map(stateHandler)
         connection.start(queue: .main)
     }
 
