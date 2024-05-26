@@ -10,14 +10,10 @@ public enum WebSocketDelegateState {
     case cancelled
 }
 
-public protocol WebSocketDelegate {
-    var stateHandler: ((_ state: WebSocketDelegateState) -> Void)? { get set }
-}
-
 public protocol WebSocketClient: AnyObject {
     typealias ReceiveResult = Result<Data, Error>
-    var delegate: WebSocketDelegate? { get set }
-    
+    var stateHandler: ((_ state: WebSocketDelegateState) -> Void)? { get set }
+
     func start() throws
     func disconnect()
 

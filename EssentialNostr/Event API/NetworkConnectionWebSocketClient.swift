@@ -29,8 +29,7 @@ class NWConnectionWebSocketDelegate {
 }
 
 public class NetworkConnectionWebSocketClient: WebSocketClient {
-    public var delegate: WebSocketDelegate?
-
+    public var stateHandler: ((_ state: WebSocketDelegateState) -> Void)?
     private let connection: NWConnection
 
     public enum Error: Swift.Error, Equatable {
@@ -50,7 +49,7 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
     }
 
     public func start() throws {
-        guard let stateHandler = delegate?.stateHandler else { throw Error.stateHandlerNotSet }
+        guard let stateHandler = stateHandler else { throw Error.stateHandlerNotSet }
         connection.stateUpdateHandler = NWConnectionWebSocketDelegate.map(stateHandler)
         connection.start(queue: .main)
     }
