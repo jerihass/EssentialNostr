@@ -46,7 +46,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         let sut = makeSUT()
         let request = makeRequest()
 
-        sut.delegate?.stateHandler = sendRequestOnReady(sut, request)
+        sut.stateHandler = sendRequestOnReady(sut, request)
 
         expect(sut, toReceiveWith: failure(.networkError(.posix(.ECANCELED)))) {
             sut.disconnect()
@@ -58,7 +58,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         let request = makeRequest()
         let requestData = request.data(using: .utf8)!
 
-        sut.delegate?.stateHandler = sendRequestOnReady(sut, request)
+        sut.stateHandler = sendRequestOnReady(sut, request)
 
         expect(sut, toReceiveWith: .success(requestData)) { }
     }
@@ -67,10 +67,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> WebSocketClient {
         let url = URL(string: "wss://127.0.0.1:4433")!
         let sut = NetworkConnectionWebSocketClient(url: url)
-        let delegate = PassthroughDelegate()
-        sut.delegate = delegate
         trackForMemoryLeaks(sut, file: file, line: line)
-        trackForMemoryLeaks(delegate, file: file, line: line)
         return sut
     }
 
@@ -79,7 +76,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         let exp = expectation(description: "Wait for ready")
 
-        sut.delegate?.stateHandler = {
+        sut.stateHandler = {
             if .ready == $0 {
                 state = .ready
                 exp.fulfill()
@@ -126,7 +123,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         let request = makeRequest()
         let exp = expectation(description: "Wait for send completion")
         var error: NetworkConnectionWebSocketClient.Error?
-        sut.delegate?.stateHandler = { _ in }
+        sut.stateHandler = { _ in }
 
         try? sut.start()
 
@@ -157,10 +154,6 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
                 sut?.send(message: request, completion: { _ in })
             }
         }
-    }
-
-    private class PassthroughDelegate: WebSocketDelegate {
-        var stateHandler: ((WebSocketDelegateState) -> Void)?
     }
 
     private func makeRequest() -> String {
