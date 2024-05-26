@@ -63,6 +63,40 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         expect(sut, toReceiveWith: .success(requestData)) { }
     }
 
+    func test_receiveTwice_canReceiveTwice() {
+        let sut = makeSUT()
+        let request = makeRequest()
+        let requestData = request.data(using: .utf8)!
+        let exp1 = expectation(description: "first result")
+        let exp2 = expectation(description: "second result")
+        
+
+        var results = [Data]()
+        sut.stateHandler = { _ in }
+
+        try? sut.start()
+
+        sut.send(message: request) { _ in }
+        sut.receive { result in
+            if let result = try? result.get() {
+                results.append(result)
+            }
+            exp1.fulfill()
+        }
+
+        sut.send(message: request) { _ in }
+        sut.receive { result in
+            if let result = try? result.get() {
+                results.append(result)
+            }
+            exp2.fulfill()
+        }
+
+        waitForExpectations(timeout: 2)
+
+        XCTAssertEqual(results, [requestData, requestData])
+    }
+
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> WebSocketClient {
         let url = URL(string: "ws://127.0.0.1:8080")!
