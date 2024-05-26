@@ -18,8 +18,14 @@ class LocalEventLoader {
 
 class EventStore {
     var deleteCachedEventsCallCount = 0
+    var insertCallCount = 0
+    
     func deleteCachedFeed() {
         deleteCachedEventsCallCount += 1
+    }
+
+    func completeDeletion(with error: Error, at index: Int = 0) {
+
     }
 }
 
@@ -34,6 +40,17 @@ class EventCachingTests: XCTestCase {
         let events = [uniqueEvent(), uniqueEvent()]
         sut.save(events)
         XCTAssertEqual(store.deleteCachedEventsCallCount, 1)
+    }
+
+    func test_save_doesNotRequestCacheInsertionOnDeletionError() {
+        let (sut, store) = makeSUT()
+        let events = [uniqueEvent(), uniqueEvent()]
+        let deletionError = NSError(domain: "domain", code: 1)
+
+        sut.save(events)
+        store.completeDeletion(with: deletionError)
+
+        XCTAssertEqual(store.insertCallCount, 0)
     }
 
     // MARK: - Helpers
