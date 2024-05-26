@@ -8,7 +8,7 @@ final class RelayMessageMapper {
 
     internal static func mapData(_ data: Data) -> RemoteEventLoader.Result {
         do {
-            return .success(try mapEvent(data))
+            return .success([try mapEvent(data)])
         } catch {
             return .failure(error as? RemoteEventLoader.Error ?? .unknown)
         }
