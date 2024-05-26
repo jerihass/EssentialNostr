@@ -32,7 +32,12 @@ final public class RemoteEventLoader: EventLoader {
             switch result {
             case .success(let data):
                 if let data = data {
-                    completion(RelayMessageMapper.mapData(data))
+                    do {
+                    let event = try RelayMessageMapper.mapData(data)
+                        completion(.success([event]))
+                    } catch {
+                        completion(.failure(error))
+                    }
                 }
             case .failure:
                 completion(.failure(Error.connectivity))
