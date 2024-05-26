@@ -27,6 +27,7 @@ final public class RemoteEventLoader: EventLoader {
     }
 
     public func load(_ completion: @escaping (LoadEventResult) -> Void) {
+        var events = [Event]()
         client.receive { [weak self] result in
             guard self != nil else { return }
             switch result {
@@ -34,9 +35,14 @@ final public class RemoteEventLoader: EventLoader {
                 if let data = data {
                     do {
                     let event = try RelayMessageMapper.mapData(data)
+                        events.append(event)
                         completion(.success([event]))
                     } catch {
-                        completion(.failure(error))
+                        if case Error.eose = error {
+                            completion(.success(events))
+                        } else {
+                            completion(.failure(error))
+                        }
                     }
                 }
             case .failure:

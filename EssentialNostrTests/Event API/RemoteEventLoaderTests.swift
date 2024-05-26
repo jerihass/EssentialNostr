@@ -68,10 +68,10 @@ class RemoteEventLoaderTests: XCTestCase {
         }
     }
 
-    func test_load_deliversEOSEErrorOnEndOfStoredEvents() {
+    func test_load_deliversNoEventsOnEndOfStoredEvents() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toLoadWith: failure(.eose(sub: "sub1"))) {
+        expect(sut, toLoadWith: .success([])) {
             let eoseMessage = Data("[\"EOSE\",\"sub1\"]".utf8)
             client.complete(with: eoseMessage)
         }
@@ -116,7 +116,7 @@ class RemoteEventLoaderTests: XCTestCase {
             client.complete(with: event.data)
         }
 
-        expect(sut, toLoadWith: failure(.eose(sub: "sub1"))) {
+        expect(sut, toLoadWith: .success([])) {
             let eoseMessage = Data("[\"EOSE\",\"sub1\"]".utf8)
             client.complete(with: eoseMessage, at: 1)
         }
