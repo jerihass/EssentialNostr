@@ -62,9 +62,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> RemoteEventLoader {
         let url = URL(string: "wss://127.0.0.1:4433")!
         let client = NetworkConnectionWebSocketClient(url: url)
-        let delegate = Delegate()
-        delegate.stateHandler = { _ in }
-        client.delegate = delegate
+        client.stateHandler = { _ in }
         let loader = RemoteEventLoader(client: client)
         trackForMemoryLeaks(client, file: file, line: line)
         trackForMemoryLeaks(loader, file: file, line: line)
@@ -72,9 +70,5 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         try? client.start()
 
         return loader
-    }
-
-    class Delegate: WebSocketDelegate {
-        var stateHandler: ((WebSocketDelegateState) -> Void)?
     }
 }
