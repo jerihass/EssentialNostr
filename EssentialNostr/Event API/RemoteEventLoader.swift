@@ -44,13 +44,12 @@ final public class RemoteEventLoader: EventLoader {
         }
     }
 
-    fileprivate func handleError(_ error: Swift.Error, _ completion: (LoadEventResult) -> Void) {
+    fileprivate func handleError(_ error: Swift.Error) -> LoadEventResult {
         if case Error.eose = error {
-            completion(.success(self.events ))
+            return .success(self.events )
         } else {
-            completion(.failure(error))
+            return .failure(error)
         }
-        self.resetEvents()
     }
     
     fileprivate func handleData(_ data: Data?, _ completion: @escaping (LoadEventResult) -> Void) {
@@ -60,7 +59,8 @@ final public class RemoteEventLoader: EventLoader {
                 self.events.append(event)
                 self.receive(completion)
             } catch {
-                handleError(error, completion)
+                completion(handleError(error))
+                self.resetEvents()
             }
         } else {
             completion(.success(self.events ))
