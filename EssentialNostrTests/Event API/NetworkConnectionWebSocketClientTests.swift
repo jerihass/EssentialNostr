@@ -77,7 +77,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         try? sut.start()
 
         sut.send(message: request) { _ in }
-        sut.receive { result, _ in
+        sut.receive { result in
             if let result = try? result.get() {
                 results.append(result)
             }
@@ -85,7 +85,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         }
 
         sut.send(message: request) { _ in }
-        sut.receive { result, _ in
+        sut.receive { result in
             if let result = try? result.get() {
                 results.append(result)
             }
@@ -136,7 +136,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
 
         action()
 
-        sut.receive { result, _ in
+        sut.receive { result in
             switch (result, expected) {
             case let (.failure(capturedError), .failure(expectedError)):
                 let capturedError = capturedError as? NetworkConnectionWebSocketClient.Error

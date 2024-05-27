@@ -6,11 +6,11 @@ import Foundation
 
 final class RelayMessageMapper {
 
-    internal static func mapData(_ data: Data) throws -> Event {
+    internal static func mapData(_ data: Data) -> RemoteEventLoader.Result {
         do {
-            return try mapEvent(data)
+            return .success(try mapEvent(data))
         } catch {
-            throw error
+            return .failure(error as? RemoteEventLoader.Error ?? .unknown)
         }
     }
 

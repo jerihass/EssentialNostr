@@ -3,7 +3,7 @@
 //
 
 import Foundation
-public typealias LoadEventResult = Result<[Event], Error>
+public typealias LoadEventResult = Result<Event, Error>
 
 public protocol EventLoader {
     func request(_ message: String)

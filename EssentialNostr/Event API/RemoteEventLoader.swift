@@ -27,49 +27,16 @@ final public class RemoteEventLoader: EventLoader {
     }
 
     public func load(_ completion: @escaping (LoadEventResult) -> Void) {
-        receive(completion)
-    }
-
-    private var events = [Event]()
-    
-    func receive(_ completion: @escaping (LoadEventResult) -> Void) {
-        client.receive { [weak self] result, isComplete in
+        client.receive { [weak self] result in
             guard self != nil else { return }
             switch result {
             case .success(let data):
-                self?.handleData(data, completion)
+                if let data = data {
+                    completion(RelayMessageMapper.mapData(data))
+                }
             case .failure:
                 completion(.failure(Error.connectivity))
             }
         }
-    }
-    
-    fileprivate func handleData(_ data: Data?, _ completion: @escaping (LoadEventResult) -> Void) {
-        if let data = data {
-            var event: Event?
-            do {
-                event = try RelayMessageMapper.mapData(data)
-            } catch {
-                if case Error.eose = error {
-                    completion(.success(self.events))
-                } else if self.events.count > 0 {
-                    completion(.success(self.events))
-                } else {
-                    completion(.failure(error))
-                }
-            }
-            if let event = event {
-                self.events.append(event)
-                self.receive(completion)
-            } else {
-                self.resetEvents()
-            }
-        } else {
-            completion(.success(self.events))
-        }
-    }
-
-    private func resetEvents() {
-        events = []
     }
 }

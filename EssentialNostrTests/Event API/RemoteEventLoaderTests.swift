@@ -68,10 +68,10 @@ class RemoteEventLoaderTests: XCTestCase {
         }
     }
 
-    func test_load_deliversNoEventsOnEndOfStoredEvents() {
+    func test_load_deliversEOSEErrorOnEndOfStoredEvents() {
         let (sut, client) = makeSUT()
 
-        expect(sut, toLoadWith: .success([])) {
+        expect(sut, toLoadWith: failure(.eose(sub: "sub1"))) {
             let eoseMessage = Data("[\"EOSE\",\"sub1\"]".utf8)
             client.complete(with: eoseMessage)
         }
@@ -101,9 +101,8 @@ class RemoteEventLoaderTests: XCTestCase {
 
         let event = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
 
-        expect(sut, toLoadWith: .success([event.model])) {
+        expect(sut, toLoadWith: .success(event.model)) {
             client.complete(with: event.data)
-            client.complete(with: eoseData(), at: 1)
         }
     }
 
@@ -113,14 +112,13 @@ class RemoteEventLoaderTests: XCTestCase {
 
         let event = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
 
-        expect(sut, toLoadWith: .success([event.model])) {
+        expect(sut, toLoadWith: .success(event.model)) {
             client.complete(with: event.data)
-            client.complete(with: eoseData(), at: 1)
         }
 
-        expect(sut, toLoadWith: .success([])) {
+        expect(sut, toLoadWith: failure(.eose(sub: "sub1"))) {
             let eoseMessage = Data("[\"EOSE\",\"sub1\"]".utf8)
-            client.complete(with: eoseMessage, at: 2)
+            client.complete(with: eoseMessage, at: 1)
         }
     }
 
@@ -132,46 +130,12 @@ class RemoteEventLoaderTests: XCTestCase {
 
         let event2 = makeEvent(id: "id2", pubkey: "pubkey2", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content2", sig: "sig2")
 
-        expect(sut, toLoadWith: .success([event.model])) {
+        expect(sut, toLoadWith: .success(event.model)) {
             client.complete(with: event.data)
-            client.complete(with: eoseData(), at: 1)
         }
 
-        expect(sut, toLoadWith: .success([event2.model])) {
-            client.complete(with: event2.data, at: 2)
-            client.complete(with: eoseData(), at: 3)
-        }
-    }
-
-    func test_loadRepeatedly_deliversEventsUntilEOSE() {
-        let (sut, client) = makeSUT()
-        let date = Date.distantPast
-
-        let event = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
-
-        let event2 = makeEvent(id: "id2", pubkey: "pubkey2", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content2", sig: "sig2")
-        let eoseMessage = eoseData()
-
-        expect(sut, toLoadWith: .success([event.model, event2.model])) {
-            client.complete(with: [event.data, event2.data, eoseMessage])
-        }
-    }
-
-    func test_load_deliversEventsAfterEOSE() {
-        let (sut, client) = makeSUT()
-        let date = Date.distantPast
-
-        let event = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
-
-        let event2 = makeEvent(id: "id2", pubkey: "pubkey2", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content2", sig: "sig2")
-        let eoseMessage = eoseData()
-
-        expect(sut, toLoadWith: .success([event.model, event2.model])) {
-            client.complete(with: [event.data, event2.data, eoseMessage])
-        }
-
-        expect(sut, toLoadWith: .success([event.model, event2.model])) {
-            client.complete(with: [event.data, event2.data, eoseMessage], startingAt: 3)
+        expect(sut, toLoadWith: .success(event2.model)) {
+            client.complete(with: event2.data, at: 1)
         }
     }
 
@@ -189,6 +153,7 @@ class RemoteEventLoaderTests: XCTestCase {
 
         client.complete(with: NSError())
 
+
         XCTAssertTrue(capturedResults.isEmpty)
     }
 
@@ -197,13 +162,9 @@ class RemoteEventLoaderTests: XCTestCase {
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteEventLoader, client: WebSocketClientSpy) {
         let client = WebSocketClientSpy()
         let sut = RemoteEventLoader(client: client)
-        trackForMemoryLeaks(sut, file: file, line: line)
+        trackForMemoryLeaks(sut)
         trackForMemoryLeaks(client, file: file, line: line)
         return (sut, client)
-    }
-
-    private func eoseData() -> Data {
-        Data("[\"EOSE\",\"sub1\"]".utf8)
     }
 
     private func failure(_ error: RemoteEventLoader.Error) -> RemoteEventLoader.Result {
@@ -245,27 +206,21 @@ class RemoteEventLoaderTests: XCTestCase {
 
     class WebSocketClientSpy: WebSocketClient {
         var sendMessages = [String]()
-        var loadCompletions = [(Result<Data?, Error>, Bool) -> Void]()
+        var loadCompletions = [(Result<Data?, Error>) -> Void]()
 
         func complete(with error: Error, at index: Int = 0) {
-            loadCompletions[index](.failure(error), true)
+            loadCompletions[index](.failure(error))
         }
 
         func complete(with message: Data?, at index: Int = 0) {
-            loadCompletions[index](.success(message), true)
-        }
-
-        func complete(with messages: [Data?], startingAt index: Int = 0) {
-            for (i, message) in messages.enumerated() {
-                loadCompletions[index + i](.success(message), true)
-            }
+            loadCompletions[index](.success(message))
         }
 
         func send(message: String, completion: @escaping (Error) -> Void) {
             sendMessages.append(message)
         }
 
-        func receive(completion: @escaping (Result<Data?, Error>, Bool) -> Void) {
+        func receive(completion: @escaping (Result<Data?, Error>) -> Void) {
             loadCompletions.append(completion)
         }
 
