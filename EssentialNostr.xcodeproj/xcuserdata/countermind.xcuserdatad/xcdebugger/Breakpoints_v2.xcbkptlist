@@ -14,8 +14,8 @@
             filePath = "EssentialNostrTests/Event API/RemoteEventLoaderTests.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "228"
-            endingLineNumber = "228"
+            startingLineNumber = "246"
+            endingLineNumber = "246"
             landmarkName = "WebSocketClientSpy"
             landmarkType = "3">
             <Locations>

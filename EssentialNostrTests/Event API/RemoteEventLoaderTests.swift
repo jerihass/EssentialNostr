@@ -157,6 +157,24 @@ class RemoteEventLoaderTests: XCTestCase {
         }
     }
 
+    func test_load_deliversEventsAfterEOSE() {
+        let (sut, client) = makeSUT()
+        let date = Date.distantPast
+
+        let event = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
+
+        let event2 = makeEvent(id: "id2", pubkey: "pubkey2", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content2", sig: "sig2")
+        let eoseMessage = eoseData()
+
+        expect(sut, toLoadWith: .success([event.model, event2.model])) {
+            client.complete(with: [event.data, event2.data, eoseMessage])
+        }
+
+        expect(sut, toLoadWith: .success([event.model, event2.model])) {
+            client.complete(with: [event.data, event2.data, eoseMessage], startingAt: 3)
+        }
+    }
+
     func test_load_doesNotDeliverResultsAfterLoaderDeallocated() {
         let client = WebSocketClientSpy()
         var sut:RemoteEventLoader? = RemoteEventLoader(client: client)
