@@ -31,24 +31,6 @@ final public class RemoteEventLoader: EventLoader {
     }
 
     private var events = [Event]()
-    fileprivate func handleData(_ data: Data?, _ completion: @escaping (LoadEventResult) -> Void) {
-        if let data = data {
-            do {
-                let event = try RelayMessageMapper.mapData(data)
-                self.events.append(event)
-                self.receive(completion)
-            } catch {
-                if case Error.eose = error {
-                    completion(.success(self.events ))
-                } else {
-                    completion(.failure(error))
-                }
-                self.resetEvents()
-            }
-        } else {
-            completion(.success(self.events ))
-        }
-    }
     
     func receive(_ completion: @escaping (LoadEventResult) -> Void) {
         client.receive { [weak self] result, isComplete in
@@ -59,6 +41,29 @@ final public class RemoteEventLoader: EventLoader {
             case .failure:
                 completion(.failure(Error.connectivity))
             }
+        }
+    }
+
+    fileprivate func handleError(_ error: Swift.Error, _ completion: (LoadEventResult) -> Void) {
+        if case Error.eose = error {
+            completion(.success(self.events ))
+        } else {
+            completion(.failure(error))
+        }
+        self.resetEvents()
+    }
+    
+    fileprivate func handleData(_ data: Data?, _ completion: @escaping (LoadEventResult) -> Void) {
+        if let data = data {
+            do {
+                let event = try RelayMessageMapper.mapData(data)
+                self.events.append(event)
+                self.receive(completion)
+            } catch {
+                handleError(error, completion)
+            }
+        } else {
+            completion(.success(self.events ))
         }
     }
 
