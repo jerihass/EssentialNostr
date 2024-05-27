@@ -54,16 +54,20 @@ final public class RemoteEventLoader: EventLoader {
     
     fileprivate func handleData(_ data: Data?, _ completion: @escaping (LoadEventResult) -> Void) {
         if let data = data {
+            var event: Event?
             do {
-                let event = try RelayMessageMapper.mapData(data)
-                self.events.append(event)
-                self.receive(completion)
+                event = try RelayMessageMapper.mapData(data)
             } catch {
                 completion(handleError(error))
+            }
+            if let event = event {
+                self.events.append(event)
+                self.receive(completion)
+            } else {
                 self.resetEvents()
             }
         } else {
-            completion(.success(self.events ))
+            completion(.success(self.events))
         }
     }
 
