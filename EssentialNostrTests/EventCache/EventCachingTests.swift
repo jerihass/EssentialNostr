@@ -6,16 +6,16 @@ import XCTest
 import EssentialNostr
 
 class EventCachingTests: XCTestCase {
-    func test_init_doesNoteDeleteCacheWhenCreated() {
+    func test_init_doesNoteMessageCacheWhenCreated() {
         let (_, store) = makeSUT()
-        XCTAssertEqual(store.deleteCachedEventsCallCount, 0)
+        XCTAssertEqual(store.receivedMessages, [])
     }
 
     func test_save_requestsCacheDeletion() {
         let (sut, store) = makeSUT()
         let events = [uniqueEvent(), uniqueEvent()]
         sut.save(events)
-        XCTAssertEqual(store.deleteCachedEventsCallCount, 1)
+        XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents])
     }
 
     func test_save_doesNotRequestCacheInsertionOnDeletionError() {
@@ -26,7 +26,7 @@ class EventCachingTests: XCTestCase {
         sut.save(events)
         store.completeDeletion(with: deletionError)
 
-        XCTAssertEqual(store.insertCallCount, 0)
+        XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents])
     }
 
     func test_save_requestsNewCacheInsertionOnSuccessfulDeletion() {
@@ -35,9 +35,8 @@ class EventCachingTests: XCTestCase {
 
         sut.save(events)
         store.completeDeletionSuccessfully()
-
-        XCTAssertEqual(store.insertCallCount, 1)
-        XCTAssertEqual(store.insertions.first, events)
+        
+        XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents, .insert(events)])
     }
 
     // MARK: - Helpers

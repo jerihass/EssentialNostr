@@ -11,7 +11,7 @@ public class LocalEventLoader {
     }
 
     public func save(_ events: [Event]) {
-        store.deleteCachedFeed { [weak self] error in
+        store.deleteCachedEvents { [weak self] error in
             if error == nil {
                 self?.store.insert(events)
             }
@@ -21,15 +21,20 @@ public class LocalEventLoader {
 
 public class EventStore {
     public typealias DeletionCompletion = (Error?) -> Void
-    public var deleteCachedEventsCallCount:Int { deletionCompletions.count }
-    public var insertCallCount: Int { insertions.count }
-    public var insertions = [[Event]]()
+
+    public enum ReceivedMessage: Equatable {
+        case insert([Event])
+        case deleteCachedEvents
+    }
+
+    private(set) public var receivedMessages = [ReceivedMessage]()
     public init() {}
 
     private var deletionCompletions = [DeletionCompletion]()
 
-    public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
+    public func deleteCachedEvents(completion: @escaping DeletionCompletion) {
         deletionCompletions.append(completion)
+        receivedMessages.append(.deleteCachedEvents)
     }
 
     public func completeDeletion(with error: Error, at index: Int = 0) {
@@ -41,6 +46,6 @@ public class EventStore {
     }
 
     func insert(_ events: [Event]) {
-        self.insertions.append(events)
+        receivedMessages.append(.insert(events))
     }
 }
