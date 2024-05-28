@@ -31,27 +31,33 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         }
     }
 
-    func test_endToEndTestServer_retrievesTwoExpectedEvents() throws {
+    func test_endToEndTestServer_retrievesTwoExpectedEventsAndEOSE() throws {
         let loader = makeSUT()
 
         loader.request("EVENT_REQUEST_TWO")
         var receivedResult = [LoadEventResult]()
 
         let exp = expectation(description: "Wait for load completion")
+
         loader.load { result in
+            print(result)
             receivedResult.append(result)
-            if ((try? result.get()) != nil) {
-                loader.load {
-                    receivedResult.append($0)
-                    exp.fulfill()
-                }
-            }
         }
 
-        wait(for: [exp], timeout: 3.0)
+        XCTExpectFailure("Expected due to recursive nature of loader load function.") {
+            wait(for: [exp], timeout: 1.0)
+        }
 
-        XCTAssertEqual(receivedResult.count, 2)
+        XCTAssertEqual(receivedResult.count, 3)
         XCTAssertEqual(receivedResult.compactMap { try? $0.get().id }, ["eventID", "eventID"])
+        let errors = receivedResult.compactMap { result in
+            switch result {
+            case .failure(let error):
+                return error as? RemoteEventLoader.Error
+            default: return nil
+            }
+        }
+        XCTAssertEqual(errors.first, RemoteEventLoader.Error.eose(sub: "sub1"))
     }
 
     func test_endToEndTestServer_badEventJSONGivesErrorReply() throws {
@@ -86,12 +92,46 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         let url = URL(string: "ws://127.0.0.1:8080")!
         let client = NetworkConnectionWebSocketClient(url: url)
         client.stateHandler = { _ in }
+        try? client.start()
+
         let loader = RemoteEventLoader(client: client)
         trackForMemoryLeaks(client, file: file, line: line)
         trackForMemoryLeaks(loader, file: file, line: line)
-
-        try? client.start()
-
         return loader
+    }
+}
+
+class WeakRefVirtualProxy<T: AnyObject> {
+    private weak var object: T?
+    init(_ object: T? = nil) {
+        self.object = object
+    }
+}
+
+typealias WeakClient = WeakRefVirtualProxy<NetworkConnectionWebSocketClient>
+extension WeakRefVirtualProxy: WebSocketClient where T == NetworkConnectionWebSocketClient {
+    var stateHandler: ((EssentialNostr.WebSocketDelegateState) -> Void)? {
+        get {
+            object?.stateHandler
+        }
+        set(newValue) {
+            object?.stateHandler = newValue
+        }
+    }
+
+    func start() throws {
+        try object?.start()
+    }
+
+    func disconnect() {
+        object?.disconnect()
+    }
+
+    func send(message: String, completion: @escaping (Error) -> Void) {
+        object?.send(message: message, completion: completion)
+    }
+
+    func receive(completion: @escaping (ReceiveResult) -> Void) {
+        object?.receive(completion: completion)
     }
 }
