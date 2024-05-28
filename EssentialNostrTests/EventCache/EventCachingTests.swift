@@ -29,6 +29,17 @@ class EventCachingTests: XCTestCase {
         XCTAssertEqual(store.insertCallCount, 0)
     }
 
+    func test_save_requestsNewCacheInsertionOnSuccessfulDeletion() {
+        let (sut, store) = makeSUT()
+        let events = [uniqueEvent(), uniqueEvent()]
+
+        sut.save(events)
+        store.completeDeletionSuccessfully()
+
+        XCTAssertEqual(store.insertCallCount, 1)
+        XCTAssertEqual(store.insertions.first, events)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalEventLoader, store: EventStore) {
