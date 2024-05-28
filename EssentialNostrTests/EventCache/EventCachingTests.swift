@@ -5,30 +5,6 @@
 import XCTest
 import EssentialNostr
 
-class LocalEventLoader {
-    private let store: EventStore
-    init(store: EventStore) {
-        self.store = store
-    }
-
-    func save(_ events: [Event]) {
-        store.deleteCachedFeed()
-    }
-}
-
-class EventStore {
-    var deleteCachedEventsCallCount = 0
-    var insertCallCount = 0
-    
-    func deleteCachedFeed() {
-        deleteCachedEventsCallCount += 1
-    }
-
-    func completeDeletion(with error: Error, at index: Int = 0) {
-
-    }
-}
-
 class EventCachingTests: XCTestCase {
     func test_init_doesNoteDeleteCacheWhenCreated() {
         let (_, store) = makeSUT()
