@@ -69,8 +69,8 @@ class EventCachingTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalEventLoader, store: EventStore) {
-        let store = EventStore()
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalEventLoader, store: EventStoreSpy) {
+        let store = EventStoreSpy()
         let sut = LocalEventLoader(store: store)
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(store, file: file, line: line)
@@ -95,5 +95,44 @@ class EventCachingTests: XCTestCase {
 
     private func uniqueEvent() -> Event {
         return Event(id: UUID().uuidString, pubkey: "pubkey", created_at: .now, kind: 1, tags: [[]], content: "Some content", sig: "signature")
+    }
+
+    public class EventStoreSpy: EventStore {
+        public enum ReceivedMessage: Equatable {
+            case insert([Event])
+            case deleteCachedEvents
+        }
+
+        private(set) public var receivedMessages = [ReceivedMessage]()
+        public init() {}
+
+        private var deletionCompletions = [DeletionCompletion]()
+        private var insertionCompletions = [InsertionCompletion]()
+
+        public func deleteCachedEvents(completion: @escaping DeletionCompletion) {
+            deletionCompletions.append(completion)
+            receivedMessages.append(.deleteCachedEvents)
+        }
+
+        public func completeDeletion(with error: Error, at index: Int = 0) {
+            deletionCompletions[index](error)
+        }
+
+        public func completeDeletionSuccessfully(at index: Int = 0) {
+            deletionCompletions[index](nil)
+        }
+
+        public func insert(_ events: [Event], completion: @escaping InsertionCompletion) {
+            insertionCompletions.append(completion)
+            receivedMessages.append(.insert(events))
+        }
+
+        public func completeInsertion(with error: Error, at index: Int = 0) {
+            insertionCompletions[index](error)
+        }
+
+        public func completeInsertionSuccessfully(at index: Int = 0) {
+            insertionCompletions[index](nil)
+        }
     }
 }
