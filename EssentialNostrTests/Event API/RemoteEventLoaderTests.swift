@@ -106,36 +106,15 @@ class RemoteEventLoaderTests: XCTestCase {
         }
     }
 
-    func test_load_deliversEventsOnValidEventUntilEOSE() {
+    func test_load_deliversMultipleEventsOnValidEvents() {
         let (sut, client) = makeSUT()
         let date = Date.distantPast
 
         let event = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
+        let event2 = makeEvent(id: "id2", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content2", sig: "sig2")
 
-        expect(sut, toLoadWith: .success(event.model)) {
-            client.complete(with: event.data)
-        }
-
-        expect(sut, toLoadWith: failure(.eose(sub: "sub1"))) {
-            let eoseMessage = Data("[\"EOSE\",\"sub1\"]".utf8)
-            client.complete(with: eoseMessage, at: 1)
-        }
-    }
-
-    func test_loadRepeatedly_deliversEventsOnValidEvents() {
-        let (sut, client) = makeSUT()
-        let date = Date.distantPast
-
-        let event = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
-
-        let event2 = makeEvent(id: "id2", pubkey: "pubkey2", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content2", sig: "sig2")
-
-        expect(sut, toLoadWith: .success(event.model)) {
-            client.complete(with: event.data)
-        }
-
-        expect(sut, toLoadWith: .success(event2.model)) {
-            client.complete(with: event2.data, at: 1)
+        expectMultiple(sut, toLoadWith: [.success(event.model), .success(event2.model)]) {
+            client.complete(with: [event.data, event2.data])
         }
     }
 
@@ -204,6 +183,31 @@ class RemoteEventLoaderTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
+    private func expectMultiple(_ sut: RemoteEventLoader, toLoadWith expectedResults: [RemoteEventLoader.Result], when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+        for (i, expectedResult) in expectedResults.enumerated() {
+            let exp = expectation(description: "Wait for load completion.")
+            sut.load { receivedResult in
+                switch (receivedResult, expectedResult) {
+                case let (.success(receivedEvent), .success(expectedEvent)):
+                    XCTAssertEqual(receivedEvent, expectedEvent, "Result \(i): Got \(receivedEvent), expected \(expectedEvent)",
+                                   file: file, line: line)
+                case let (.failure(receivedError as RemoteEventLoader.Error), .failure(expectedError as RemoteEventLoader.Error)):
+                    XCTAssertEqual(receivedError, expectedError, "Result \(i): Got \(receivedError), expected \(expectedError)",
+                                   file: file, line: line)
+
+                default:
+                    XCTFail("Result \(i): Got \(receivedResult), expected \(expectedResult)",
+                            file: file, line: line)
+                }
+                exp.fulfill()
+            }
+        }
+
+        action()
+
+        waitForExpectations(timeout: 1)
+    }
+
     class WebSocketClientSpy: WebSocketClient {
         var sendMessages = [String]()
         var loadCompletions = [(Result<Data?, Error>) -> Void]()
@@ -214,6 +218,12 @@ class RemoteEventLoaderTests: XCTestCase {
 
         func complete(with message: Data?, at index: Int = 0) {
             loadCompletions[index](.success(message))
+        }
+
+        func complete(with messages: [Data?], at index: Int = 0) {
+            for (i, message) in messages.enumerated() {
+                loadCompletions[index + i](.success(message))
+            }
         }
 
         func send(message: String, completion: @escaping (Error) -> Void) {

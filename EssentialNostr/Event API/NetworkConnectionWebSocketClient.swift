@@ -65,9 +65,11 @@ public class NetworkConnectionWebSocketClient: WebSocketClient {
     }
 
     public func receive(completion: @escaping (ReceiveResult) -> Void) {
-        connection.receiveMessage { content, contentContext, isComplete, error in
+        connection.receiveMessage { [weak self] content, contentContext, isComplete, error in
+            guard let self = self else { return }
             if let content = content, isComplete {
                 completion(.success(content))
+                self.receive(completion: completion)
             }
             if let error = error {
                completion(.failure(Error.networkError(error)))

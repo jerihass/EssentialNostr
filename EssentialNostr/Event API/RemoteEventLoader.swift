@@ -33,6 +33,7 @@ final public class RemoteEventLoader: EventLoader {
             case .success(let data):
                 if let data = data {
                     completion(RelayMessageMapper.mapData(data))
+                    self?.load(completion)
                 }
             case .failure:
                 completion(.failure(Error.connectivity))
