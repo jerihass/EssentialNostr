@@ -41,60 +41,30 @@ class EventCachingTests: XCTestCase {
 
     func test_save_failsOnDeletionError() {
         let (sut, store) = makeSUT()
-        let events = [uniqueEvent(), uniqueEvent()]
         let deletionError = NSError(domain: "domain", code: 1)
 
-        let exp = expectation(description: "Wait for save completion")
-
-        var capturedError: Error?
-        sut.save(events) { error in
-            capturedError = error
-            exp.fulfill()
+        expect(sut, toCompleteWith: deletionError) {
+            store.completeDeletion(with: deletionError)
         }
-
-        store.completeDeletion(with: deletionError)
-        waitForExpectations(timeout: 1)
-
-        XCTAssertEqual(capturedError as NSError?, deletionError)
     }
 
     func test_save_failsOnInsertionError() {
         let (sut, store) = makeSUT()
-        let events = [uniqueEvent(), uniqueEvent()]
         let insertionError = NSError(domain: "domain", code: 1)
 
-        let exp = expectation(description: "Wait for save completion")
-
-        var capturedError: Error?
-        sut.save(events) { error in
-            capturedError = error
-            exp.fulfill()
+        expect(sut, toCompleteWith: insertionError) {
+            store.completeDeletionSuccessfully()
+            store.completeInsertion(with: insertionError)
         }
-        
-        store.completeDeletionSuccessfully()
-        store.completeInsertion(with: insertionError)
-        waitForExpectations(timeout: 1)
-
-        XCTAssertEqual(capturedError as NSError?, insertionError)
     }
 
     func test_save_succeedsOnSuccessfulCacheInsertion() {
         let (sut, store) = makeSUT()
-        let events = [uniqueEvent(), uniqueEvent()]
 
-        let exp = expectation(description: "Wait for save completion")
-
-        var capturedError: Error?
-        sut.save(events) { error in
-            capturedError = error
-            exp.fulfill()
+        expect(sut, toCompleteWith: .none) {
+            store.completeDeletionSuccessfully()
+            store.completeInsertionSuccessfully()
         }
-
-        store.completeDeletionSuccessfully()
-        store.completeInsertionSuccessfully()
-        waitForExpectations(timeout: 1)
-
-        XCTAssertNil(capturedError)
     }
 
     // MARK: - Helpers
@@ -105,6 +75,22 @@ class EventCachingTests: XCTestCase {
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(store, file: file, line: line)
         return (sut, store)
+    }
+
+    private func expect(_ sut: LocalEventLoader, toCompleteWith error: NSError?, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+        let exp = expectation(description: "Wait for save completion")
+
+        var capturedError: Error?
+        sut.save([uniqueEvent()]) { error in
+            capturedError = error
+            exp.fulfill()
+        }
+
+        action()
+
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertEqual(capturedError as NSError?, error, file: file, line: line)
     }
 
     private func uniqueEvent() -> Event {
