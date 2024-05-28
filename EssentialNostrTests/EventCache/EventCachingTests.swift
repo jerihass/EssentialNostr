@@ -39,6 +39,25 @@ class EventCachingTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents, .insert(events)])
     }
 
+    func test_save_failsOnDeletionError() {
+        let (sut, store) = makeSUT()
+        let events = [uniqueEvent(), uniqueEvent()]
+        let deletionError = NSError(domain: "domain", code: 1)
+
+        let exp = expectation(description: "Wait for save completion")
+
+        var capturedError: Error?
+        sut.save(events) { error in
+            capturedError = error
+            exp.fulfill()
+        }
+
+        store.completeDeletion(with: deletionError)
+        waitForExpectations(timeout: 1)
+
+        XCTAssertEqual(capturedError as NSError?, deletionError)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalEventLoader, store: EventStore) {
