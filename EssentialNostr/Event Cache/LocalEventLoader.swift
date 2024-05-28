@@ -57,4 +57,8 @@ public class EventStore {
     public func completeInsertion(with error: Error, at index: Int = 0) {
         insertionCompletions[index](error)
     }
+
+    public func completeInsertionSuccessfully(at index: Int = 0) {
+        insertionCompletions[index](nil)
+    }
 }
