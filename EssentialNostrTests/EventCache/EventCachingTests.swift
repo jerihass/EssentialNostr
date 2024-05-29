@@ -81,6 +81,20 @@ class EventCachingTests: XCTestCase {
         XCTAssertTrue(results.isEmpty)
     }
 
+    func test_save_doesNotDeliverInsertiontErrorAfterSUTInstanceHasBeenDeallocated() {
+        let store = EventStoreSpy()
+        var sut: LocalEventLoader? = LocalEventLoader(store: store)
+
+        var results = [Error?]()
+        sut?.save([uniqueEvent()]) { results.append($0) }
+
+        store.completeDeletionSuccessfully()
+        sut = nil
+        store.completeInsertion(with: anyError())
+
+        XCTAssertTrue(results.isEmpty)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalEventLoader, store: EventStoreSpy) {

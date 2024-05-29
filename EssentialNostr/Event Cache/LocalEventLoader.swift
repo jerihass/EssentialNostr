@@ -19,9 +19,12 @@ public class LocalEventLoader {
 
     public func save(_ events: [Event], completion: @escaping (Error?) -> Void = { _ in }) {
         store.deleteCachedEvents { [weak self] error in
-            guard self != nil else { return }
+            guard let self = self else { return }
             if error == nil {
-                self?.store.insert(events, completion: completion)
+                self.store.insert(events) { [weak self] error in
+                    guard self != nil else { return }
+                    completion(error)
+                }
             } else {
                 completion(error)
             }
