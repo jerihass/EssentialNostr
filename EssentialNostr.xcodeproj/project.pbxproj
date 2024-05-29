@@ -25,6 +25,7 @@
 		ADB6CEEC2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB6CEEB2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.swift */; };
 		ADB6CEED2BF9557600EF3B54 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		ADE7026D2BF98D850066AC13 /* ClientMessageMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */; };
+		ADEA67922C06CE9600CF97D9 /* EventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADEA67912C06CE9600CF97D9 /* EventStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		ADB6CEE92BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostrAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADB6CEEB2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialNostrAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessageMapperTests.swift; sourceTree = "<group>"; };
+		ADEA67912C06CE9600CF97D9 /* EventStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				AD7FDC882C05764A005B3DE0 /* LocalEventLoader.swift */,
+				ADEA67912C06CE9600CF97D9 /* EventStore.swift */,
 			);
 			path = "Event Cache";
 			sourceTree = "<group>";
@@ -348,6 +351,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADEA67922C06CE9600CF97D9 /* EventStore.swift in Sources */,
 				AD7FDC892C05764A005B3DE0 /* LocalEventLoader.swift in Sources */,
 				AD8ED5FD2BFA580A00B9ED43 /* ClientMessageMapper.swift in Sources */,
 				AD51DB722BF433E500B5673C /* RemoteEventLoader.swift in Sources */,

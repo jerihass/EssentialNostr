@@ -4,13 +4,6 @@
 
 import Foundation
 
-public protocol EventStore {
-    typealias InsertionCompletion = (Error?) -> Void
-    typealias DeletionCompletion = (Error?) -> Void
-    func deleteCachedEvents(completion: @escaping DeletionCompletion)
-    func insert(_ events: [Event], completion: @escaping InsertionCompletion)
-}
-
 public class LocalEventLoader {
     private let store: EventStore
     public init(store: EventStore) {
