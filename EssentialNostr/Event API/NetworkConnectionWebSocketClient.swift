@@ -6,7 +6,7 @@ import Foundation
 import Network
 
 class NWConnectionWebSocketStateMapper {
-    static func map(_ handler: @escaping (WebSocketDelegateState) -> Void) -> ((NWConnection.State) -> Void) {
+    static func map(_ handler: @escaping (WebSocketState) -> Void) -> ((NWConnection.State) -> Void) {
         { state in
             switch state {
             case .ready:
@@ -29,7 +29,7 @@ class NWConnectionWebSocketStateMapper {
 }
 
 public class NetworkConnectionWebSocketClient: WebSocketClient {
-    public var stateHandler: ((_ state: WebSocketDelegateState) -> Void)?
+    public var stateHandler: ((_ state: WebSocketState) -> Void)?
     private let connection: NWConnection
 
     public enum Error: Swift.Error, Equatable {
