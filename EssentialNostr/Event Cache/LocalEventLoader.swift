@@ -24,9 +24,23 @@ public class LocalEventLoader {
     }
 
     private func cacheEventsWithCompletion(_ events: [Event], _ completion: @escaping (Error?) -> Void) {
-        store.insert(events) { [weak self] insertError in
+        store.insert(events.toLocal()) { [weak self] insertError in
             guard self != nil else { return }
             completion(insertError)
         }
+    }
+}
+
+private extension Array where Element == Event {
+    func toLocal() -> [LocalEvent] {
+        map{ LocalEvent(id: $0.id,
+                        pubkey: $0.pubkey,
+                        created_at: $0.created_at,
+                        kind: $0.kind,
+                        tags: $0.tags,
+                        content: $0.content,
+                        sig: $0.sig)
+        }
+        
     }
 }

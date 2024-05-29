@@ -32,11 +32,11 @@ class EventCachingTests: XCTestCase {
     func test_save_requestsNewCacheInsertionOnSuccessfulDeletion() {
         let (sut, store) = makeSUT()
         let events = [uniqueEvent(), uniqueEvent()]
-
+        let localEvents = events.map { LocalEvent(id: $0.id, pubkey: $0.pubkey, created_at: $0.created_at, kind: $0.kind, tags: $0.tags, content: $0.content, sig: $0.sig)}
         sut.save(events)
         store.completeDeletionSuccessfully()
         
-        XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents, .insert(events)])
+        XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents, .insert(localEvents)])
     }
 
     func test_save_failsOnDeletionError() {
@@ -131,7 +131,7 @@ class EventCachingTests: XCTestCase {
 
     public class EventStoreSpy: EventStore {
         public enum ReceivedMessage: Equatable {
-            case insert([Event])
+            case insert([LocalEvent])
             case deleteCachedEvents
         }
 
@@ -154,7 +154,7 @@ class EventCachingTests: XCTestCase {
             deletionCompletions[index](nil)
         }
 
-        public func insert(_ events: [Event], completion: @escaping InsertionCompletion) {
+        public func insert(_ events: [LocalEvent], completion: @escaping InsertionCompletion) {
             insertionCompletions.append(completion)
             receivedMessages.append(.insert(events))
         }
