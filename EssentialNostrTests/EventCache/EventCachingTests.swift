@@ -50,7 +50,7 @@ class EventCachingTests: XCTestCase {
 
     func test_save_failsOnInsertionError() {
         let (sut, store) = makeSUT()
-        let insertionError = NSError(domain: "domain", code: 1)
+        let insertionError = anyError()
 
         expect(sut, toCompleteWith: insertionError) {
             store.completeDeletionSuccessfully()
@@ -65,6 +65,20 @@ class EventCachingTests: XCTestCase {
             store.completeDeletionSuccessfully()
             store.completeInsertionSuccessfully()
         }
+    }
+
+    func test_save_doesNotDeliverDeletionErrorAfterSUTInstanceHasBeenDeallocated() {
+        let store = EventStoreSpy()
+        var sut: LocalEventLoader? = LocalEventLoader(store: store)
+
+        var results = [Error?]()
+        sut?.save([uniqueEvent()]) { results.append($0) }
+
+        sut = nil
+
+        store.completeDeletion(with: anyError())
+
+        XCTAssertTrue(results.isEmpty)
     }
 
     // MARK: - Helpers
@@ -95,6 +109,10 @@ class EventCachingTests: XCTestCase {
 
     private func uniqueEvent() -> Event {
         return Event(id: UUID().uuidString, pubkey: "pubkey", created_at: .now, kind: 1, tags: [[]], content: "Some content", sig: "signature")
+    }
+
+    private func anyError() -> NSError {
+        NSError(domain: "domain", code: 1)
     }
 
     public class EventStoreSpy: EventStore {
