@@ -6,11 +6,13 @@ import Foundation
 
 public class LocalEventLoader {
     private let store: EventStore
+
+    public typealias SaveResult = Error?
     public init(store: EventStore) {
         self.store = store
     }
 
-    public func save(_ events: [Event], completion: @escaping (Error?) -> Void = { _ in }) {
+    public func save(_ events: [Event], completion: @escaping (SaveResult) -> Void = { _ in }) {
         store.deleteCachedEvents { [weak self] deleteError in
             guard let self = self else { return }
             if let de = deleteError {

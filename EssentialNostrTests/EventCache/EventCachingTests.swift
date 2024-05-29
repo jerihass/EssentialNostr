@@ -71,7 +71,7 @@ class EventCachingTests: XCTestCase {
         let store = EventStoreSpy()
         var sut: LocalEventLoader? = LocalEventLoader(store: store)
 
-        var results = [Error?]()
+        var results = [LocalEventLoader.SaveResult]()
         sut?.save([uniqueEvent()]) { results.append($0) }
 
         sut = nil
@@ -85,7 +85,7 @@ class EventCachingTests: XCTestCase {
         let store = EventStoreSpy()
         var sut: LocalEventLoader? = LocalEventLoader(store: store)
 
-        var results = [Error?]()
+        var results = [LocalEventLoader.SaveResult]()
         sut?.save([uniqueEvent()]) { results.append($0) }
 
         store.completeDeletionSuccessfully()
