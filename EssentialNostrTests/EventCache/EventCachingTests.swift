@@ -13,17 +13,17 @@ class EventCachingTests: XCTestCase {
 
     func test_save_requestsCacheDeletion() {
         let (sut, store) = makeSUT()
-        let events = [uniqueEvent(), uniqueEvent()]
-        sut.save(events)
+        let events = uniqueEvents()
+        sut.save(events.model)
         XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents])
     }
 
     func test_save_doesNotRequestCacheInsertionOnDeletionError() {
         let (sut, store) = makeSUT()
-        let events = [uniqueEvent(), uniqueEvent()]
+        let events = uniqueEvents()
         let deletionError = NSError(domain: "domain", code: 1)
 
-        sut.save(events)
+        sut.save(events.model)
         store.completeDeletion(with: deletionError)
 
         XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents])
@@ -31,12 +31,11 @@ class EventCachingTests: XCTestCase {
 
     func test_save_requestsNewCacheInsertionOnSuccessfulDeletion() {
         let (sut, store) = makeSUT()
-        let events = [uniqueEvent(), uniqueEvent()]
-        let localEvents = events.map { LocalEvent(id: $0.id, pubkey: $0.pubkey, created_at: $0.created_at, kind: $0.kind, tags: $0.tags, content: $0.content, sig: $0.sig)}
-        sut.save(events)
+        let events = uniqueEvents()
+        sut.save(events.model)
         store.completeDeletionSuccessfully()
         
-        XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents, .insert(localEvents)])
+        XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents, .insert(events.local)])
     }
 
     func test_save_failsOnDeletionError() {
@@ -109,7 +108,7 @@ class EventCachingTests: XCTestCase {
         let exp = expectation(description: "Wait for save completion")
 
         var capturedError: Error?
-        sut.save([uniqueEvent()]) { error in
+        sut.save(uniqueEvents().model) { error in
             capturedError = error
             exp.fulfill()
         }
@@ -123,6 +122,12 @@ class EventCachingTests: XCTestCase {
 
     private func uniqueEvent() -> Event {
         return Event(id: UUID().uuidString, pubkey: "pubkey", created_at: .now, kind: 1, tags: [[]], content: "Some content", sig: "signature")
+    }
+
+    private func uniqueEvents() -> (model: [Event], local: [LocalEvent]) {
+        let events = [uniqueEvent(), uniqueEvent()]
+        let localEvents = events.map { LocalEvent(id: $0.id, pubkey: $0.pubkey, created_at: $0.created_at, kind: $0.kind, tags: $0.tags, content: $0.content, sig: $0.sig)}
+        return (events, localEvents)
     }
 
     private func anyError() -> NSError {
