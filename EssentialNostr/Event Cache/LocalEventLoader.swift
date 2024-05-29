@@ -21,13 +21,17 @@ public class LocalEventLoader {
         store.deleteCachedEvents { [weak self] deleteError in
             guard let self = self else { return }
             if let de = deleteError {
-                completion(deleteError)
+                completion(de)
             } else {
-                self.store.insert(events) { [weak self] insertError in
-                    guard self != nil else { return }
-                    completion(insertError)
-                }
+                self.cacheEventsWithCompletion(events, completion)
             }
+        }
+    }
+
+    private func cacheEventsWithCompletion(_ events: [Event], _ completion: @escaping (Error?) -> Void) {
+        store.insert(events) { [weak self] insertError in
+            guard self != nil else { return }
+            completion(insertError)
         }
     }
 }
