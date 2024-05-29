@@ -14,7 +14,7 @@ class EventCachingTests: XCTestCase {
     func test_save_requestsCacheDeletion() {
         let (sut, store) = makeSUT()
         let events = uniqueEvents()
-        sut.save(events.model)
+        sut.save(events.model) { _ in }
         XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents])
     }
 
@@ -23,7 +23,7 @@ class EventCachingTests: XCTestCase {
         let events = uniqueEvents()
         let deletionError = NSError(domain: "domain", code: 1)
 
-        sut.save(events.model)
+        sut.save(events.model) { _ in }
         store.completeDeletion(with: deletionError)
 
         XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents])
@@ -32,7 +32,7 @@ class EventCachingTests: XCTestCase {
     func test_save_requestsNewCacheInsertionOnSuccessfulDeletion() {
         let (sut, store) = makeSUT()
         let events = uniqueEvents()
-        sut.save(events.model)
+        sut.save(events.model) { _ in }
         store.completeDeletionSuccessfully()
         
         XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents, .insert(events.local)])

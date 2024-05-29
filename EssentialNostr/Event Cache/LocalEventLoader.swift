@@ -12,7 +12,7 @@ public class LocalEventLoader {
         self.store = store
     }
 
-    public func save(_ events: [Event], completion: @escaping (SaveResult) -> Void = { _ in }) {
+    public func save(_ events: [Event], completion: @escaping (SaveResult) -> Void) {
         store.deleteCachedEvents { [weak self] deleteError in
             guard let self = self else { return }
             if let de = deleteError {
@@ -41,6 +41,6 @@ private extension Array where Element == Event {
                         content: $0.content,
                         sig: $0.sig)
         }
-        
+
     }
 }
