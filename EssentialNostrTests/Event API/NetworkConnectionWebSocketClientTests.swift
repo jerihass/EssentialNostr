@@ -182,7 +182,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
         .failure(error)
     }
 
-    private func sendRequestOnReady(_ sut: WebSocketClient, _ request: String) -> (WebSocketState) -> Void {
+    private func sendRequestOnReady(_ sut: WebSocketClient, _ request: String) -> (WebSocketDelegateState) -> Void {
         return { [weak sut] in
             if $0 == .ready {
                 sut?.send(message: request, completion: { _ in })
