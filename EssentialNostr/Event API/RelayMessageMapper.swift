@@ -79,13 +79,3 @@ final class RelayMessageMapper {
         }
     }
 }
-
-struct RelayEvent: Decodable {
-    let id: String
-    let pubkey: String
-    let created_at: Double
-    let kind: UInt16
-    let tags: [[String]]
-    let content: String
-    let sig: String
-}
