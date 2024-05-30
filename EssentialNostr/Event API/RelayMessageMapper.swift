@@ -5,20 +5,19 @@
 import Foundation
 
 final class RelayMessageMapper {
-
-    internal static func mapData(_ data: Data) -> RemoteEventLoader.Result {
+    internal static func mapData(_ data: Data) throws -> RelayEvent {
         do {
-            return .success(try mapEvent(data))
+            return try mapEvent(data)
         } catch {
-            return .failure(error as? RemoteEventLoader.Error ?? .unknown)
+            throw error
         }
     }
 
-    private static func mapEvent(_ data: Data) throws -> Event {
+    private static func mapEvent(_ data: Data) throws -> RelayEvent {
         if let message = try? JSONDecoder().decode(RelayMessage.self, from: data) {
             switch message.message {
             case let .event(_, event):
-                return event.local
+                return event
             case let .closed(sub, message):
                 throw RemoteEventLoader.Error.closed(sub: sub, message: message)
             case .eose(let sub):
@@ -79,18 +78,14 @@ final class RelayMessageMapper {
             }
         }
     }
+}
 
-    private struct RelayEvent: Decodable {
-        let id: String
-        let pubkey: String
-        let created_at: Double
-        let kind: UInt16
-        let tags: [[String]]
-        let content: String
-        let sig: String
-
-        var local: Event {
-            return Event(id: id, pubkey: pubkey, created_at: Date(timeIntervalSince1970: created_at), kind: kind, tags: tags, content: content, sig: sig)
-        }
-    }
+struct RelayEvent: Decodable {
+    let id: String
+    let pubkey: String
+    let created_at: Double
+    let kind: UInt16
+    let tags: [[String]]
+    let content: String
+    let sig: String
 }

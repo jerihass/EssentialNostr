@@ -31,10 +31,24 @@ final public class RemoteEventLoader: EventLoader {
             guard self != nil else { return }
             switch result {
             case .success(let data):
-                completion(RelayMessageMapper.mapData(data))
+                completion(RemoteEventLoader.map(data))
             case .failure:
                 completion(.failure(Error.connectivity))
             }
         }
+    }
+
+    private static func map(_ data: Data) -> LoadEventResult {
+        do {
+            return .success(try RelayMessageMapper.mapData(data).model)
+        } catch {
+            return .failure(error)
+        }
+    }
+}
+
+extension RelayEvent {
+    var model: Event {
+        Event(id: id, pubkey: pubkey, created_at: Date(timeIntervalSince1970: created_at), kind: kind, tags: tags, content: content, sig: sig)
     }
 }

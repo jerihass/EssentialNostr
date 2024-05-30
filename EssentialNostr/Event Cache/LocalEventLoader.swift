@@ -41,6 +41,5 @@ private extension Array where Element == Event {
                         content: $0.content,
                         sig: $0.sig)
         }
-
     }
 }
