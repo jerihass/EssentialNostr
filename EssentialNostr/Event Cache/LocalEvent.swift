@@ -13,13 +13,13 @@ public struct LocalEvent: Equatable {
     public let content: String
     public let signature: String
 
-    public init(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) {
+    public init(id: String, publicKey: String, created: Date, kind: UInt16, tags: [[String]], content: String, signature: String) {
         self.id = id
-        self.publickey = pubkey
-        self.created = created_at
+        self.publickey = publicKey
+        self.created = created
         self.kind = kind
         self.tags = tags
         self.content = content
-        self.signature = sig
+        self.signature = signature
     }
 }

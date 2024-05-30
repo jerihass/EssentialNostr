@@ -56,7 +56,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
 
     func test_endToEndTestServer_badEventJSONGivesErrorReply() throws {
         let loader = makeSUT()
-        let event = Event(id: "bdID", pubkey: "npub1el277q4kesp8vhs7rq6qkwnhpxfp345u7tnuxykwr67d9wg0wvyslam5n0", created_at: .now, kind: 1, tags: [], content: "Test", sig: "badsig")
+        let event = Event(id: "bdID", publicKey: "npub1el277q4kesp8vhs7rq6qkwnhpxfp345u7tnuxykwr67d9wg0wvyslam5n0", created: .now, kind: 1, tags: [], content: "Test", signature: "badsig")
         let message = ClientMessage.Message.event(event: event)
 
         loader.request(ClientMessageMapper.mapMessage(message))

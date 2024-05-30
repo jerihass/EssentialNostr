@@ -6,20 +6,20 @@ import Foundation
 
 public struct Event: Equatable {
     public let id: String
-    public let pubkey: String
-    public let created_at: Date
+    public let publicKey: String
+    public let created: Date
     public let kind: UInt16
     public let tags: [[String]]
     public let content: String
-    public let sig: String
+    public let signature: String
 
-    public init(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) {
+    public init(id: String, publicKey: String, created: Date, kind: UInt16, tags: [[String]], content: String, signature: String) {
         self.id = id
-        self.pubkey = pubkey
-        self.created_at = created_at
+        self.publicKey = publicKey
+        self.created = created
         self.kind = kind
         self.tags = tags
         self.content = content
-        self.sig = sig
+        self.signature = signature
     }
 }

@@ -34,12 +34,12 @@ public class LocalEventLoader {
 private extension Array where Element == Event {
     func toLocal() -> [LocalEvent] {
         map{ LocalEvent(id: $0.id,
-                        pubkey: $0.pubkey,
-                        created_at: $0.created_at,
+                        publicKey: $0.publicKey,
+                        created: $0.created,
                         kind: $0.kind,
                         tags: $0.tags,
                         content: $0.content,
-                        sig: $0.sig)
+                        signature: $0.signature)
         }
     }
 }

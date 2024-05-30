@@ -49,6 +49,6 @@ final public class RemoteEventLoader: EventLoader {
 
 extension NostrEvent {
     var model: Event {
-        Event(id: id, pubkey: pubkey, created_at: Date(timeIntervalSince1970: created_at), kind: kind, tags: tags, content: content, sig: sig)
+        Event(id: id, publicKey: pubkey, created: Date(timeIntervalSince1970: created_at), kind: kind, tags: tags, content: content, signature: sig)
     }
 }
