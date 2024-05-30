@@ -9,4 +9,5 @@ public protocol EventStore {
     typealias DeletionCompletion = (Error?) -> Void
     func deleteCachedEvents(completion: @escaping DeletionCompletion)
     func insert(_ events: [LocalEvent], completion: @escaping InsertionCompletion)
+    func retrieve()
 }

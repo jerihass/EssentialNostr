@@ -9,6 +9,7 @@ class EventStoreSpy: EventStore {
     enum ReceivedMessage: Equatable {
         case insert([LocalEvent])
         case deleteCachedEvents
+        case retrieve
     }
 
     private(set) public var receivedMessages = [ReceivedMessage]()
@@ -41,5 +42,9 @@ class EventStoreSpy: EventStore {
 
     func completeInsertionSuccessfully(at index: Int = 0) {
         insertionCompletions[index](nil)
+    }
+
+    func retrieve() {
+        receivedMessages.append(.retrieve)
     }
 }

@@ -23,6 +23,10 @@ public class LocalEventLoader {
         }
     }
 
+    public func load() {
+        store.retrieve()
+    }
+
     private func cacheEventsWithCompletion(_ events: [Event], _ completion: @escaping (Error?) -> Void) {
         store.insert(events.toLocal()) { [weak self] insertError in
             guard self != nil else { return }

@@ -11,6 +11,14 @@ class LoadEventsFromCacheTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [])
     }
 
+    func test_load_requestCacheRetrieval() {
+        let (sut, store) = makeSUT()
+
+        sut.load()
+
+        XCTAssertEqual(store.receivedMessages, [.retrieve])
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalEventLoader, store: EventStoreSpy) {
