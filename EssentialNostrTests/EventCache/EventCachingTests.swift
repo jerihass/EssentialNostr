@@ -133,43 +133,4 @@ class EventCachingTests: XCTestCase {
     private func anyError() -> NSError {
         NSError(domain: "domain", code: 1)
     }
-
-    public class EventStoreSpy: EventStore {
-        public enum ReceivedMessage: Equatable {
-            case insert([LocalEvent])
-            case deleteCachedEvents
-        }
-
-        private(set) public var receivedMessages = [ReceivedMessage]()
-        public init() {}
-
-        private var deletionCompletions = [DeletionCompletion]()
-        private var insertionCompletions = [InsertionCompletion]()
-
-        public func deleteCachedEvents(completion: @escaping DeletionCompletion) {
-            deletionCompletions.append(completion)
-            receivedMessages.append(.deleteCachedEvents)
-        }
-
-        public func completeDeletion(with error: Error, at index: Int = 0) {
-            deletionCompletions[index](error)
-        }
-
-        public func completeDeletionSuccessfully(at index: Int = 0) {
-            deletionCompletions[index](nil)
-        }
-
-        public func insert(_ events: [LocalEvent], completion: @escaping InsertionCompletion) {
-            insertionCompletions.append(completion)
-            receivedMessages.append(.insert(events))
-        }
-
-        public func completeInsertion(with error: Error, at index: Int = 0) {
-            insertionCompletions[index](error)
-        }
-
-        public func completeInsertionSuccessfully(at index: Int = 0) {
-            insertionCompletions[index](nil)
-        }
-    }
 }
