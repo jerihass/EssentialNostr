@@ -7,7 +7,8 @@ import Foundation
 public protocol EventStore {
     typealias InsertionCompletion = (Error?) -> Void
     typealias DeletionCompletion = (Error?) -> Void
+    typealias RetrievalCompletion = (Error?) -> Void
     func deleteCachedEvents(completion: @escaping DeletionCompletion)
     func insert(_ events: [LocalEvent], completion: @escaping InsertionCompletion)
-    func retrieve()
+    func retrieve(completion: @escaping RetrievalCompletion)
 }

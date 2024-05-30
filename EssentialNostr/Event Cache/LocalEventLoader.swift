@@ -23,8 +23,8 @@ public class LocalEventLoader {
         }
     }
 
-    public func load() {
-        store.retrieve()
+    public func load(completion: @escaping (Error?) -> Void) {
+        store.retrieve(completion: completion)
     }
 
     private func cacheEventsWithCompletion(_ events: [Event], _ completion: @escaping (Error?) -> Void) {
