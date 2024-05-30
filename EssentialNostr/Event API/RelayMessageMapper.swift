@@ -5,7 +5,7 @@
 import Foundation
 
 final class RelayMessageMapper {
-    internal static func mapData(_ data: Data) throws -> RelayEvent {
+    internal static func mapData(_ data: Data) throws -> NostrEvent {
         do {
             return try mapEvent(data)
         } catch {
@@ -13,7 +13,7 @@ final class RelayMessageMapper {
         }
     }
 
-    private static func mapEvent(_ data: Data) throws -> RelayEvent {
+    private static func mapEvent(_ data: Data) throws -> NostrEvent {
         if let message = try? JSONDecoder().decode(RelayMessage.self, from: data) {
             switch message.message {
             case let .event(_, event):
@@ -45,7 +45,7 @@ final class RelayMessageMapper {
         }
 
         enum Message {
-            case event(sub: String, event: RelayEvent)
+            case event(sub: String, event: NostrEvent)
             case closed(sub: String, message: String)
             case eose(sub: String)
             case notice(message: String)
@@ -58,7 +58,7 @@ final class RelayMessageMapper {
             switch type {
             case .event:
                 let sub = try container.decode(String.self)
-                let event = try container.decode(RelayEvent.self)
+                let event = try container.decode(NostrEvent.self)
                 message = .event(sub: sub, event: event)
             case .closed:
                 let sub = try container.decode(String.self)

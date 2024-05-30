@@ -4,7 +4,7 @@
 
 import Foundation
 
-struct RelayEvent: Decodable {
+struct NostrEvent: Decodable {
     let id: String
     let pubkey: String
     let created_at: Double

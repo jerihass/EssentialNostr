@@ -47,7 +47,7 @@ final public class RemoteEventLoader: EventLoader {
     }
 }
 
-extension RelayEvent {
+extension NostrEvent {
     var model: Event {
         Event(id: id, pubkey: pubkey, created_at: Date(timeIntervalSince1970: created_at), kind: kind, tags: tags, content: content, sig: sig)
     }

@@ -26,7 +26,7 @@
 		ADB6CEED2BF9557600EF3B54 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		ADE7026D2BF98D850066AC13 /* ClientMessageMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */; };
 		ADEA67922C06CE9600CF97D9 /* EventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADEA67912C06CE9600CF97D9 /* EventStore.swift */; };
-		ADFFFE722C08066B00A504A3 /* RelayEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFFFE712C08066B00A504A3 /* RelayEvent.swift */; };
+		ADFFFE722C08066B00A504A3 /* NostrEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFFFE712C08066B00A504A3 /* NostrEvent.swift */; };
 		ADFFFE742C0806A600A504A3 /* LocalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFFFE732C0806A600A504A3 /* LocalEvent.swift */; };
 /* End PBXBuildFile section */
 
@@ -70,7 +70,7 @@
 		ADB6CEEB2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialNostrAPIEndToEndTests.swift; sourceTree = "<group>"; };
 		ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessageMapperTests.swift; sourceTree = "<group>"; };
 		ADEA67912C06CE9600CF97D9 /* EventStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStore.swift; sourceTree = "<group>"; };
-		ADFFFE712C08066B00A504A3 /* RelayEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayEvent.swift; sourceTree = "<group>"; };
+		ADFFFE712C08066B00A504A3 /* NostrEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrEvent.swift; sourceTree = "<group>"; };
 		ADFFFE732C0806A600A504A3 /* LocalEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEvent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -162,7 +162,7 @@
 				AD7B0B1B2BF5726C0053793A /* RelayMessageMapper.swift */,
 				AD5B9EBC2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift */,
 				AD8ED5FC2BFA580A00B9ED43 /* ClientMessageMapper.swift */,
-				ADFFFE712C08066B00A504A3 /* RelayEvent.swift */,
+				ADFFFE712C08066B00A504A3 /* NostrEvent.swift */,
 			);
 			path = "Event API";
 			sourceTree = "<group>";
@@ -362,7 +362,7 @@
 				AD8ED5FD2BFA580A00B9ED43 /* ClientMessageMapper.swift in Sources */,
 				AD51DB722BF433E500B5673C /* RemoteEventLoader.swift in Sources */,
 				AD8ED5FF2BFA7E9900B9ED43 /* ClientMessage.swift in Sources */,
-				ADFFFE722C08066B00A504A3 /* RelayEvent.swift in Sources */,
+				ADFFFE722C08066B00A504A3 /* NostrEvent.swift in Sources */,
 				AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */,
 				AD7B0B1A2BF571AE0053793A /* WebSocketClient.swift in Sources */,
 				ADFFFE742C0806A600A504A3 /* LocalEvent.swift in Sources */,
