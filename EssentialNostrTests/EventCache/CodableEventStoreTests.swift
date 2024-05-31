@@ -79,83 +79,44 @@ class CodableEventStoreTests: XCTestCase {
 
     func test_retrieve_deliversEmptyOnEmptyCache() {
         let sut = makeSUT()
-        let exp = expectation(description: "Wait for store retrieval")
-        sut.retrieve { result in
-            switch result {
-            case let .success(events):
-                XCTAssertTrue(events.isEmpty)
-                break
-            default:
-                XCTFail("Expected success, got \(result) instead")
-            }
-            exp.fulfill()
-        }
 
-        wait(for: [exp], timeout: 1)
+        expect(sut, toRetrieve: .success([]))
     }
 
     func test_retrieve_hasNoSideEffects() {
         let sut = makeSUT()
-        let exp = expectation(description: "Wait for store retrieval")
-        sut.retrieve { firstResult in
-            sut.retrieve { secondResult in
-                switch (firstResult, secondResult) {
-                case let (.success(firstEvents), .success(secondEvents)):
-                    XCTAssertTrue(firstEvents.isEmpty == secondEvents.isEmpty)
-                    break
-                default:
-                    XCTFail("Expected success, got \(firstResult) instead")
-                }
-                exp.fulfill()
-            }
-        }
 
-        wait(for: [exp], timeout: 1)
+        expect(sut, toRetrieve: .success([]))
+        expect(sut, toRetrieve: .success([]))
     }
 
     func test_retrieve_afterInsertingToEmptyCacheRetrievesInsertedValue() {
         let sut = makeSUT()
-        let exp = expectation(description: "Wait for store retrieval")
         let events = uniqueEvents().local
+        let exp = expectation(description: "Wait for store retrieval")
+
         sut.insert(events) { insertError in
             XCTAssertNil(insertError)
-            sut.retrieve { retrieveResult in
-                switch retrieveResult {
-                case let .success(retrieveEvents):
-                    XCTAssertEqual(retrieveEvents, events)
-                    break
-                default:
-                    XCTFail("Expected success, got \(retrieveResult) instead")
-                }
-                exp.fulfill()
-            }
-        }
-
+            exp.fulfill()
+        }        
         wait(for: [exp], timeout: 1)
+
+        expect(sut, toRetrieve: .success(events))
     }
 
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
         let sut = makeSUT()
-        let exp = expectation(description: "Wait for store retrieval")
         let events = uniqueEvents().local
+        let exp = expectation(description: "Wait for store retrieval")
+        
         sut.insert(events) { insertError in
             XCTAssertNil(insertError)
-            sut.retrieve { firstResult in
-                sut.retrieve { secondResult in
-                    switch (firstResult, secondResult) {
-                    case let (.success(firstEvents), .success(secondEvents)):
-                        XCTAssertEqual(firstEvents, events)
-                        XCTAssertEqual(secondEvents, events)
-                        break
-                    default:
-                        XCTFail("Expected retrieving twice gives same result, got\(firstResult) and \(secondResult) instead")
-                    }
-                    exp.fulfill()
-                }
-            }
+            exp.fulfill()
         }
-
         wait(for: [exp], timeout: 1)
+
+        expect(sut, toRetrieve: .success(events))
+        expect(sut, toRetrieve: .success(events))
     }
 
     // MARK: - Helpers
@@ -166,6 +127,22 @@ class CodableEventStoreTests: XCTestCase {
         let sut = CodableEventStore(storeURL: storeURL)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+
+    private func expect(_ sut: CodableEventStore, toRetrieve expectedResult:  Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
+        let exp = expectation(description: "Wait for cache retrieval")
+
+        sut.retrieve { result in
+            switch (result, expectedResult) {
+            case let (.success(events), .success(expectedEvents)):
+                XCTAssertEqual(events, expectedEvents)
+            default:
+                XCTFail("Expected \(expectedResult), got \(result) instead")
+            }
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
     }
 
     private func setupEmptyStoreState() {
