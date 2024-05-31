@@ -121,13 +121,37 @@ class CodableEventStoreTests: XCTestCase {
             XCTAssertNil(insertError)
             sut.retrieve { retrieveResult in
                 switch retrieveResult {
-                case let .success(insertEvents):
-                    XCTAssertEqual(insertEvents, events)
+                case let .success(retrieveEvents):
+                    XCTAssertEqual(retrieveEvents, events)
                     break
                 default:
                     XCTFail("Expected success, got \(retrieveResult) instead")
                 }
                 exp.fulfill()
+            }
+        }
+
+        wait(for: [exp], timeout: 1)
+    }
+
+    func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
+        let sut = makeSUT()
+        let exp = expectation(description: "Wait for store retrieval")
+        let events = uniqueEvents().local
+        sut.insert(events) { insertError in
+            XCTAssertNil(insertError)
+            sut.retrieve { firstResult in
+                sut.retrieve { secondResult in
+                    switch (firstResult, secondResult) {
+                    case let (.success(firstEvents), .success(secondEvents)):
+                        XCTAssertEqual(firstEvents, events)
+                        XCTAssertEqual(secondEvents, events)
+                        break
+                    default:
+                        XCTFail("Expected retrieving twice gives same result, got\(firstResult) and \(secondResult) instead")
+                    }
+                    exp.fulfill()
+                }
             }
         }
 
