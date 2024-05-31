@@ -25,7 +25,8 @@ public class LocalEventsLoader {
     }
 
     public func load(completion: @escaping (LoadResult) -> Void) {
-        store.retrieve { result in
+        store.retrieve { [weak self] result in
+            guard self != nil else { return  }
             switch result {
             case let .failure(error):
                 completion(.failure(error))

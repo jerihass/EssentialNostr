@@ -44,6 +44,20 @@ class LoadEventsFromCacheTests: XCTestCase {
         }
     }
 
+    func test_load_doesNotDeliverResultAfterSUTInstanceHasBeenDeallocated() {
+        let store = EventStoreSpy()
+        var sut: LocalEventsLoader? = LocalEventsLoader(store: store)
+
+        var results = [LocalEventsLoader.LoadResult]()
+        sut?.load { results.append($0) }
+
+        sut = nil
+
+        store.completeRetrievalWithEmptyCache()
+        
+        XCTAssertTrue(results.isEmpty)
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalEventsLoader, store: EventStoreSpy) {
