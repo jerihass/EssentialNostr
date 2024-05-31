@@ -78,7 +78,7 @@ class CodableEventStoreTests: XCTestCase {
     }
 
     private func undoSideEffects() {
-        try? FileManager.default.removeItem(at: storeURL())
+        try? FileManager.default.removeItem(at: testStoreURL())
     }
 
     func test_retrieve_deliversEmptyOnEmptyCache() {
@@ -141,14 +141,16 @@ class CodableEventStoreTests: XCTestCase {
     // MARK: - Helpers
 
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableEventStore {
-        let storeURL = storeURL()
+        let storeURL = testStoreURL()
 
         let sut = CodableEventStore(storeURL: storeURL)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
 
-    private func storeURL() -> URL {
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("event-feed.store")
+    private func testStoreURL() -> URL {
+        FileManager
+            .default.urls(for: .cachesDirectory, in: .userDomainMask)
+            .first!.appendingPathComponent("\(type(of: self)).store")
     }
 }
