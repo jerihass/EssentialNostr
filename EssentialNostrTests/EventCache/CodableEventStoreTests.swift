@@ -89,10 +89,10 @@ class CodableEventStoreTests: XCTestCase {
         expect(sut, toRetrieveTwice: .success([]))
     }
 
-    func test_retrieve_afterInsertingToEmptyCacheRetrievesInsertedValue() {
+    func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
         let sut = makeSUT()
         let events = uniqueEvents().local
-        
+
         insert(events, to: sut)
 
         expect(sut, toRetrieve: .success(events))
