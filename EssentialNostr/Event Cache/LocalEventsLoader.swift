@@ -25,11 +25,12 @@ public class LocalEventsLoader {
     }
 
     public func load(completion: @escaping (LoadResult) -> Void) {
-        store.retrieve { error in
-            if let error = error { 
+        store.retrieve { result in
+            switch result {
+            case let .failure(error):
                 completion(.failure(error))
-            } else {
-                completion(.success([]))
+            case let .success(events):
+                completion(.success(events))
             }
         }
     }
