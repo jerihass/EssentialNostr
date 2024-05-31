@@ -4,11 +4,15 @@
 
 import Foundation
 
+public protocol EventsLoader {
+    typealias LoadResult = Result<[Event], Error>
+    func load(completion: @escaping (LoadResult) -> Void)
+}
+
 public class LocalEventsLoader {
     private let store: EventStore
 
     public typealias SaveResult = Error?
-    public typealias LoadResult = Result<[Event], Error>
     public init(store: EventStore) {
         self.store = store
     }
@@ -24,7 +28,14 @@ public class LocalEventsLoader {
         }
     }
 
-    public func load(completion: @escaping (LoadResult) -> Void) {
+    private func cacheEventsWithCompletion(_ events: [Event], _ completion: @escaping (Error?) -> Void) {
+        store.insert(events.toLocal()) { [weak self] insertError in
+            guard self != nil else { return }
+            completion(insertError)
+        }
+    }
+
+    public func load(completion: @escaping (EventsLoader.LoadResult) -> Void) {
         store.retrieve { [weak self] result in
             guard self != nil else { return  }
             switch result {
@@ -36,12 +47,6 @@ public class LocalEventsLoader {
         }
     }
 
-    private func cacheEventsWithCompletion(_ events: [Event], _ completion: @escaping (Error?) -> Void) {
-        store.insert(events.toLocal()) { [weak self] insertError in
-            guard self != nil else { return }
-            completion(insertError)
-        }
-    }
 }
 
 private extension Array where Element == Event {
