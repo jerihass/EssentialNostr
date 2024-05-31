@@ -92,13 +92,8 @@ class CodableEventStoreTests: XCTestCase {
     func test_retrieve_afterInsertingToEmptyCacheRetrievesInsertedValue() {
         let sut = makeSUT()
         let events = uniqueEvents().local
-        let exp = expectation(description: "Wait for store insertion")
-
-        sut.insert(events) { insertError in
-            XCTAssertNil(insertError)
-            exp.fulfill()
-        }        
-        wait(for: [exp], timeout: 1)
+        
+        insert(events, to: sut)
 
         expect(sut, toRetrieve: .success(events))
     }
@@ -106,13 +101,8 @@ class CodableEventStoreTests: XCTestCase {
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
         let sut = makeSUT()
         let events = uniqueEvents().local
-        let exp = expectation(description: "Wait for store insertion")
 
-        sut.insert(events) { insertError in
-            XCTAssertNil(insertError)
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1)
+        insert(events, to: sut)
 
         expect(sut, toRetrieveTwice: .success(events))
     }
@@ -125,6 +115,16 @@ class CodableEventStoreTests: XCTestCase {
         let sut = CodableEventStore(storeURL: storeURL)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+
+    private func insert(_ events: [LocalEvent], to sut: CodableEventStore, file: StaticString = #file, line: UInt = #line) {
+        let exp = expectation(description: "Wait for store insertion")
+
+        sut.insert(events) { insertError in
+            XCTAssertNil(insertError)
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1)
     }
 
     private func expect(_ sut: CodableEventStore, toRetrieveTwice expectedResult: Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
