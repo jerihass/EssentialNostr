@@ -4,7 +4,7 @@
 
 import Foundation
 
-public struct LocalEvent: Equatable, Codable {
+public struct LocalEvent: Equatable {
     public let id: String
     public let publickey: String
     public let created: Date
