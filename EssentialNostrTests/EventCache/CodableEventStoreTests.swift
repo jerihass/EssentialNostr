@@ -78,7 +78,7 @@ class CodableEventStoreTests: XCTestCase {
     }
 
     func test_retrieve_deliversEmptyOnEmptyCache() {
-        let sut = CodableEventStore()
+        let sut = makeSUT()
         let exp = expectation(description: "Wait for store retrieval")
         sut.retrieve { result in
             switch result {
@@ -95,7 +95,7 @@ class CodableEventStoreTests: XCTestCase {
     }
 
     func test_retrieve_hasNoSideEffects() {
-        let sut = CodableEventStore()
+        let sut = makeSUT()
         let exp = expectation(description: "Wait for store retrieval")
         sut.retrieve { firstResult in
             sut.retrieve { secondResult in
@@ -114,7 +114,7 @@ class CodableEventStoreTests: XCTestCase {
     }
 
     func test_retrieve_afterInsertingToEmptyCacheRetrievesInsertedValue() {
-        let sut = CodableEventStore()
+        let sut = makeSUT()
         let exp = expectation(description: "Wait for store retrieval")
         let events = uniqueEvents().local
         sut.insert(events) { insertError in
@@ -132,5 +132,13 @@ class CodableEventStoreTests: XCTestCase {
         }
 
         wait(for: [exp], timeout: 1)
+    }
+
+    // MARK: - Helpers
+
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableEventStore {
+        let sut = CodableEventStore()
+        trackForMemoryLeaks(sut, file: file, line: line)
+        return sut
     }
 }
