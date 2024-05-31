@@ -18,7 +18,7 @@ public class LocalEventsLoader {
     }
 }
 
-extension LocalEventsLoader {
+extension LocalEventsLoader: EventsLoader {
     public func load(completion: @escaping (EventsLoader.LoadResult) -> Void) {
         store.retrieve { [weak self] result in
             guard self != nil else { return  }
