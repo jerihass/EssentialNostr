@@ -16,11 +16,14 @@ class CodableEventStore {
         guard let data = try? Data(contentsOf: storeURL) else {
             return completion(.success([]))
         }
-
-        let decoder = JSONDecoder()
-        let codableEvents = try! decoder.decode([CodableEvent].self, from: data)
-        let events = codableEvents.map(\.local)
-        completion(.success(events))
+        do {
+            let decoder = JSONDecoder()
+            let codableEvents = try decoder.decode([CodableEvent].self, from: data)
+            let events = codableEvents.map(\.local)
+            completion(.success(events))
+        } catch {
+            completion(.failure(error))
+        }
     }
 
     func insert(_ events: [LocalEvent], completion: @escaping EventStore.InsertionCompletion) {
@@ -107,6 +110,14 @@ class CodableEventStoreTests: XCTestCase {
         expect(sut, toRetrieveTwice: .success(events))
     }
 
+    func test_retrieve_deliversFailureOnRetrievalError() {
+        let sut = makeSUT()
+
+        try! "invalidData".write(to: testStoreURL(), atomically: false, encoding: .utf8)
+
+        expect(sut, toRetrieve: .failure(anyError()))
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableEventStore {
@@ -139,6 +150,8 @@ class CodableEventStoreTests: XCTestCase {
             switch (result, expectedResult) {
             case let (.success(events), .success(expectedEvents)):
                 XCTAssertEqual(events, expectedEvents)
+            case (.failure, .failure):
+                break
             default:
                 XCTFail("Expected \(expectedResult), got \(result) instead")
             }
