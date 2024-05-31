@@ -16,7 +16,23 @@ public class LocalEventsLoader {
     public init(store: EventStore) {
         self.store = store
     }
+}
 
+extension LocalEventsLoader {
+    public func load(completion: @escaping (EventsLoader.LoadResult) -> Void) {
+        store.retrieve { [weak self] result in
+            guard self != nil else { return  }
+            switch result {
+            case let .failure(error):
+                completion(.failure(error))
+            case let .success(events):
+                completion(.success(events.model()))
+            }
+        }
+    }
+}
+
+extension LocalEventsLoader {
     public func save(_ events: [Event], completion: @escaping (SaveResult) -> Void) {
         store.deleteCachedEvents { [weak self] deleteError in
             guard let self = self else { return }
@@ -34,19 +50,6 @@ public class LocalEventsLoader {
             completion(insertError)
         }
     }
-
-    public func load(completion: @escaping (EventsLoader.LoadResult) -> Void) {
-        store.retrieve { [weak self] result in
-            guard self != nil else { return  }
-            switch result {
-            case let .failure(error):
-                completion(.failure(error))
-            case let .success(events):
-                completion(.success(events.model()))
-            }
-        }
-    }
-
 }
 
 private extension Array where Element == Event {
