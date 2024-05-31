@@ -28,4 +28,23 @@ class CodableEventStoreTests: XCTestCase {
 
         wait(for: [exp], timeout: 1)
     }
+
+    func test_retrieve_hasNoSideEffects() {
+        let sut = CodableEventStore()
+        let exp = expectation(description: "Wait for store retrieval")
+        sut.retrieve { firstResult in
+            sut.retrieve { secondResult in
+                switch (firstResult, secondResult) {
+                case let (.success(firstEvents), .success(secondEvents)):
+                    XCTAssertTrue(firstEvents.isEmpty == secondEvents.isEmpty)
+                    break
+                default:
+                    XCTFail("Expected success, got \(firstResult) instead")
+                }
+                exp.fulfill()
+            }
+        }
+
+        wait(for: [exp], timeout: 1)
+    }
 }
