@@ -8,6 +8,7 @@ public class LocalEventsLoader {
     private let store: EventStore
 
     public typealias SaveResult = Error?
+    public typealias LoadResult = Result<[Event], Error>
     public init(store: EventStore) {
         self.store = store
     }
@@ -23,8 +24,10 @@ public class LocalEventsLoader {
         }
     }
 
-    public func load(completion: @escaping (Error?) -> Void) {
-        store.retrieve(completion: completion)
+    public func load(completion: @escaping (LoadResult) -> Void) {
+        store.retrieve { error in
+            if let error = error { completion(.failure(error)) }
+        }
     }
 
     private func cacheEventsWithCompletion(_ events: [Event], _ completion: @escaping (Error?) -> Void) {
