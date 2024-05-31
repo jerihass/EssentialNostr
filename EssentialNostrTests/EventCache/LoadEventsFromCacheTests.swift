@@ -45,8 +45,4 @@ class LoadEventsFromCacheTests: XCTestCase {
         trackForMemoryLeaks(store, file: file, line: line)
         return (sut, store)
     }
-
-    private func anyError() -> NSError {
-        NSError(domain: "domain", code: 1)
-    }
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD3215C42C09FEC000345A57 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C32C09FEC000345A57 /* Helpers.swift */; };
 		AD3FFA0D2BFC332500467B85 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5B9EBF2BF6CD2800E7D5CD /* XCTestCase+MemoryLeakTracking.swift */; };
 		AD51DB5A2BF42A4E00B5673C /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB692BF42A7100B5673C /* Event.swift */; };
@@ -50,6 +51,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		AD3215C32C09FEC000345A57 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		AD3FFA0E2BFC341900467B85 /* EssentialNostrAPIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialNostrAPIEndToEndTests.xctestplan; sourceTree = "<group>"; };
 		AD3FFA112BFC389700467B85 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialNostr.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -229,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				ADFFFE782C080D2E00A504A3 /* EventStoreSpy.swift */,
+				AD3215C32C09FEC000345A57 /* Helpers.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -393,6 +396,7 @@
 				AD72AEDF2C03C4BC00DD9964 /* EventCachingTests.swift in Sources */,
 				ADFFFE792C080D2E00A504A3 /* EventStoreSpy.swift in Sources */,
 				ADFFFE762C080CB900A504A3 /* LoadEventsFromCacheTests.swift in Sources */,
+				AD3215C42C09FEC000345A57 /* Helpers.swift in Sources */,
 				AD51DB6F2BF42CCD00B5673C /* RemoteEventLoaderTests.swift in Sources */,
 				ADE7026D2BF98D850066AC13 /* ClientMessageMapperTests.swift in Sources */,
 				AD7B0B1F2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift in Sources */,
