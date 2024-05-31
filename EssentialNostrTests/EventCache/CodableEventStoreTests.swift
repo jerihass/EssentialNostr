@@ -69,16 +69,12 @@ class CodableEventStore {
 class CodableEventStoreTests: XCTestCase {
     override func setUp() {
         super.setUp()
-        undoSideEffects()
+        setupEmptyStoreState()
     }
 
     override func tearDown() {
         super.tearDown()
-        undoSideEffects()
-    }
-
-    private func undoSideEffects() {
-        try? FileManager.default.removeItem(at: testStoreURL())
+        undoStoreSideEffects()
     }
 
     func test_retrieve_deliversEmptyOnEmptyCache() {
@@ -140,12 +136,24 @@ class CodableEventStoreTests: XCTestCase {
 
     // MARK: - Helpers
 
-    func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableEventStore {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableEventStore {
         let storeURL = testStoreURL()
 
         let sut = CodableEventStore(storeURL: storeURL)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
+    }
+
+    private func setupEmptyStoreState() {
+        deleteStoreArtifacts()
+    }
+
+    private func undoStoreSideEffects() {
+        deleteStoreArtifacts()
+    }
+
+    private func deleteStoreArtifacts() {
+        try? FileManager.default.removeItem(at: testStoreURL())
     }
 
     private func testStoreURL() -> URL {
