@@ -6,6 +6,12 @@ import XCTest
 import EssentialNostr
 
 class CodableEventStore {
+    private let storeURL: URL
+
+    init(storeURL: URL) {
+        self.storeURL = storeURL
+    }
+
     func retrieve(completion: @escaping EventStore.RetrievalCompletion) {
         guard let data = try? Data(contentsOf: storeURL) else {
             return completion(.success([]))
@@ -17,7 +23,6 @@ class CodableEventStore {
         completion(.success(events))
     }
 
-    private let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("event-feed.store")
     func insert(_ events: [LocalEvent], completion: @escaping EventStore.InsertionCompletion) {
         let encoder = JSONEncoder()
         let codableEvents = events.map(CodableEvent.init)
@@ -137,7 +142,9 @@ class CodableEventStoreTests: XCTestCase {
     // MARK: - Helpers
 
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> CodableEventStore {
-        let sut = CodableEventStore()
+        let storeURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("event-feed.store")
+
+        let sut = CodableEventStore(storeURL: storeURL)
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
