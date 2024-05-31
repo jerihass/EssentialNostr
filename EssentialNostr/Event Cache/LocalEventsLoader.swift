@@ -8,7 +8,7 @@ public class LocalEventsLoader {
     private let store: EventStore
 
     public typealias SaveResult = Error?
-    public typealias LoadResult = Result<[Event], Error>
+    public typealias LoadResult = Result<[LocalEvent], Error>
     public init(store: EventStore) {
         self.store = store
     }
