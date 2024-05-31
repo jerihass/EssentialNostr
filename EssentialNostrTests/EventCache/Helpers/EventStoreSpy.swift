@@ -57,4 +57,8 @@ class EventStoreSpy: EventStore {
     func completeRetrievalWithEmptyCache(at index: Int = 0) {
         retrievalCompletions[index](.success([]))
     }
+
+    func completeRetrieval(with events: [LocalEvent], at index: Int = 0) {
+        retrievalCompletions[index](.success(events))
+    }
 }

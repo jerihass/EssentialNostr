@@ -36,6 +36,14 @@ class LoadEventsFromCacheTests: XCTestCase {
         }
     }
 
+    func test_load_deliversEventsOnNonEmptyCache() {
+        let (sut, store) = makeSUT()
+        let events = uniqueEvents()
+        expect(sut, toLoadWith: .success(events.model)) {
+            store.completeRetrieval(with: events.local)
+        }
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalEventsLoader, store: EventStoreSpy) {

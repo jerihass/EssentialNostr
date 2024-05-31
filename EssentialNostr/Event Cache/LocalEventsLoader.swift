@@ -8,7 +8,7 @@ public class LocalEventsLoader {
     private let store: EventStore
 
     public typealias SaveResult = Error?
-    public typealias LoadResult = Result<[LocalEvent], Error>
+    public typealias LoadResult = Result<[Event], Error>
     public init(store: EventStore) {
         self.store = store
     }
@@ -30,7 +30,7 @@ public class LocalEventsLoader {
             case let .failure(error):
                 completion(.failure(error))
             case let .success(events):
-                completion(.success(events))
+                completion(.success(events.model()))
             }
         }
     }
@@ -47,6 +47,19 @@ private extension Array where Element == Event {
     func toLocal() -> [LocalEvent] {
         map{ LocalEvent(id: $0.id,
                         publicKey: $0.publicKey,
+                        created: $0.created,
+                        kind: $0.kind,
+                        tags: $0.tags,
+                        content: $0.content,
+                        signature: $0.signature)
+        }
+    }
+}
+
+private extension Array where Element == LocalEvent {
+    func model() -> [Event] {
+        map{ Event(id: $0.id,
+                        publicKey: $0.publickey,
                         created: $0.created,
                         kind: $0.kind,
                         tags: $0.tags,
