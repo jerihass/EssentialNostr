@@ -68,9 +68,9 @@ class EventCachingTests: XCTestCase {
 
     func test_save_doesNotDeliverDeletionErrorAfterSUTInstanceHasBeenDeallocated() {
         let store = EventStoreSpy()
-        var sut: LocalEventLoader? = LocalEventLoader(store: store)
+        var sut: LocalEventsLoader? = LocalEventsLoader(store: store)
 
-        var results = [LocalEventLoader.SaveResult]()
+        var results = [LocalEventsLoader.SaveResult]()
         sut?.save([uniqueEvent()]) { results.append($0) }
 
         sut = nil
@@ -82,9 +82,9 @@ class EventCachingTests: XCTestCase {
 
     func test_save_doesNotDeliverInsertiontErrorAfterSUTInstanceHasBeenDeallocated() {
         let store = EventStoreSpy()
-        var sut: LocalEventLoader? = LocalEventLoader(store: store)
+        var sut: LocalEventsLoader? = LocalEventsLoader(store: store)
 
-        var results = [LocalEventLoader.SaveResult]()
+        var results = [LocalEventsLoader.SaveResult]()
         sut?.save([uniqueEvent()]) { results.append($0) }
 
         store.completeDeletionSuccessfully()
@@ -96,15 +96,15 @@ class EventCachingTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalEventLoader, store: EventStoreSpy) {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalEventsLoader, store: EventStoreSpy) {
         let store = EventStoreSpy()
-        let sut = LocalEventLoader(store: store)
+        let sut = LocalEventsLoader(store: store)
         trackForMemoryLeaks(sut, file: file, line: line)
         trackForMemoryLeaks(store, file: file, line: line)
         return (sut, store)
     }
 
-    private func expect(_ sut: LocalEventLoader, toCompleteWith error: NSError?, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: LocalEventsLoader, toCompleteWith error: NSError?, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait for save completion")
 
         var capturedError: Error?

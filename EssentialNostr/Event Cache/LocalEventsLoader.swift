@@ -4,7 +4,7 @@
 
 import Foundation
 
-public class LocalEventLoader {
+public class LocalEventsLoader {
     private let store: EventStore
 
     public typealias SaveResult = Error?
