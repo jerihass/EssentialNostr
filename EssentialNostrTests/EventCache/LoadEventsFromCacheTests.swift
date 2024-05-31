@@ -40,6 +40,26 @@ class LoadEventsFromCacheTests: XCTestCase {
         XCTAssertEqual(receivedError as NSError?, error)
     }
 
+    func test_load_deliversNoEventsOnEmptyCache() {
+        let (sut, store) = makeSUT()
+        let exp = expectation(description: "Wait for load completion")
+
+        var receivedEvents: [Event]?
+        sut.load { result in
+            if case let .success(events) = result {
+                receivedEvents = events
+            } else {
+                XCTFail("Expected success, got \(result) instead")
+            }
+            exp.fulfill()
+        }
+        store.completeRetrievalWithEmptyCache()
+
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertEqual(receivedEvents, [])
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: LocalEventsLoader, store: EventStoreSpy) {
