@@ -4,11 +4,6 @@
 
 import Foundation
 
-public protocol EventsLoader {
-    typealias LoadResult = Result<[Event], Error>
-    func load(completion: @escaping (LoadResult) -> Void)
-}
-
 public class LocalEventsLoader {
     private let store: EventStore
 
@@ -19,7 +14,7 @@ public class LocalEventsLoader {
 }
 
 extension LocalEventsLoader: EventsLoader {
-    public func load(completion: @escaping (EventsLoader.LoadResult) -> Void) {
+    public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
             guard self != nil else { return  }
             switch result {
