@@ -13,6 +13,7 @@
 		AD13434D2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */; };
 		AD13434E2C0BB94C0082F2E5 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		AD1343552C0BBB0B0082F2E5 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5B9EBF2BF6CD2800E7D5CD /* XCTestCase+MemoryLeakTracking.swift */; };
+		AD1343562C0BBD520082F2E5 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C32C09FEC000345A57 /* Helpers.swift */; };
 		AD3215C42C09FEC000345A57 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C32C09FEC000345A57 /* Helpers.swift */; };
 		AD3215C62C0A56AF00345A57 /* EventsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C52C0A56AF00345A57 /* EventsLoader.swift */; };
 		AD3215C82C0A5AB800345A57 /* CodableEventStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C72C0A5AB800345A57 /* CodableEventStoreTests.swift */; };
@@ -459,6 +460,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AD13434D2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift in Sources */,
+				AD1343562C0BBD520082F2E5 /* Helpers.swift in Sources */,
 				AD1343552C0BBB0B0082F2E5 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
