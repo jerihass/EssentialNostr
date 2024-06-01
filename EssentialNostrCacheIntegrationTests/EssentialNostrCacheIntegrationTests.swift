@@ -15,7 +15,7 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
         super.tearDown()
         undoStoreSideEffects()
     }
-
+    
     func test_load_deliversNoItemsOnEmptyCache() {
         let sut = makeSUT()
 
@@ -31,6 +31,32 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1)
+    }
+
+    func test_load_deliversEventsSavedOnSeprateInstance() {
+        let sutToSave = makeSUT()
+        let sutToLoad = makeSUT()
+        let events = uniqueEvents().model
+
+        let saveExp = expectation(description: "Wait for save completion")
+        sutToSave.save(events) { saveError in
+            XCTAssertNil(saveError, "Expected successful save")
+            saveExp.fulfill()
+        }
+        wait(for: [saveExp], timeout: 1)
+
+        let loadExp = expectation(description: "Wait for load completion")
+        sutToLoad.load { result in
+            switch result {
+            case let .success(loadedEvents):
+                XCTAssertEqual(loadedEvents, events, "Expected empty events")
+            case let .failure(error):
+                XCTFail("Expected successful events result, got \(error) instead.")
+            }
+            loadExp.fulfill()
+        }
+        wait(for: [loadExp], timeout: 1)
+
     }
 
     // MARK: - Helpers
