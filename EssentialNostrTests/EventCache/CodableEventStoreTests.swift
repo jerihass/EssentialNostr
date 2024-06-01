@@ -12,7 +12,7 @@ class CodableEventStore: EventStore {
         self.storeURL = storeURL
     }
 
-    func retrieve(completion: @escaping EventStore.RetrievalCompletion) {
+    func retrieve(completion: @escaping RetrievalCompletion) {
         guard let data = try? Data(contentsOf: storeURL) else {
             return completion(.success([]))
         }
@@ -26,7 +26,7 @@ class CodableEventStore: EventStore {
         }
     }
 
-    func insert(_ events: [LocalEvent], completion: @escaping EventStore.InsertionCompletion) {
+    func insert(_ events: [LocalEvent], completion: @escaping InsertionCompletion) {
         var storedEvents: [LocalEvent]?
         retrieve { result in
             storedEvents = try? result.get()
@@ -46,7 +46,7 @@ class CodableEventStore: EventStore {
         }
     }
 
-    func deleteCachedEvents(completion: @escaping EventStore.DeletionCompletion) {
+    func deleteCachedEvents(completion: @escaping DeletionCompletion) {
         guard FileManager.default.fileExists(atPath: storeURL.path()) else {
             return completion(nil)
         }
@@ -209,14 +209,14 @@ class CodableEventStoreTests: XCTestCase {
 
     // MARK: - Helpers
 
-    private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableEventStore {
+    private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> EventStore {
         let sut = CodableEventStore(storeURL: storeURL ?? testingStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
 
     @discardableResult
-    private func insert(_ events: [LocalEvent], to sut: CodableEventStore, file: StaticString = #file, line: UInt = #line) -> Error? {
+    private func insert(_ events: [LocalEvent], to sut: EventStore, file: StaticString = #file, line: UInt = #line) -> Error? {
         let exp = expectation(description: "Wait for store insertion")
         var error: Error?
         sut.insert(events) { insertError in
@@ -227,7 +227,7 @@ class CodableEventStoreTests: XCTestCase {
         return error
     }
 
-    private func deleteCache(from sut: CodableEventStore, file: StaticString = #file, line: UInt = #line) -> Error? {
+    private func deleteCache(from sut: EventStore, file: StaticString = #file, line: UInt = #line) -> Error? {
         let exp = expectation(description: "Wait for store insertion")
         var error: Error?
         sut.deleteCachedEvents { deleteError in
@@ -238,12 +238,12 @@ class CodableEventStoreTests: XCTestCase {
         return error
     }
 
-    private func expect(_ sut: CodableEventStore, toRetrieveTwice expectedResult: Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: EventStore, toRetrieveTwice expectedResult: Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
         expect(sut, toRetrieve: expectedResult)
         expect(sut, toRetrieve: expectedResult)
     }
 
-    private func expect(_ sut: CodableEventStore, toRetrieve expectedResult:  Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: EventStore, toRetrieve expectedResult:  Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait for cache retrieval")
 
         sut.retrieve { result in
