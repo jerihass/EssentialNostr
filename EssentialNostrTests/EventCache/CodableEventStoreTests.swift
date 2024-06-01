@@ -34,11 +34,15 @@ class CodableEventStore {
         var tempEvents = events
         tempEvents.insert(contentsOf: storedEvents ?? [], at: 0)
 
-        let encoder = JSONEncoder()
-        let codableEvents = tempEvents.map(CodableEvent.init)
-        let data = try! encoder.encode(codableEvents)
-        try! data.write(to: storeURL)
-        completion(nil)
+        do {
+            let encoder = JSONEncoder()
+            let codableEvents = tempEvents.map(CodableEvent.init)
+            let data = try encoder.encode(codableEvents)
+            try data.write(to: storeURL)
+            completion(nil)
+        } catch {
+            completion(error)
+        }
     }
 
     private struct CodableEvent: Codable {
@@ -147,6 +151,16 @@ class CodableEventStoreTests: XCTestCase {
         XCTAssertNil(secondError, "Expected first insertion success")
 
         expect(sut, toRetrieve: .success(events + events2))
+    }
+
+    func test_insert_deliversErroOnInsertionError() {
+        let invalidURL = URL(string: "invalid://store")!
+        let sut = makeSUT(storeURL: invalidURL)
+        let events = uniqueEvents().local
+
+        let insertError = insert(events, to: sut)
+
+        XCTAssertNotNil(insertError)
     }
 
     // MARK: - Helpers
