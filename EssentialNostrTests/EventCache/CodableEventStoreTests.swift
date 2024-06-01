@@ -46,7 +46,7 @@ class CodableEventStore {
         }
     }
 
-    func deleteCache(completion: @escaping EventStore.DeletionCompletion) {
+    func deleteCachedEvents(completion: @escaping EventStore.DeletionCompletion) {
         do {
             try FileManager.default.removeItem(at: storeURL)
             completion(nil)
@@ -227,7 +227,7 @@ class CodableEventStoreTests: XCTestCase {
     private func deleteCache(from sut: CodableEventStore, file: StaticString = #file, line: UInt = #line) -> Error? {
         let exp = expectation(description: "Wait for store insertion")
         var error: Error?
-        sut.deleteCache { deleteError in
+        sut.deleteCachedEvents { deleteError in
             error = deleteError
             exp.fulfill()
         }
