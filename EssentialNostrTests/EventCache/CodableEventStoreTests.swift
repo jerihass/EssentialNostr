@@ -27,8 +27,15 @@ class CodableEventStore {
     }
 
     func insert(_ events: [LocalEvent], completion: @escaping EventStore.InsertionCompletion) {
+        var storedEvents: [LocalEvent]?
+        retrieve { result in
+            storedEvents = try? result.get()
+        }
+        var tempEvents = events
+        tempEvents.insert(contentsOf: storedEvents ?? [], at: 0)
+
         let encoder = JSONEncoder()
-        let codableEvents = events.map(CodableEvent.init)
+        let codableEvents = tempEvents.map(CodableEvent.init)
         let data = try! encoder.encode(codableEvents)
         try! data.write(to: storeURL)
         completion(nil)
@@ -126,6 +133,17 @@ class CodableEventStoreTests: XCTestCase {
         try! "invalidData".write(to: storeURL, atomically: false, encoding: .utf8)
 
         expect(sut, toRetrieveTwice: .failure(anyError()))
+    }
+
+    func test_insert_appendsCacheValues() {
+        let sut = makeSUT()
+        var events = uniqueEvents().local
+        let events2 = uniqueEvents().local
+        insert(events, to: sut)
+        insert(events2, to: sut)
+
+        events.append(contentsOf: events2)
+        expect(sut, toRetrieve: .success(events))
     }
 
     // MARK: - Helpers
