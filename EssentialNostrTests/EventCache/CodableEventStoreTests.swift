@@ -5,7 +5,7 @@
 import XCTest
 import EssentialNostr
 
-class CodableEventStoreTests: XCTestCase {
+class CodableEventStoreTests: XCTestCase, EventStoreSpecs {
     override func setUp() {
         super.setUp()
         setupEmptyStoreState()
@@ -18,32 +18,22 @@ class CodableEventStoreTests: XCTestCase {
 
     func test_retrieve_deliversEmptyOnEmptyCache() {
         let sut = makeSUT()
-
-        expect(sut, toRetrieve: .success([]))
+        assertThatStoreDeliversEmptyOnEmptyCache(sut)
     }
 
     func test_retrieve_hasNoSideEffects() {
         let sut = makeSUT()
-
-        expect(sut, toRetrieveTwice: .success([]))
+        assertThatRetrieveHasNoSideEffects(sut)
     }
 
     func test_retrieve_deliversFoundValuesOnNonEmptyCache() {
         let sut = makeSUT()
-        let events = uniqueEvents().local
-
-        insert(events, to: sut)
-
-        expect(sut, toRetrieve: .success(events))
+        assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(sut)
     }
 
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
         let sut = makeSUT()
-        let events = uniqueEvents().local
-
-        insert(events, to: sut)
-
-        expect(sut, toRetrieveTwice: .success(events))
+        assertThatRetrieveHasNoSideEffectsOnNonEmptyCache(sut)
     }
 
     func test_retrieve_deliversFailureOnRetrievalError() {
@@ -52,7 +42,7 @@ class CodableEventStoreTests: XCTestCase {
 
         try! "invalidData".write(to: storeURL, atomically: false, encoding: .utf8)
 
-        expect(sut, toRetrieve: .failure(anyError()))
+        assertThatRetrieveDeliversFailureOnRetrievalError(sut)
     }
 
     func test_retrieve_hasNoSideEffectsOnFailure() {
@@ -61,62 +51,34 @@ class CodableEventStoreTests: XCTestCase {
 
         try! "invalidData".write(to: storeURL, atomically: false, encoding: .utf8)
 
-        expect(sut, toRetrieveTwice: .failure(anyError()))
+        assertThatRetrieveHasNoSideEffectsOnFailure(sut)
     }
 
     func test_insert_appendsCacheValuesToPreviousValues() {
         let sut = makeSUT()
-        let events = uniqueEvents().local
-        let events2 = uniqueEvents().local
-
-        let firstError = insert(events, to: sut)
-        XCTAssertNil(firstError, "Expected first insertion success")
-
-        let secondError = insert(events2, to: sut)
-        XCTAssertNil(secondError, "Expected first insertion success")
-
-        expect(sut, toRetrieve: .success(events + events2))
+        assertThatInsertAppendsCacheValuesToPreviousValues(sut)
     }
 
     func test_insert_deliversErroOnInsertionError() {
         let invalidURL = URL(string: "invalid://store")!
         let sut = makeSUT(storeURL: invalidURL)
-        let events = uniqueEvents().local
-
-        let insertError = insert(events, to: sut)
-
-        XCTAssertNotNil(insertError)
+        assertThatInsertDeliversErrorOnInsertionError(sut)
     }
 
     func test_delete_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
-
-        let deletionError = deleteCache(from: sut)
-
-        XCTAssertNil(deletionError, "Exepected cache deletion to succeed")
-        expect(sut, toRetrieve: .success([]))
+        assertThatDeleteHasNoSideEffectsOnEmptyCache(sut)
     }
 
     func test_delete_emptiesPreviouslyInsertedCache() {
         let sut = makeSUT()
-        let events = uniqueEvents().local
-        insert(events, to: sut)
-
-        let deletionError = deleteCache(from: sut)
-
-        XCTAssertNil(deletionError, "Exepected cache deletion to succeed")
-        expect(sut, toRetrieve: .success([]))
+        assertThatDeleteEmptiesPreviouslyInsertedCache(sut)
     }
 
     func test_delete_deliversErrorOnDeletionError() {
         let noDeletePermissionURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
         let sut = makeSUT(storeURL: noDeletePermissionURL)
-        let events = uniqueEvents().local
-        insert(events, to: sut)
-
-        let deletionError = deleteCache(from: sut)
-
-        XCTAssertNotNil(deletionError, "Exepected cache deletion to fail")
+        assertThatDeleteDeliversErrorOnDeletionError(sut)
     }
 
     func test_storeSideEffects_runSerially() {
@@ -151,52 +113,6 @@ class CodableEventStoreTests: XCTestCase {
         let sut = CodableEventStore(storeURL: storeURL ?? testingStoreURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
-    }
-
-    @discardableResult
-    private func insert(_ events: [LocalEvent], to sut: EventStore, file: StaticString = #file, line: UInt = #line) -> Error? {
-        let exp = expectation(description: "Wait for store insertion")
-        var error: Error?
-        sut.insert(events) { insertError in
-            error = insertError
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1)
-        return error
-    }
-
-    private func deleteCache(from sut: EventStore, file: StaticString = #file, line: UInt = #line) -> Error? {
-        let exp = expectation(description: "Wait for store insertion")
-        var error: Error?
-        sut.deleteCachedEvents { deleteError in
-            error = deleteError
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1)
-        return error
-    }
-
-    private func expect(_ sut: EventStore, toRetrieveTwice expectedResult: Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
-        expect(sut, toRetrieve: expectedResult)
-        expect(sut, toRetrieve: expectedResult)
-    }
-
-    private func expect(_ sut: EventStore, toRetrieve expectedResult:  Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
-        let exp = expectation(description: "Wait for cache retrieval")
-
-        sut.retrieve { result in
-            switch (result, expectedResult) {
-            case let (.success(events), .success(expectedEvents)):
-                XCTAssertEqual(events, expectedEvents, file: file, line: line)
-            case (.failure, .failure):
-                break
-            default:
-                XCTFail("Expected \(expectedResult), got \(result) instead")
-            }
-            exp.fulfill()
-        }
-
-        wait(for: [exp], timeout: 1)
     }
 
     private func setupEmptyStoreState() {
