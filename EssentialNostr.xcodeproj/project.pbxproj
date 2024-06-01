@@ -10,6 +10,8 @@
 		AD1343402C0AC09A0082F2E5 /* CodableEventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13433F2C0AC09A0082F2E5 /* CodableEventStore.swift */; };
 		AD1343432C0BB7C60082F2E5 /* EventStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343422C0BB7C60082F2E5 /* EventStoreSpecs.swift */; };
 		AD1343452C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343442C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift */; };
+		AD13434D2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */; };
+		AD13434E2C0BB94C0082F2E5 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		AD3215C42C09FEC000345A57 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C32C09FEC000345A57 /* Helpers.swift */; };
 		AD3215C62C0A56AF00345A57 /* EventsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C52C0A56AF00345A57 /* EventsLoader.swift */; };
 		AD3215C82C0A5AB800345A57 /* CodableEventStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C72C0A5AB800345A57 /* CodableEventStoreTests.swift */; };
@@ -39,6 +41,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		AD13434F2C0BB94C0082F2E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AD51DB482BF42A4D00B5673C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD51DB502BF42A4D00B5673C;
+			remoteInfo = EssentialNostr;
+		};
 		AD51DB5B2BF42A4E00B5673C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AD51DB482BF42A4D00B5673C /* Project object */;
@@ -59,6 +68,9 @@
 		AD13433F2C0AC09A0082F2E5 /* CodableEventStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableEventStore.swift; sourceTree = "<group>"; };
 		AD1343422C0BB7C60082F2E5 /* EventStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStoreSpecs.swift; sourceTree = "<group>"; };
 		AD1343442C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventStoreSpecs+XCTestHelpers.swift"; sourceTree = "<group>"; };
+		AD13434A2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostrCacheIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialNostrCacheIntegrationTests.swift; sourceTree = "<group>"; };
+		AD1343542C0BB98D0082F2E5 /* EssentialNostrCacheIntegrationTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialNostrCacheIntegrationTests.xctestplan; sourceTree = "<group>"; };
 		AD3215C32C09FEC000345A57 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		AD3215C52C0A56AF00345A57 /* EventsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsLoader.swift; sourceTree = "<group>"; };
 		AD3215C72C0A5AB800345A57 /* CodableEventStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableEventStoreTests.swift; sourceTree = "<group>"; };
@@ -91,6 +103,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		AD1343472C0BB94C0082F2E5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD13434E2C0BB94C0082F2E5 /* EssentialNostr.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AD51DB4E2BF42A4D00B5673C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -126,6 +146,15 @@
 			path = "EventStore Specs";
 			sourceTree = "<group>";
 		};
+		AD13434B2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests */ = {
+			isa = PBXGroup;
+			children = (
+				AD1343542C0BB98D0082F2E5 /* EssentialNostrCacheIntegrationTests.xctestplan */,
+				AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */,
+			);
+			path = EssentialNostrCacheIntegrationTests;
+			sourceTree = "<group>";
+		};
 		AD51DB472BF42A4D00B5673C = {
 			isa = PBXGroup;
 			children = (
@@ -133,6 +162,7 @@
 				AD51DB532BF42A4E00B5673C /* EssentialNostr */,
 				AD51DB5D2BF42A4E00B5673C /* EssentialNostrTests */,
 				ADB6CEEA2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests */,
+				AD13434B2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests */,
 				AD51DB522BF42A4E00B5673C /* Products */,
 			);
 			sourceTree = "<group>";
@@ -143,6 +173,7 @@
 				AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */,
 				AD51DB592BF42A4E00B5673C /* EssentialNostrTests.xctest */,
 				ADB6CEE92BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.xctest */,
+				AD13434A2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -272,6 +303,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		AD1343492C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AD1343512C0BB94C0082F2E5 /* Build configuration list for PBXNativeTarget "EssentialNostrCacheIntegrationTests" */;
+			buildPhases = (
+				AD1343462C0BB94C0082F2E5 /* Sources */,
+				AD1343472C0BB94C0082F2E5 /* Frameworks */,
+				AD1343482C0BB94C0082F2E5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AD1343502C0BB94C0082F2E5 /* PBXTargetDependency */,
+			);
+			name = EssentialNostrCacheIntegrationTests;
+			productName = EssentialNostrCacheIntegrationTests;
+			productReference = AD13434A2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		AD51DB502BF42A4D00B5673C /* EssentialNostr */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = AD51DB632BF42A4E00B5673C /* Build configuration list for PBXNativeTarget "EssentialNostr" */;
@@ -336,6 +385,9 @@
 				LastSwiftUpdateCheck = 1510;
 				LastUpgradeCheck = 1510;
 				TargetAttributes = {
+					AD1343492C0BB94C0082F2E5 = {
+						CreatedOnToolsVersion = 15.1;
+					};
 					AD51DB502BF42A4D00B5673C = {
 						CreatedOnToolsVersion = 15.1;
 						LastSwiftMigration = 1510;
@@ -364,11 +416,19 @@
 				AD51DB502BF42A4D00B5673C /* EssentialNostr */,
 				AD51DB582BF42A4E00B5673C /* EssentialNostrTests */,
 				ADB6CEE82BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests */,
+				AD1343492C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		AD1343482C0BB94C0082F2E5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AD51DB4F2BF42A4D00B5673C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -393,6 +453,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		AD1343462C0BB94C0082F2E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AD13434D2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		AD51DB4D2BF42A4D00B5673C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -444,6 +512,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		AD1343502C0BB94C0082F2E5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AD51DB502BF42A4D00B5673C /* EssentialNostr */;
+			targetProxy = AD13434F2C0BB94C0082F2E5 /* PBXContainerItemProxy */;
+		};
 		AD51DB5C2BF42A4E00B5673C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = AD51DB502BF42A4D00B5673C /* EssentialNostr */;
@@ -457,6 +530,40 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		AD1343522C0BB94C0082F2E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7W77348744;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sal-et-lucem.EssentialNostrCacheIntegrationTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AD1343532C0BB94C0082F2E5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 7W77348744;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.6;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sal-et-lucem.EssentialNostrCacheIntegrationTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		AD51DB612BF42A4E00B5673C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -735,6 +842,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		AD1343512C0BB94C0082F2E5 /* Build configuration list for PBXNativeTarget "EssentialNostrCacheIntegrationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AD1343522C0BB94C0082F2E5 /* Debug */,
+				AD1343532C0BB94C0082F2E5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		AD51DB4B2BF42A4D00B5673C /* Build configuration list for PBXProject "EssentialNostr" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

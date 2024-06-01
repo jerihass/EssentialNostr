@@ -1,0 +1,34 @@
+{
+  "configurations" : [
+    {
+      "id" : "EAE435E3-0B6B-4E1A-AD21-B5F15F2F66E1",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:EssentialNostr.xcodeproj",
+          "identifier" : "AD51DB502BF42A4D00B5673C",
+          "name" : "EssentialNostr"
+        }
+      ]
+    },
+    "testExecutionOrdering" : "random"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:EssentialNostr.xcodeproj",
+        "identifier" : "AD1343492C0BB94C0082F2E5",
+        "name" : "EssentialNostrCacheIntegrationTests"
+      }
+    }
+  ],
+  "version" : 1
+}
