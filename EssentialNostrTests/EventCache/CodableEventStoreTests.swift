@@ -135,15 +135,18 @@ class CodableEventStoreTests: XCTestCase {
         expect(sut, toRetrieveTwice: .failure(anyError()))
     }
 
-    func test_insert_appendsCacheValues() {
+    func test_insert_appendsCacheValuesToPreviousValues() {
         let sut = makeSUT()
-        var events = uniqueEvents().local
+        let events = uniqueEvents().local
         let events2 = uniqueEvents().local
-        insert(events, to: sut)
-        insert(events2, to: sut)
 
-        events.append(contentsOf: events2)
-        expect(sut, toRetrieve: .success(events))
+        let firstError = insert(events, to: sut)
+        XCTAssertNil(firstError, "Expected first insertion success")
+
+        let secondError = insert(events2, to: sut)
+        XCTAssertNil(secondError, "Expected first insertion success")
+
+        expect(sut, toRetrieve: .success(events + events2))
     }
 
     // MARK: - Helpers
@@ -154,14 +157,16 @@ class CodableEventStoreTests: XCTestCase {
         return sut
     }
 
-    private func insert(_ events: [LocalEvent], to sut: CodableEventStore, file: StaticString = #file, line: UInt = #line) {
+    @discardableResult
+    private func insert(_ events: [LocalEvent], to sut: CodableEventStore, file: StaticString = #file, line: UInt = #line) -> Error? {
         let exp = expectation(description: "Wait for store insertion")
-
+        var error: Error?
         sut.insert(events) { insertError in
-            XCTAssertNil(insertError)
+            error = insertError
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1)
+        return error
     }
 
     private func expect(_ sut: CodableEventStore, toRetrieveTwice expectedResult: Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
