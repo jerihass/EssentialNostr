@@ -14,6 +14,7 @@
 		AD13434E2C0BB94C0082F2E5 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		AD1343552C0BBB0B0082F2E5 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5B9EBF2BF6CD2800E7D5CD /* XCTestCase+MemoryLeakTracking.swift */; };
 		AD1343562C0BBD520082F2E5 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C32C09FEC000345A57 /* Helpers.swift */; };
+		AD1343582C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343572C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift */; };
 		AD3215C42C09FEC000345A57 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C32C09FEC000345A57 /* Helpers.swift */; };
 		AD3215C62C0A56AF00345A57 /* EventsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C52C0A56AF00345A57 /* EventsLoader.swift */; };
 		AD3215C82C0A5AB800345A57 /* CodableEventStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C72C0A5AB800345A57 /* CodableEventStoreTests.swift */; };
@@ -73,6 +74,7 @@
 		AD13434A2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostrCacheIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialNostrCacheIntegrationTests.swift; sourceTree = "<group>"; };
 		AD1343542C0BB98D0082F2E5 /* EssentialNostrCacheIntegrationTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialNostrCacheIntegrationTests.xctestplan; sourceTree = "<group>"; };
+		AD1343572C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataEventStoreTests.swift; sourceTree = "<group>"; };
 		AD3215C32C09FEC000345A57 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		AD3215C52C0A56AF00345A57 /* EventsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsLoader.swift; sourceTree = "<group>"; };
 		AD3215C72C0A5AB800345A57 /* CodableEventStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableEventStoreTests.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				AD72AEDE2C03C4BC00DD9964 /* EventCachingTests.swift */,
 				ADFFFE752C080CB900A504A3 /* LoadEventsFromCacheTests.swift */,
 				AD3215C72C0A5AB800345A57 /* CodableEventStoreTests.swift */,
+				AD1343572C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift */,
 			);
 			path = EventCache;
 			sourceTree = "<group>";
@@ -492,6 +495,7 @@
 			files = (
 				AD72AEDF2C03C4BC00DD9964 /* EventCachingTests.swift in Sources */,
 				AD1343432C0BB7C60082F2E5 /* EventStoreSpecs.swift in Sources */,
+				AD1343582C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift in Sources */,
 				ADFFFE792C080D2E00A504A3 /* EventStoreSpy.swift in Sources */,
 				ADFFFE762C080CB900A504A3 /* LoadEventsFromCacheTests.swift in Sources */,
 				AD3215C42C09FEC000345A57 /* Helpers.swift in Sources */,

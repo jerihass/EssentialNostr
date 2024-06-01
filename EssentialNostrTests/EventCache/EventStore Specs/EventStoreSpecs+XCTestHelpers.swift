@@ -6,8 +6,8 @@ import XCTest
 import EssentialNostr
 
 extension EventStoreSpecs where Self: XCTestCase {
-    func assertThatStoreDeliversEmptyOnEmptyCache(_ sut: EventStore) {
-        expect(sut, toRetrieve: .success([]))
+    func assertThatStoreDeliversEmptyOnEmptyCache(_ sut: EventStore, file: StaticString = #file, line: UInt = #line) {
+        expect(sut, toRetrieve: .success([]), file: file, line: line)
     }
     func assertThatRetrieveHasNoSideEffects(_ sut: EventStore) {
         expect(sut, toRetrieveTwice: .success([]))
