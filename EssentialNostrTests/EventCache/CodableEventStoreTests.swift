@@ -5,7 +5,7 @@
 import XCTest
 import EssentialNostr
 
-class CodableEventStore {
+class CodableEventStore: EventStore {
     private let storeURL: URL
 
     init(storeURL: URL) {
