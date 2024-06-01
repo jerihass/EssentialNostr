@@ -46,6 +46,10 @@ class CodableEventStore {
         }
     }
 
+    func deleteCache(completion: @escaping EventStore.DeletionCompletion) {
+        completion(nil)
+    }
+
     private struct CodableEvent: Codable {
         private let id: String
         private let publickey: String
@@ -164,6 +168,15 @@ class CodableEventStoreTests: XCTestCase {
         XCTAssertNotNil(insertError)
     }
 
+    func test_delete_hasNoSideEffectsOnEmptyCache() {
+        let sut = makeSUT()
+
+        let deletionError = deleteCache(from: sut)
+
+        XCTAssertNil(deletionError, "Exepected cache deletion to succeed")
+        expect(sut, toRetrieve: .success([]))
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> CodableEventStore {
@@ -178,6 +191,17 @@ class CodableEventStoreTests: XCTestCase {
         var error: Error?
         sut.insert(events) { insertError in
             error = insertError
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1)
+        return error
+    }
+
+    private func deleteCache(from sut: CodableEventStore, file: StaticString = #file, line: UInt = #line) -> Error? {
+        let exp = expectation(description: "Wait for store insertion")
+        var error: Error?
+        sut.deleteCache { deleteError in
+            error = deleteError
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1)
