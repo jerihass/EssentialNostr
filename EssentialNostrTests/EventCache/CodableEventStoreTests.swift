@@ -47,6 +47,7 @@ class CodableEventStore {
     }
 
     func deleteCache(completion: @escaping EventStore.DeletionCompletion) {
+        try? FileManager.default.removeItem(at: storeURL)
         completion(nil)
     }
 
@@ -170,6 +171,17 @@ class CodableEventStoreTests: XCTestCase {
 
     func test_delete_hasNoSideEffectsOnEmptyCache() {
         let sut = makeSUT()
+
+        let deletionError = deleteCache(from: sut)
+
+        XCTAssertNil(deletionError, "Exepected cache deletion to succeed")
+        expect(sut, toRetrieve: .success([]))
+    }
+
+    func test_delete_emptiesPreviouslyInsertedCache() {
+        let sut = makeSUT()
+        let events = uniqueEvents().local
+        insert(events, to: sut)
 
         let deletionError = deleteCache(from: sut)
 
