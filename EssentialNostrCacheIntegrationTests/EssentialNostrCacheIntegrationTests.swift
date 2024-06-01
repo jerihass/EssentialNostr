@@ -31,6 +31,19 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
         expect(sutToLoad, toLoad: events)
     }
 
+    func test_save_appendsEventsSavedOnSeprateInstance() {
+        let sutForFirstSave = makeSUT()
+        let sutForAppending = makeSUT()
+        let sutForLoad = makeSUT()
+
+        let firstEvents = uniqueEvents().model
+        let lastEvents = uniqueEvents().model
+
+        expect(sutForFirstSave, toSave: firstEvents)
+        expect(sutForAppending, toSave: lastEvents, overwrite: false)
+        expect(sutForLoad, toLoad: firstEvents + lastEvents)
+    }
+
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> LocalEventsLoader {
         let storeURL = testingStoreURL()
@@ -40,10 +53,11 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
         return loader
     }
 
-    private func expect(_ sut: LocalEventsLoader, toSave events: [Event], file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: LocalEventsLoader, toSave events: [Event], overwrite: Bool = true, file: StaticString = #file, line: UInt = #line) {
+        print("saving :\(events)")
 
         let saveExp = expectation(description: "Wait for save completion")
-        sut.save(events) { saveError in
+        sut.save(events, overwrite: overwrite) { saveError in
             XCTAssertNil(saveError, "Expected successful save")
             saveExp.fulfill()
         }
@@ -51,11 +65,12 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
     }
 
     private func expect(_ sut: LocalEventsLoader, toLoad events: [Event], file: StaticString = #file, line: UInt = #line) {
+        print("loading \(events)")
         let loadExp = expectation(description: "Wait for load completion")
         sut.load { result in
             switch result {
             case let .success(loadedEvents):
-                XCTAssertEqual(loadedEvents, events, "Expected empty events")
+                XCTAssertEqual(loadedEvents, events, "\nLoaded: \(loadedEvents.count) events,\nExpected: \(events.count) events", file: file, line: line)
             case let .failure(error):
                 XCTFail("Expected successful events result, got \(error) instead.")
             }

@@ -12,12 +12,12 @@ extension EventStoreSpecs where Self: XCTestCase {
     func assertThatRetrieveHasNoSideEffects(_ sut: EventStore) {
         expect(sut, toRetrieveTwice: .success([]))
     }
-    func assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(_ sut: EventStore) {
+    func assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(_ sut: EventStore,file: StaticString = #file, line: UInt = #line) {
         let events = uniqueEvents().local
 
         insert(events, to: sut)
 
-        expect(sut, toRetrieve: .success(events))
+        expect(sut, toRetrieve: .success(events), file: file, line: line)
     }
     func assertThatRetrieveHasNoSideEffectsOnNonEmptyCache(_ sut: EventStore) {
         let events = uniqueEvents().local
