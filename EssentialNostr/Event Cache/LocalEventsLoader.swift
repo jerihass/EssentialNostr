@@ -28,14 +28,19 @@ extension LocalEventsLoader: EventsLoader {
 }
 
 extension LocalEventsLoader {
-    public func save(_ events: [Event], completion: @escaping (SaveResult) -> Void) {
-        store.deleteCachedEvents { [weak self] deleteError in
-            guard let self = self else { return }
-            if let de = deleteError {
-                completion(de)
-            } else {
-                self.cacheEventsWithCompletion(events, completion)
+    public func save(_ events: [Event], overwrite: Bool = true, completion: @escaping (SaveResult) -> Void) {
+        if overwrite {
+            store.deleteCachedEvents { [weak self] deleteError in
+                guard let self = self else { return }
+                if let de = deleteError {
+                    completion(de)
+                } else {
+                    self.cacheEventsWithCompletion(events, completion)
+                }
             }
+        }
+        else {
+            self.cacheEventsWithCompletion(events, completion)
         }
     }
 

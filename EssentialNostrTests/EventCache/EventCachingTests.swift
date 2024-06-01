@@ -38,6 +38,14 @@ class EventCachingTests: XCTestCase {
         XCTAssertEqual(store.receivedMessages, [.deleteCachedEvents, .insert(events.local)])
     }
 
+    func test_save_requestsNewCacheInsertionIgnoringOverwrite() {
+        let (sut, store) = makeSUT()
+        let events = uniqueEvents()
+        sut.save(events.model, overwrite: false) { _ in }
+
+        XCTAssertEqual(store.receivedMessages, [.insert(events.local)])
+    }
+
     func test_save_failsOnDeletionError() {
         let (sut, store) = makeSUT()
         let deletionError = NSError(domain: "domain", code: 1)
