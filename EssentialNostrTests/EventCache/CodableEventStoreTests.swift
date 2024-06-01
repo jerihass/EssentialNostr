@@ -187,7 +187,7 @@ class CodableEventStoreTests: XCTestCase {
         sut.retrieve { result in
             switch (result, expectedResult) {
             case let (.success(events), .success(expectedEvents)):
-                XCTAssertEqual(events, expectedEvents)
+                XCTAssertEqual(events, expectedEvents, file: file, line: line)
             case (.failure, .failure):
                 break
             default:
