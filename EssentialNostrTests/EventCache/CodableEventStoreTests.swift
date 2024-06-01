@@ -47,8 +47,12 @@ class CodableEventStore {
     }
 
     func deleteCache(completion: @escaping EventStore.DeletionCompletion) {
-        try? FileManager.default.removeItem(at: storeURL)
-        completion(nil)
+        do {
+            try FileManager.default.removeItem(at: storeURL)
+            completion(nil)
+        } catch {
+            completion(error)
+        }
     }
 
     private struct CodableEvent: Codable {
@@ -187,6 +191,17 @@ class CodableEventStoreTests: XCTestCase {
 
         XCTAssertNil(deletionError, "Exepected cache deletion to succeed")
         expect(sut, toRetrieve: .success([]))
+    }
+
+    func test_delete_deliversErrorOnDeletionError() {
+        let noDeletePermissionURL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first
+        let sut = makeSUT(storeURL: noDeletePermissionURL)
+        let events = uniqueEvents().local
+        insert(events, to: sut)
+
+        let deletionError = deleteCache(from: sut)
+
+        XCTAssertNotNil(deletionError, "Exepected cache deletion to fail")
     }
 
     // MARK: - Helpers
