@@ -15,22 +15,11 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
         super.tearDown()
         undoStoreSideEffects()
     }
-    
+
     func test_load_deliversNoItemsOnEmptyCache() {
         let sut = makeSUT()
 
-        let exp = expectation(description: "wait for load completion")
-
-        sut.load { result in
-            switch result {
-            case let .success(events):
-                XCTAssertEqual(events, [], "Expected empty events")
-            case let .failure(error):
-                XCTFail("Expected successful events result, got \(error) instead.")
-            }
-            exp.fulfill()
-        }
-        wait(for: [exp], timeout: 1)
+        expect(sut, toLoad: [])
     }
 
     func test_load_deliversEventsSavedOnSeprateInstance() {
@@ -38,25 +27,8 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
         let sutToLoad = makeSUT()
         let events = uniqueEvents().model
 
-        let saveExp = expectation(description: "Wait for save completion")
-        sutToSave.save(events) { saveError in
-            XCTAssertNil(saveError, "Expected successful save")
-            saveExp.fulfill()
-        }
-        wait(for: [saveExp], timeout: 1)
-
-        let loadExp = expectation(description: "Wait for load completion")
-        sutToLoad.load { result in
-            switch result {
-            case let .success(loadedEvents):
-                XCTAssertEqual(loadedEvents, events, "Expected empty events")
-            case let .failure(error):
-                XCTFail("Expected successful events result, got \(error) instead.")
-            }
-            loadExp.fulfill()
-        }
-        wait(for: [loadExp], timeout: 1)
-
+        expect(sutToSave, toSave: events)
+        expect(sutToLoad, toLoad: events)
     }
 
     // MARK: - Helpers
@@ -66,6 +38,30 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
         let loader = LocalEventsLoader(store: store)
         trackForMemoryLeaks(loader, file: file, line: line)
         return loader
+    }
+
+    private func expect(_ sut: LocalEventsLoader, toSave events: [Event], file: StaticString = #file, line: UInt = #line) {
+
+        let saveExp = expectation(description: "Wait for save completion")
+        sut.save(events) { saveError in
+            XCTAssertNil(saveError, "Expected successful save")
+            saveExp.fulfill()
+        }
+        wait(for: [saveExp], timeout: 1)
+    }
+
+    private func expect(_ sut: LocalEventsLoader, toLoad events: [Event], file: StaticString = #file, line: UInt = #line) {
+        let loadExp = expectation(description: "Wait for load completion")
+        sut.load { result in
+            switch result {
+            case let .success(loadedEvents):
+                XCTAssertEqual(loadedEvents, events, "Expected empty events")
+            case let .failure(error):
+                XCTFail("Expected successful events result, got \(error) instead.")
+            }
+            loadExp.fulfill()
+        }
+        wait(for: [loadExp], timeout: 1)
     }
 
     private func testingStoreURL() -> URL {
