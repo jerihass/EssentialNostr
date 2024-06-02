@@ -10,21 +10,19 @@ import SwiftData
 
 @available(macOS 14, *)
 public class SwiftDataEventStore: EventStore {
-    public static func modelConfig(inMemory: Bool = false) -> ModelConfiguration {
-        ModelConfiguration(for: SDEvent.self, isStoredInMemoryOnly: inMemory)
+    public static func modelSchema() -> Schema {
+        Schema([SDEvent.self])
     }
 
-    public static func modelConfig(url: URL) -> ModelConfiguration {
-        let schema = Schema([SDEvent.self])
-        return ModelConfiguration(schema: schema, url: url)
-    }
-
-    private static var theContainer: ModelContainer?
+    private static var modelContainer: ModelContainer?
     public static func container(configuration: ModelConfiguration) -> ModelContainer {
-        if theContainer == nil {
-            theContainer = try! ModelContainer(for: SDEvent.self, configurations: configuration)
+        if configuration.isStoredInMemoryOnly {
+            return try! ModelContainer(for: SDEvent.self, configurations: configuration)
         }
-        return theContainer!
+        if modelContainer == nil {
+            modelContainer = try! ModelContainer(for: SDEvent.self, configurations: configuration)
+        }
+        return modelContainer!
     }
 
     private let container: ModelContainer
@@ -67,6 +65,7 @@ public class SwiftDataEventStore: EventStore {
     }
 }
 
+@available(macOS 14, *)
 @Model
 class SDEvent {
     public let id: String
@@ -93,6 +92,7 @@ class SDEvent {
 }
 
 extension Array where Element == LocalEvent {
+    @available(macOS 14, *)
     fileprivate func toSwiftData() -> [SDEvent] {
         map {
             SDEvent(id: $0.id, publicKey: $0.publickey, created: $0.created, kind: $0.kind, tags: $0.tags, content: $0.content, signature: $0.signature)

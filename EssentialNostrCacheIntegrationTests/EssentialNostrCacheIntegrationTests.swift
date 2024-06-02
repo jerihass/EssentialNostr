@@ -28,7 +28,7 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
         let sutToLoad = makeSUT()
         let events = uniqueEvents().model
 
-        expect(sutToSave, toSave: events)
+        expect(sutToSave, toSave: events, overwrite: true)
         expect(sutToLoad, toLoad: events)
     }
 
@@ -40,7 +40,7 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
         let firstEvents = uniqueEvents().model
         let lastEvents = uniqueEvents().model
 
-        expect(sutForFirstSave, toSave: firstEvents)
+        expect(sutForFirstSave, toSave: firstEvents, overwrite: true)
         expect(sutForAppending, toSave: lastEvents, overwrite: false)
         expect(sutForLoad, toLoad: firstEvents + lastEvents)
     }
@@ -48,7 +48,8 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> LocalEventsLoader {
         let storeURL = testingStoreURL()
-        let configuration = SwiftDataEventStore.modelConfig(url: storeURL)
+        let schema = SwiftDataEventStore.modelSchema()
+        let configuration = ModelConfiguration(schema: schema, url: storeURL)
         let container = SwiftDataEventStore.container(configuration: configuration)
         let store = SwiftDataEventStore(container: container)
         let loader = LocalEventsLoader(store: store)
@@ -93,7 +94,7 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
     }
 
     private func undoStoreSideEffects() {
-        deleteStoreArtifacts()
+//        deleteStoreArtifacts()
     }
 
     private func deleteStoreArtifacts() {
