@@ -86,7 +86,8 @@ class SwiftDataEventStoreTests: XCTestCase, EventStoreSpecs {
     }
     
     func test_retrieve_hasNoSideEffectsOnNonEmptyCache() {
-
+        let sut = makeSUT()
+        assertThatRetrieveHasNoSideEffectsOnNonEmptyCache(sut)
     }
     
     func test_retrieve_deliversFailureOnRetrievalError() {
