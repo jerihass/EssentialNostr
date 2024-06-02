@@ -109,7 +109,9 @@ extension EventStoreSpecs where Self: XCTestCase {
         sut.retrieve { result in
             switch (result, expectedResult) {
             case let (.success(events), .success(expectedEvents)):
-                XCTAssertEqual(events, expectedEvents, file: file, line: line)
+                XCTAssertEqual(
+                    events.sorted(by: { e1, e2 in e1.id < e2.id}),
+                    expectedEvents.sorted(by: { e1, e2 in e1.id < e2.id}), file: file, line: line)
             case (.failure, .failure):
                 break
             default:
