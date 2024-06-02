@@ -35,9 +35,9 @@ public class SwiftDataEventStore: EventStore {
             let predicate = #Predicate<SDEvent> { _ in true }
             try container.mainContext.delete(model: SDEvent.self, where: predicate)
 
-            completion(nil)
+            completion(.success(()))
         } catch {
-            completion(error)
+            completion(.failure(error))
         }
     }
 

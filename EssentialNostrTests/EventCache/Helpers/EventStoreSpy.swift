@@ -25,11 +25,11 @@ class EventStoreSpy: EventStore {
     }
 
     func completeDeletion(with error: Error, at index: Int = 0) {
-        deletionCompletions[index](error)
+        deletionCompletions[index](.failure(error))
     }
 
     func completeDeletionSuccessfully(at index: Int = 0) {
-        deletionCompletions[index](nil)
+        deletionCompletions[index](.success(()))
     }
 
     func insert(_ events: [LocalEvent], completion: @escaping InsertionCompletion) {

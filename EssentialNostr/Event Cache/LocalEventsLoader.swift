@@ -32,8 +32,8 @@ extension LocalEventsLoader {
         if overwrite {
             store.deleteCachedEvents { [weak self] deleteError in
                 guard let self = self else { return }
-                if let de = deleteError {
-                    completion(de)
+                if case let .failure(error) = deleteError {
+                    completion(error)
                 } else {
                     self.cacheEventsWithCompletion(events, completion)
                 }

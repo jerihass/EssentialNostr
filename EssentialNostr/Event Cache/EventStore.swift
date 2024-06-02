@@ -6,7 +6,9 @@ import Foundation
 
 public protocol EventStore {
     typealias InsertionCompletion = (Error?) -> Void
-    typealias DeletionCompletion = (Error?) -> Void
+
+    typealias DeletionResult = Result<Void, Error>
+    typealias DeletionCompletion = (DeletionResult) -> Void
 
     typealias RetrievalResult = Result<[LocalEvent], Error>
     typealias RetrievalCompletion = (RetrievalResult) -> Void

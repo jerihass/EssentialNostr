@@ -90,8 +90,10 @@ extension EventStoreSpecs where Self: XCTestCase {
     func deleteCache(from sut: EventStore, file: StaticString = #file, line: UInt = #line) -> Error? {
         let exp = expectation(description: "Wait for store insertion")
         var error: Error?
-        sut.deleteCachedEvents { deleteError in
-            error = deleteError
+        sut.deleteCachedEvents { result in
+            if case let .failure(de) = result {
+                error = de
+            }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1)
