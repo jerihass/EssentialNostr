@@ -98,12 +98,12 @@ extension EventStoreSpecs where Self: XCTestCase {
         return error
     }
 
-    func expect(_ sut: EventStore, toRetrieveTwice expectedResult: Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
+    func expect(_ sut: EventStore, toRetrieveTwice expectedResult: EventStore.RetrievalResult, file: StaticString = #file, line: UInt = #line) {
         expect(sut, toRetrieve: expectedResult, file: file, line: line)
         expect(sut, toRetrieve: expectedResult, file: file, line: line)
     }
 
-    func expect(_ sut: EventStore, toRetrieve expectedResult:  Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
+    func expect(_ sut: EventStore, toRetrieve expectedResult: EventStore.RetrievalResult, file: StaticString = #file, line: UInt = #line) {
         let exp = expectation(description: "Wait for cache retrieval")
 
         sut.retrieve { result in

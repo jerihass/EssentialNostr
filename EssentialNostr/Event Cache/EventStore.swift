@@ -7,7 +7,9 @@ import Foundation
 public protocol EventStore {
     typealias InsertionCompletion = (Error?) -> Void
     typealias DeletionCompletion = (Error?) -> Void
-    typealias RetrievalCompletion = (Result<[LocalEvent], Error>) -> Void
+
+    typealias RetrievalResult = Result<[LocalEvent], Error>
+    typealias RetrievalCompletion = (RetrievalResult) -> Void
 
     /// The completion handler can be invoked in any thread.
     /// Clients are responsible to dispatch to appropriate threads if needed.
