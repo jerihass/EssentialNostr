@@ -15,7 +15,7 @@ class SwiftDataEventStore: EventStore {
     }
 
     func deleteCachedEvents(completion: @escaping DeletionCompletion) {
-
+        completion(nil)
     }
     
     @MainActor func insert(_ events: [EssentialNostr.LocalEvent], completion: @escaping InsertionCompletion) {
@@ -105,11 +105,12 @@ class SwiftDataEventStoreTests: XCTestCase, EventStoreSpecs {
     }
     
     func test_insert_deliversErroOnInsertionError() {
-
+        // How to force swift data to have insert error?
     }
     
     func test_delete_hasNoSideEffectsOnEmptyCache() {
-
+        let sut = makeSUT()
+        assertThatDeleteHasNoSideEffectsOnEmptyCache(sut)
     }
     
     func test_delete_emptiesPreviouslyInsertedCache() {
