@@ -9,8 +9,8 @@ extension EventStoreSpecs where Self: XCTestCase {
     func assertThatStoreDeliversEmptyOnEmptyCache(_ sut: EventStore, file: StaticString = #file, line: UInt = #line) {
         expect(sut, toRetrieve: .success([]), file: file, line: line)
     }
-    func assertThatRetrieveHasNoSideEffects(_ sut: EventStore) {
-        expect(sut, toRetrieveTwice: .success([]))
+    func assertThatRetrieveHasNoSideEffects(_ sut: EventStore, file: StaticString = #file, line: UInt = #line) {
+        expect(sut, toRetrieveTwice: .success([]), file: file, line: line)
     }
     func assertThatRetrieveDeliversFoundValuesOnNonEmptyCache(_ sut: EventStore,file: StaticString = #file, line: UInt = #line) {
         let events = uniqueEvents().local
@@ -99,8 +99,8 @@ extension EventStoreSpecs where Self: XCTestCase {
     }
 
     func expect(_ sut: EventStore, toRetrieveTwice expectedResult: Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
-        expect(sut, toRetrieve: expectedResult)
-        expect(sut, toRetrieve: expectedResult)
+        expect(sut, toRetrieve: expectedResult, file: file, line: line)
+        expect(sut, toRetrieve: expectedResult, file: file, line: line)
     }
 
     func expect(_ sut: EventStore, toRetrieve expectedResult:  Result<[LocalEvent], Error>, file: StaticString = #file, line: UInt = #line) {
