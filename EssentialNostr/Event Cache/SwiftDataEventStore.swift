@@ -31,32 +31,26 @@ public class SwiftDataEventStore: EventStore {
     }
 
     @MainActor public func deleteCachedEvents(completion: @escaping DeletionCompletion) {
-        do {
+        completion(Result(catching: {
             let predicate = #Predicate<SDEvent> { _ in true }
             try container.mainContext.delete(model: SDEvent.self, where: predicate)
-
-            completion(.success(()))
-        } catch {
-            completion(.failure(error))
-        }
+        }))
     }
 
     @MainActor public func insert(_ events: [EssentialNostr.LocalEvent], completion: @escaping InsertionCompletion) {
-        let sdEvents = events.toSwiftData()
-        for event in sdEvents { container.mainContext.insert(event) }
-        try! container.mainContext.save()
-        completion(.success(()))
+        completion(Result(catching: {
+            let sdEvents = events.toSwiftData()
+            for event in sdEvents { container.mainContext.insert(event) }
+            try container.mainContext.save()
+        }))
     }
 
     @MainActor public func retrieve(completion: @escaping RetrievalCompletion) {
-        let sdEvents = FetchDescriptor<SDEvent>()
-        do {
+        completion(Result(catching: {
+            let sdEvents = FetchDescriptor<SDEvent>()
             let events = try container.mainContext.fetch(sdEvents)
-            let found = events.map(\.local)
-            completion(.success(found))
-        } catch {
-            completion(.failure(error))
-        }
+            return events.map(\.local)
+        }))
     }
 }
 
