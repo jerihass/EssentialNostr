@@ -54,6 +54,7 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
         let store = SwiftDataEventStore(container: container)
         let loader = LocalEventsLoader(store: store)
         trackForMemoryLeaks(loader, file: file, line: line)
+        trackForMemoryLeaks(store, file: file, line: line)
         return loader
     }
 
@@ -94,7 +95,7 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
     }
 
     private func undoStoreSideEffects() {
-//        deleteStoreArtifacts()
+        deleteStoreArtifacts()
     }
 
     private func deleteStoreArtifacts() {
