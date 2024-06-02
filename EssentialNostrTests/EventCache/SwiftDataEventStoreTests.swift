@@ -27,10 +27,11 @@ class SwiftDataEventStore: EventStore {
     @MainActor func retrieve(completion: @escaping RetrievalCompletion) {
         let sdEvents = FetchDescriptor<SDEvent>()
         do {
-            let found = try container.mainContext.fetch(sdEvents).map(\.local)
+            let events = try container.mainContext.fetch(sdEvents)
+            let found = events.map(\.local)
             completion(.success(found))
         } catch {
-            completion(.success([]))
+            completion(.failure(error))
         }
     }
 }
@@ -91,15 +92,16 @@ class SwiftDataEventStoreTests: XCTestCase, EventStoreSpecs {
     }
     
     func test_retrieve_deliversFailureOnRetrievalError() {
-
+        // How to force swift data to have retrieve error?
     }
     
     func test_retrieve_hasNoSideEffectsOnFailure() {
-
+        // How to force swift data to have retrieve error?
     }
     
     func test_insert_appendsCacheValuesToPreviousValues() {
-
+        let sut = makeSUT()
+        assertThatInsertAppendsCacheValuesToPreviousValues(sut)
     }
     
     func test_insert_deliversErroOnInsertionError() {
@@ -124,9 +126,9 @@ class SwiftDataEventStoreTests: XCTestCase, EventStoreSpecs {
 
     // MARK: - Helpers
 
-    func makeSUT() -> SwiftDataEventStore {
-        let configuration = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try! ModelContainer(for: SDEvent.self, configurations: configuration)
+    func makeSUT(configuration: ModelConfiguration? = nil) -> SwiftDataEventStore {
+        let memoryConfig = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try! ModelContainer(for: SDEvent.self, configurations: configuration ?? memoryConfig)
         let sut = SwiftDataEventStore(container: container)
         trackForMemoryLeaks(sut)
         return sut
