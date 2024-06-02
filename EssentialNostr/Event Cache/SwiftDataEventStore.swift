@@ -10,11 +10,24 @@ import SwiftData
 
 @available(macOS 14, *)
 public class SwiftDataEventStore: EventStore {
-    public static func container(configuration: ModelConfiguration) -> ModelContainer {
-        return try! ModelContainer(for: SDEvent.self, configurations: configuration)
+    public static func modelConfig(inMemory: Bool = false) -> ModelConfiguration {
+        ModelConfiguration(for: SDEvent.self, isStoredInMemoryOnly: inMemory)
     }
-    private let container: ModelContainer
 
+    public static func modelConfig(url: URL) -> ModelConfiguration {
+        let schema = Schema([SDEvent.self])
+        return ModelConfiguration(schema: schema, url: url)
+    }
+
+    private static var theContainer: ModelContainer?
+    public static func container(configuration: ModelConfiguration) -> ModelContainer {
+        if theContainer == nil {
+            theContainer = try! ModelContainer(for: SDEvent.self, configurations: configuration)
+        }
+        return theContainer!
+    }
+
+    private let container: ModelContainer
     public init(container: ModelContainer) {
         self.container = container
     }
@@ -38,6 +51,7 @@ public class SwiftDataEventStore: EventStore {
     @MainActor public func insert(_ events: [EssentialNostr.LocalEvent], completion: @escaping InsertionCompletion) {
         let sdEvents = events.toSwiftData()
         for event in sdEvents { container.mainContext.insert(event) }
+        try! container.mainContext.save()
         completion(nil)
     }
 

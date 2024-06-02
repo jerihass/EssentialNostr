@@ -8,6 +8,7 @@ import EssentialNostr
 
 @available(macOS 14, *)
 class SwiftDataEventStoreTests: XCTestCase, EventStoreSpecs {
+
     func test_retrieve_deliversEmptyOnEmptyCache() {
         let sut = makeSUT()
         assertThatStoreDeliversEmptyOnEmptyCache(sut)
@@ -87,7 +88,7 @@ class SwiftDataEventStoreTests: XCTestCase, EventStoreSpecs {
     // MARK: - Helpers
 
     func makeSUT(configuration: ModelConfiguration? = nil) -> SwiftDataEventStore {
-        let memoryConfig = ModelConfiguration(isStoredInMemoryOnly: true)
+        let memoryConfig = SwiftDataEventStore.modelConfig(inMemory: true)
         let container = SwiftDataEventStore.container(configuration: memoryConfig)
         let sut = SwiftDataEventStore(container: container)
         trackForMemoryLeaks(sut)
