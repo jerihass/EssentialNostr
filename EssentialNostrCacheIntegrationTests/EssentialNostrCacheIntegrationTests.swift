@@ -3,6 +3,7 @@
 //
 
 import XCTest
+import SwiftData
 import EssentialNostr
 
 final class EssentialNostrCacheIntegrationTests: XCTestCase {
@@ -47,14 +48,15 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> LocalEventsLoader {
         let storeURL = testingStoreURL()
-        let store = CodableEventStore(storeURL: storeURL)
+        let configuration = SwiftDataEventStore.modelConfig(url: storeURL)
+        let container = SwiftDataEventStore.container(configuration: configuration)
+        let store = SwiftDataEventStore(container: container)
         let loader = LocalEventsLoader(store: store)
         trackForMemoryLeaks(loader, file: file, line: line)
         return loader
     }
 
     private func expect(_ sut: LocalEventsLoader, toSave events: [Event], overwrite: Bool = true, file: StaticString = #file, line: UInt = #line) {
-        print("saving :\(events)")
 
         let saveExp = expectation(description: "Wait for save completion")
         sut.save(events, overwrite: overwrite) { saveError in
@@ -65,12 +67,13 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
     }
 
     private func expect(_ sut: LocalEventsLoader, toLoad events: [Event], file: StaticString = #file, line: UInt = #line) {
-        print("loading \(events)")
         let loadExp = expectation(description: "Wait for load completion")
         sut.load { result in
             switch result {
             case let .success(loadedEvents):
-                XCTAssertEqual(loadedEvents, events, "\nLoaded: \(loadedEvents.count) events,\nExpected: \(events.count) events", file: file, line: line)
+                XCTAssertEqual(loadedEvents.sorted(by: { lh, rh in lh.id < rh.id }),
+                               events.sorted(by: { lh, rh in lh.id < rh.id }),
+                               "\nLoaded: \(loadedEvents.count) events,\nExpected: \(events.count) events", file: file, line: line)
             case let .failure(error):
                 XCTFail("Expected successful events result, got \(error) instead.")
             }
