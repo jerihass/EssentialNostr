@@ -47,7 +47,11 @@ extension LocalEventsLoader {
     private func cacheEventsWithCompletion(_ events: [Event], _ completion: @escaping (Error?) -> Void) {
         store.insert(events.toLocal()) { [weak self] insertError in
             guard self != nil else { return }
-            completion(insertError)
+            if case let .failure(error) = insertError {
+                completion(error)
+            } else {
+                completion(nil)
+            }
         }
     }
 }

@@ -79,8 +79,10 @@ extension EventStoreSpecs where Self: XCTestCase {
     func insert(_ events: [LocalEvent], to sut: EventStore, file: StaticString = #file, line: UInt = #line) -> Error? {
         let exp = expectation(description: "Wait for store insertion")
         var error: Error?
-        sut.insert(events) { insertError in
-            error = insertError
+        sut.insert(events) { result in
+            if case let .failure(insertError) = result {
+                error = insertError
+            }
             exp.fulfill()
         }
         wait(for: [exp], timeout: 1)

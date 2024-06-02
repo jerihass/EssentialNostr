@@ -46,9 +46,9 @@ public class CodableEventStore: EventStore {
                 let codableEvents = tempEvents.map(CodableEvent.init)
                 let data = try encoder.encode(codableEvents)
                 try data.write(to: storeURL)
-                completion(nil)
+                completion(.success(()))
             } catch {
-                completion(error)
+                completion(.failure(error))
             }
         }
     }

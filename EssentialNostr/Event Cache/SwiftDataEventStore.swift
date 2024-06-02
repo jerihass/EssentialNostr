@@ -45,7 +45,7 @@ public class SwiftDataEventStore: EventStore {
         let sdEvents = events.toSwiftData()
         for event in sdEvents { container.mainContext.insert(event) }
         try! container.mainContext.save()
-        completion(nil)
+        completion(.success(()))
     }
 
     @MainActor public func retrieve(completion: @escaping RetrievalCompletion) {
