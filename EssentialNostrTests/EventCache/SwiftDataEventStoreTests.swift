@@ -86,9 +86,8 @@ class SwiftDataEventStoreTests: XCTestCase, EventStoreSpecs {
         XCTAssertEqual(completedOps, [op1, op2, op3])    }
 
     // MARK: - Helpers
-
     func makeSUT(configuration: ModelConfiguration? = nil) -> SwiftDataEventStore {
-        let memoryConfig = SwiftDataEventStore.modelConfig(inMemory: true)
+        let memoryConfig = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = SwiftDataEventStore.container(configuration: memoryConfig)
         let sut = SwiftDataEventStore(container: container)
         trackForMemoryLeaks(sut)
