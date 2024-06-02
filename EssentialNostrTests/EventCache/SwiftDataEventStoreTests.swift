@@ -14,8 +14,20 @@ class SwiftDataEventStore: EventStore {
         self.container = container
     }
 
-    func deleteCachedEvents(completion: @escaping DeletionCompletion) {
-        completion(nil)
+    @MainActor func deleteCachedEvents(completion: @escaping DeletionCompletion) {
+        do {
+//            let predicate = #Predicate<SDEvent> { _ in true }
+//            try container.mainContext.delete(model: SDEvent.self, where: predicate)
+//              The above should work, but it isn't... need to look why
+            let events = try container.mainContext.fetch(FetchDescriptor<SDEvent>())
+
+            for event in events {
+                container.mainContext.delete(event)
+            }
+            completion(nil)
+        } catch {
+            completion(error)
+        }
     }
     
     @MainActor func insert(_ events: [EssentialNostr.LocalEvent], completion: @escaping InsertionCompletion) {
@@ -114,7 +126,8 @@ class SwiftDataEventStoreTests: XCTestCase, EventStoreSpecs {
     }
     
     func test_delete_emptiesPreviouslyInsertedCache() {
-
+        let sut = makeSUT()
+        assertThatDeleteEmptiesPreviouslyInsertedCache(sut)
     }
     
     func test_delete_deliversErrorOnDeletionError() {
