@@ -93,7 +93,7 @@ class ClientMessageMapperTests: XCTestCase {
     // MARK: - Helpers
 
     private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (model: Event, data: Data) {
-        let event = Event(id: id, pubkey: pubkey, created_at: created_at, kind: kind, tags: tags, content: content, sig: sig)
+        let event = Event(id: id, publicKey: pubkey, created: created_at, kind: kind, tags: tags, content: content, signature: sig)
         let time = created_at.timeIntervalSince1970
         let tagString = tags.stringed
 

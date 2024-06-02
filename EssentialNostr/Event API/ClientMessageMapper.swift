@@ -57,12 +57,12 @@ public final class ClientMessageMapper {
 
         init(_ event: Event) {
             id = event.id
-            pubkey = event.pubkey
-            created_at = event.created_at.timeIntervalSince1970
+            pubkey = event.publicKey
+            created_at = event.created.timeIntervalSince1970
             kind = event.kind
             tags = event.tags
             content = event.content
-            sig = event.sig
+            sig = event.signature
         }
 
         var json: Data? {

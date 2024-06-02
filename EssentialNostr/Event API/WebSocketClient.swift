@@ -11,12 +11,17 @@ public enum WebSocketDelegateState {
 }
 
 public protocol WebSocketClient: AnyObject {
-    typealias ReceiveResult = Result<Data?, Error>
+    typealias ReceiveResult = Result<Data, Error>
     var stateHandler: ((_ state: WebSocketDelegateState) -> Void)? { get set }
 
     func start() throws
     func disconnect()
 
+    /// The completion handler can be invoked in any thread.
+    /// Clients are responsible to dispatch to appropriate threads if needed.
     func send(message: String, completion: @escaping (Swift.Error) -> Void)
+
+    /// The completion handler can be invoked in any thread.
+    /// Clients are responsible to dispatch to appropriate threads if needed.
     func receive(completion: @escaping (_ result: ReceiveResult) -> Void)
 }

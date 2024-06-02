@@ -5,20 +5,19 @@
 import Foundation
 
 final class RelayMessageMapper {
-
-    internal static func mapData(_ data: Data) -> RemoteEventLoader.Result {
+    internal static func mapData(_ data: Data) throws -> NostrEvent {
         do {
-            return .success(try mapEvent(data))
+            return try mapEvent(data)
         } catch {
-            return .failure(error as? RemoteEventLoader.Error ?? .unknown)
+            throw error
         }
     }
 
-    private static func mapEvent(_ data: Data) throws -> Event {
+    private static func mapEvent(_ data: Data) throws -> NostrEvent {
         if let message = try? JSONDecoder().decode(RelayMessage.self, from: data) {
             switch message.message {
             case let .event(_, event):
-                return event.local
+                return event
             case let .closed(sub, message):
                 throw RemoteEventLoader.Error.closed(sub: sub, message: message)
             case .eose(let sub):
@@ -46,7 +45,7 @@ final class RelayMessageMapper {
         }
 
         enum Message {
-            case event(sub: String, event: RelayEvent)
+            case event(sub: String, event: NostrEvent)
             case closed(sub: String, message: String)
             case eose(sub: String)
             case notice(message: String)
@@ -59,7 +58,7 @@ final class RelayMessageMapper {
             switch type {
             case .event:
                 let sub = try container.decode(String.self)
-                let event = try container.decode(RelayEvent.self)
+                let event = try container.decode(NostrEvent.self)
                 message = .event(sub: sub, event: event)
             case .closed:
                 let sub = try container.decode(String.self)
@@ -77,20 +76,6 @@ final class RelayMessageMapper {
                 let mess = try container.decode(String.self)
                 message = .ok(sub: sub, accepted: accepted, reason: mess)
             }
-        }
-    }
-
-    private struct RelayEvent: Decodable {
-        let id: String
-        let pubkey: String
-        let created_at: Double
-        let kind: UInt16
-        let tags: [[String]]
-        let content: String
-        let sig: String
-
-        var local: Event {
-            return Event(id: id, pubkey: pubkey, created_at: Date(timeIntervalSince1970: created_at), kind: kind, tags: tags, content: content, sig: sig)
         }
     }
 }

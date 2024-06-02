@@ -106,15 +106,20 @@ class RemoteEventLoaderTests: XCTestCase {
         }
     }
 
-    func test_load_deliversMultipleEventsOnValidEvents() {
+    func test_loadRepeatedly_deliversEventsOnValidEvents() {
         let (sut, client) = makeSUT()
         let date = Date.distantPast
 
         let event = makeEvent(id: "id1", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content1", sig: "sig1")
-        let event2 = makeEvent(id: "id2", pubkey: "pubkey1", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content2", sig: "sig2")
 
-        expectMultiple(sut, toLoadWith: [.success(event.model), .success(event2.model)]) {
-            client.complete(with: [event.data, event2.data])
+        let event2 = makeEvent(id: "id2", pubkey: "pubkey2", created_at: date, kind: 1, tags: [["e", "event1", "event2"], ["p", "pub1", "pub2"]], content: "content2", sig: "sig2")
+
+        expect(sut, toLoadWith: .success(event.model)) {
+            client.complete(with: event.data)
+        }
+
+        expect(sut, toLoadWith: .success(event2.model)) {
+            client.complete(with: event2.data, at: 1)
         }
     }
 
@@ -151,7 +156,7 @@ class RemoteEventLoaderTests: XCTestCase {
     }
 
     private func makeEvent(id: String, pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String, sig: String) -> (model: Event, data: Data) {
-        let event = Event(id: id, pubkey: pubkey, created_at: created_at, kind: kind, tags: tags, content: content, sig: sig)
+        let event = Event(id: id, publicKey: pubkey, created: created_at, kind: kind, tags: tags, content: content, signature: sig)
         let time = Int(created_at.timeIntervalSince1970)
         let tagString = tags.stringed
 
@@ -183,54 +188,23 @@ class RemoteEventLoaderTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 
-    private func expectMultiple(_ sut: RemoteEventLoader, toLoadWith expectedResults: [RemoteEventLoader.Result], when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
-        for (i, expectedResult) in expectedResults.enumerated() {
-            let exp = expectation(description: "Wait for load completion.")
-            sut.load { receivedResult in
-                switch (receivedResult, expectedResult) {
-                case let (.success(receivedEvent), .success(expectedEvent)):
-                    XCTAssertEqual(receivedEvent, expectedEvent, "Result \(i): Got \(receivedEvent), expected \(expectedEvent)",
-                                   file: file, line: line)
-                case let (.failure(receivedError as RemoteEventLoader.Error), .failure(expectedError as RemoteEventLoader.Error)):
-                    XCTAssertEqual(receivedError, expectedError, "Result \(i): Got \(receivedError), expected \(expectedError)",
-                                   file: file, line: line)
-
-                default:
-                    XCTFail("Result \(i): Got \(receivedResult), expected \(expectedResult)",
-                            file: file, line: line)
-                }
-                exp.fulfill()
-            }
-        }
-
-        action()
-
-        waitForExpectations(timeout: 1)
-    }
-
     class WebSocketClientSpy: WebSocketClient {
         var sendMessages = [String]()
-        var loadCompletions = [(Result<Data?, Error>) -> Void]()
+        var loadCompletions = [(Result<Data, Error>) -> Void]()
 
         func complete(with error: Error, at index: Int = 0) {
             loadCompletions[index](.failure(error))
         }
 
-        func complete(with message: Data?, at index: Int = 0) {
+        func complete(with message: Data, at index: Int = 0) {
             loadCompletions[index](.success(message))
-        }
-
-        func complete(with messages: [Data?], at index: Int = 0) {
-            for (i, message) in messages.enumerated() {
-                loadCompletions[index + i](.success(message))
-            }
         }
 
         func send(message: String, completion: @escaping (Error) -> Void) {
             sendMessages.append(message)
         }
 
-        func receive(completion: @escaping (Result<Data?, Error>) -> Void) {
+        func receive(completion: @escaping (Result<Data, Error>) -> Void) {
             loadCompletions.append(completion)
         }
 
