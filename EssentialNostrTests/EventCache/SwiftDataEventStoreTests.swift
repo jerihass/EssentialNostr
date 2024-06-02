@@ -131,12 +131,33 @@ class SwiftDataEventStoreTests: XCTestCase, EventStoreSpecs {
     }
     
     func test_delete_deliversErrorOnDeletionError() {
-
+        // How to force swift data to have delete error?
     }
     
-    func test_storeSideEffects_runSerially() {
+    @MainActor func test_storeSideEffects_runSerially() {
+        let sut = makeSUT()
 
-    }
+        var completedOps = [XCTestExpectation]()
+        let op1 = expectation(description: "Operation 1")
+        sut.insert(uniqueEvents().local) { _ in
+            completedOps.append(op1)
+            op1.fulfill()
+        }
+
+        let op2 = expectation(description: "Operation 2")
+        sut.deleteCachedEvents { _ in
+            completedOps.append(op2)
+            op2.fulfill()
+        }
+
+        let op3 = expectation(description: "Operation 3")
+        sut.insert(uniqueEvents().local) { _ in
+            completedOps.append(op3)
+            op3.fulfill()
+        }
+
+        wait(for: [op1, op2, op3], enforceOrder: true)
+        XCTAssertEqual(completedOps, [op1, op2, op3])    }
 
     // MARK: - Helpers
 
