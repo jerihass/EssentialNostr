@@ -32,14 +32,9 @@ public class SwiftDataEventStore: EventStore {
 
     @MainActor public func deleteCachedEvents(completion: @escaping DeletionCompletion) {
         do {
-//            let predicate = #Predicate<SDEvent> { _ in true }
-//            try container.mainContext.delete(model: SDEvent.self, where: predicate)
-//              The above should work, but it isn't... need to look why
-            let events = try container.mainContext.fetch(FetchDescriptor<SDEvent>())
+            let predicate = #Predicate<SDEvent> { _ in true }
+            try container.mainContext.delete(model: SDEvent.self, where: predicate)
 
-            for event in events {
-                container.mainContext.delete(event)
-            }
             completion(nil)
         } catch {
             completion(error)
