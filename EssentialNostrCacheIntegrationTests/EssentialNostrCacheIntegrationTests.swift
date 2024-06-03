@@ -86,7 +86,7 @@ final class EssentialNostrCacheIntegrationTests: XCTestCase {
 
     private func testingStoreURL() -> URL {
         FileManager
-            .default.urls(for: .cachesDirectory, in: .userDomainMask)
+            .default.urls(for: .cachesDirectory, in: .localDomainMask)
             .first!.appendingPathComponent("\(type(of: self)).store")
     }
 
