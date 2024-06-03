@@ -37,7 +37,7 @@ class CodableEventStoreTests: XCTestCase, EventStoreSpecs {
     }
 
     func test_retrieve_deliversFailureOnRetrievalError() {
-        let storeURL = testingStoreURL()
+        let storeURL = storeTestingURL()
         let sut = makeSUT(storeURL: storeURL)
 
         try! "invalidData".write(to: storeURL, atomically: false, encoding: .utf8)
@@ -46,7 +46,7 @@ class CodableEventStoreTests: XCTestCase, EventStoreSpecs {
     }
 
     func test_retrieve_hasNoSideEffectsOnFailure() {
-        let storeURL = testingStoreURL()
+        let storeURL = storeTestingURL()
         let sut = makeSUT(storeURL: storeURL)
 
         try! "invalidData".write(to: storeURL, atomically: false, encoding: .utf8)
@@ -110,7 +110,7 @@ class CodableEventStoreTests: XCTestCase, EventStoreSpecs {
     // MARK: - Helpers
 
     private func makeSUT(storeURL: URL? = nil, file: StaticString = #file, line: UInt = #line) -> EventStore {
-        let sut = CodableEventStore(storeURL: storeURL ?? testingStoreURL())
+        let sut = CodableEventStore(storeURL: storeURL ?? storeTestingURL())
         trackForMemoryLeaks(sut, file: file, line: line)
         return sut
     }
@@ -124,10 +124,10 @@ class CodableEventStoreTests: XCTestCase, EventStoreSpecs {
     }
 
     private func deleteStoreArtifacts() {
-        try? FileManager.default.removeItem(at: testingStoreURL())
+        try? FileManager.default.removeItem(at: storeTestingURL())
     }
 
-    private func testingStoreURL() -> URL {
+    private func storeTestingURL() -> URL {
         FileManager
             .default.urls(for: .cachesDirectory, in: .userDomainMask)
             .first!.appendingPathComponent("\(type(of: self)).store")
