@@ -29,17 +29,8 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:EssentialNostriOSTests/Integration/EssentialNostrCacheIntegrationTests.xctestplan"
+            reference = "container:CI.xctestplan"
             default = "YES">
-         </TestPlanReference>
-         <TestPlanReference
-            reference = "container:EssentialNostriOSTests/EssentialNostriOS.xctestplan">
-         </TestPlanReference>
-         <TestPlanReference
-            reference = "container:EssentialNostrTests/EssentialNostr.xctestplan">
-         </TestPlanReference>
-         <TestPlanReference
-            reference = "container:EssentialNostrAPIEndToEndTests/EssentialNostrAPIEndToEndTests.xctestplan">
          </TestPlanReference>
       </TestPlans>
    </TestAction>
