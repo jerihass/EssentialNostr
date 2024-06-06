@@ -5,6 +5,7 @@
 import XCTest
 import SwiftData
 import EssentialNostr
+import EssentialNostriOS
 
 final class EssentialNostrCacheIntegrationTests: XCTestCase {
     override func setUp() {

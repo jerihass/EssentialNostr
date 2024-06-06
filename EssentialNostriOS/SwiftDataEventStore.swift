@@ -1,12 +1,10 @@
 //
-//  SwiftDataEventStore.swift
-//  EssentialNostr
-//
 //  Created by Jericho Hasselbush on 6/1/24.
 //
 
 import Foundation
 import SwiftData
+import EssentialNostr
 
 @available(macOS 14, *)
 public class SwiftDataEventStore: EventStore {

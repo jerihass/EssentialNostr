@@ -10,12 +10,9 @@
 		AD1343402C0AC09A0082F2E5 /* CodableEventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13433F2C0AC09A0082F2E5 /* CodableEventStore.swift */; };
 		AD1343432C0BB7C60082F2E5 /* EventStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343422C0BB7C60082F2E5 /* EventStoreSpecs.swift */; };
 		AD1343452C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343442C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift */; };
-		AD13434D2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */; };
 		AD13434E2C0BB94C0082F2E5 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		AD1343552C0BBB0B0082F2E5 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5B9EBF2BF6CD2800E7D5CD /* XCTestCase+MemoryLeakTracking.swift */; };
 		AD1343562C0BBD520082F2E5 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C32C09FEC000345A57 /* Helpers.swift */; };
-		AD1343582C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343572C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift */; };
-		AD13435A2C0C00100082F2E5 /* SwiftDataEventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343592C0C00100082F2E5 /* SwiftDataEventStore.swift */; };
 		AD3215C42C09FEC000345A57 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C32C09FEC000345A57 /* Helpers.swift */; };
 		AD3215C62C0A56AF00345A57 /* EventsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C52C0A56AF00345A57 /* EventsLoader.swift */; };
 		AD3215C82C0A5AB800345A57 /* CodableEventStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C72C0A5AB800345A57 /* CodableEventStoreTests.swift */; };
@@ -37,6 +34,13 @@
 		ADB6CEEC2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB6CEEB2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.swift */; };
 		ADB6CEED2BF9557600EF3B54 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		ADC6C9502C11507300322BD9 /* EssentialNostriOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADC6C9482C11507300322BD9 /* EssentialNostriOS.framework */; };
+		ADC6C95D2C1150DD00322BD9 /* SwiftDataEventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343592C0C00100082F2E5 /* SwiftDataEventStore.swift */; };
+		ADC6C95E2C1150E100322BD9 /* SwiftDataEventStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343572C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift */; };
+		ADC6C95F2C1150F600322BD9 /* EventStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343422C0BB7C60082F2E5 /* EventStoreSpecs.swift */; };
+		ADC6C9602C1150F800322BD9 /* EventStoreSpecs+XCTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343442C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift */; };
+		ADC6C9612C11513A00322BD9 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C32C09FEC000345A57 /* Helpers.swift */; };
+		ADC6C9622C11514700322BD9 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5B9EBF2BF6CD2800E7D5CD /* XCTestCase+MemoryLeakTracking.swift */; };
+		ADC6C9632C1151E500322BD9 /* EssentialNostrCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */; };
 		ADE7026D2BF98D850066AC13 /* ClientMessageMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */; };
 		ADEA67922C06CE9600CF97D9 /* EventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADEA67912C06CE9600CF97D9 /* EventStore.swift */; };
 		ADFFFE722C08066B00A504A3 /* NostrEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFFFE712C08066B00A504A3 /* NostrEvent.swift */; };
@@ -177,15 +181,6 @@
 			path = "EventStore Specs";
 			sourceTree = "<group>";
 		};
-		AD13434B2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests */ = {
-			isa = PBXGroup;
-			children = (
-				AD1343542C0BB98D0082F2E5 /* EssentialNostrCacheIntegrationTests.xctestplan */,
-				AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */,
-			);
-			path = EssentialNostrCacheIntegrationTests;
-			sourceTree = "<group>";
-		};
 		AD51DB472BF42A4D00B5673C = {
 			isa = PBXGroup;
 			children = (
@@ -193,7 +188,6 @@
 				AD51DB532BF42A4E00B5673C /* EssentialNostr */,
 				AD51DB5D2BF42A4E00B5673C /* EssentialNostrTests */,
 				ADB6CEEA2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests */,
-				AD13434B2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests */,
 				ADC6C9492C11507300322BD9 /* EssentialNostriOS */,
 				ADC6C9532C11507300322BD9 /* EssentialNostriOSTests */,
 				AD51DB522BF42A4E00B5673C /* Products */,
@@ -275,7 +269,6 @@
 				AD72AEDE2C03C4BC00DD9964 /* EventCachingTests.swift */,
 				ADFFFE752C080CB900A504A3 /* LoadEventsFromCacheTests.swift */,
 				AD3215C72C0A5AB800345A57 /* CodableEventStoreTests.swift */,
-				AD1343572C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift */,
 			);
 			path = EventCache;
 			sourceTree = "<group>";
@@ -296,7 +289,6 @@
 				ADEA67912C06CE9600CF97D9 /* EventStore.swift */,
 				ADFFFE732C0806A600A504A3 /* LocalEvent.swift */,
 				AD13433F2C0AC09A0082F2E5 /* CodableEventStore.swift */,
-				AD1343592C0C00100082F2E5 /* SwiftDataEventStore.swift */,
 			);
 			path = "Event Cache";
 			sourceTree = "<group>";
@@ -313,6 +305,7 @@
 		ADC6C9492C11507300322BD9 /* EssentialNostriOS */ = {
 			isa = PBXGroup;
 			children = (
+				AD1343592C0C00100082F2E5 /* SwiftDataEventStore.swift */,
 			);
 			path = EssentialNostriOS;
 			sourceTree = "<group>";
@@ -320,6 +313,9 @@
 		ADC6C9532C11507300322BD9 /* EssentialNostriOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				AD1343542C0BB98D0082F2E5 /* EssentialNostrCacheIntegrationTests.xctestplan */,
+				AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */,
+				AD1343572C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift */,
 			);
 			path = EssentialNostriOSTests;
 			sourceTree = "<group>";
@@ -573,7 +569,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AD13434D2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift in Sources */,
 				AD1343562C0BBD520082F2E5 /* Helpers.swift in Sources */,
 				AD1343552C0BBB0B0082F2E5 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 			);
@@ -597,7 +592,6 @@
 				AD7B0B1C2BF5726C0053793A /* RelayMessageMapper.swift in Sources */,
 				AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */,
 				AD5B9EBD2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift in Sources */,
-				AD13435A2C0C00100082F2E5 /* SwiftDataEventStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -607,7 +601,6 @@
 			files = (
 				AD72AEDF2C03C4BC00DD9964 /* EventCachingTests.swift in Sources */,
 				AD1343432C0BB7C60082F2E5 /* EventStoreSpecs.swift in Sources */,
-				AD1343582C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift in Sources */,
 				ADFFFE792C080D2E00A504A3 /* EventStoreSpy.swift in Sources */,
 				ADFFFE762C080CB900A504A3 /* LoadEventsFromCacheTests.swift in Sources */,
 				AD3215C42C09FEC000345A57 /* Helpers.swift in Sources */,
@@ -633,6 +626,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADC6C95D2C1150DD00322BD9 /* SwiftDataEventStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -640,6 +634,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADC6C9602C1150F800322BD9 /* EventStoreSpecs+XCTestHelpers.swift in Sources */,
+				ADC6C95E2C1150E100322BD9 /* SwiftDataEventStoreTests.swift in Sources */,
+				ADC6C95F2C1150F600322BD9 /* EventStoreSpecs.swift in Sources */,
+				ADC6C9612C11513A00322BD9 /* Helpers.swift in Sources */,
+				ADC6C9622C11514700322BD9 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
+				ADC6C9632C1151E500322BD9 /* EssentialNostrCacheIntegrationTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1064,6 +1064,7 @@
 		ADC6C9592C11507300322BD9 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7W77348744;
@@ -1082,6 +1083,7 @@
 		ADC6C95A2C11507300322BD9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7W77348744;

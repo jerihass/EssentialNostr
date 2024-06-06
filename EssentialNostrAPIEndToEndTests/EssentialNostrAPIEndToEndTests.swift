@@ -12,7 +12,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         let loader = makeSUT()
 
         loader.request("EVENT_REQUEST")
-        var receivedResult: LoadEventResult?
+        var receivedResult: EventLoader.LoadEventResult?
 
         let exp = expectation(description: "Wait for load completion")
         loader.load { result in
@@ -35,7 +35,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         let loader = makeSUT()
 
         loader.request("EVENT_REQUEST_TWO")
-        var receivedResult = [LoadEventResult]()
+        var receivedResult = [EventLoader.LoadEventResult]()
 
         let exp = expectation(description: "Wait for load completion")
         loader.load { result in
@@ -60,7 +60,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         let message = ClientMessage.Message.event(event: event)
 
         loader.request(ClientMessageMapper.mapMessage(message))
-        var receivedResult: LoadEventResult?
+        var receivedResult: EventLoader.LoadEventResult?
 
         let exp = expectation(description: "Wait for load completion")
         loader.load { result in
