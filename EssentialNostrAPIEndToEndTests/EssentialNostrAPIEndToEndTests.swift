@@ -50,7 +50,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
 
         wait(for: [exp], timeout: 3.0)
 
-        XCTAssertEqual(receivedResult.count, 2)
+        XCTAssertEqual(receivedResult.count, 3) // Two events and EOSE
         XCTAssertEqual(receivedResult.compactMap { try? $0.get().id }, ["eventID", "eventID"])
     }
 
