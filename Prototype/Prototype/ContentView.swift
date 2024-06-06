@@ -14,7 +14,7 @@ struct NostrEventViewModel: Identifiable {
 }
 
 struct ContentView: View {
-    private let nostrEvents = NostrEventViewModel.prototypeEvents
+    @State private var nostrEvents = [NostrEventViewModel]()
     var body: some View {
         Text("Nostr Events")
             .font(.title)
@@ -23,6 +23,16 @@ struct ContentView: View {
             noteView(event)
         }
         .listStyle(.plain)
+        .refreshable {
+            await refresh()
+        }
+    }
+
+
+    private func refresh() async {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+            nostrEvents = NostrEventViewModel.prototypeEvents
+        }
     }
 
     private func noteView(_ model: NostrEventViewModel) -> some View {
