@@ -11,6 +11,7 @@
 		AD7BDD882C0D4E840034A2D1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7BDD872C0D4E840034A2D1 /* ContentView.swift */; };
 		AD7BDD8A2C0D4E860034A2D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD7BDD892C0D4E860034A2D1 /* Assets.xcassets */; };
 		AD7BDD8D2C0D4E860034A2D1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD7BDD8C2C0D4E860034A2D1 /* Preview Assets.xcassets */; };
+		ADC6C9422C11493600322BD9 /* NostrEventViewModel+PrototypeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6C9412C11493600322BD9 /* NostrEventViewModel+PrototypeData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		AD7BDD872C0D4E840034A2D1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		AD7BDD892C0D4E860034A2D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AD7BDD8C2C0D4E860034A2D1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		ADC6C9412C11493600322BD9 /* NostrEventViewModel+PrototypeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NostrEventViewModel+PrototypeData.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +57,7 @@
 				AD7BDD872C0D4E840034A2D1 /* ContentView.swift */,
 				AD7BDD892C0D4E860034A2D1 /* Assets.xcassets */,
 				AD7BDD8B2C0D4E860034A2D1 /* Preview Content */,
+				ADC6C9412C11493600322BD9 /* NostrEventViewModel+PrototypeData.swift */,
 			);
 			path = Prototype;
 			sourceTree = "<group>";
@@ -139,6 +142,7 @@
 			files = (
 				AD7BDD882C0D4E840034A2D1 /* ContentView.swift in Sources */,
 				AD7BDD862C0D4E840034A2D1 /* PrototypeApp.swift in Sources */,
+				ADC6C9422C11493600322BD9 /* NostrEventViewModel+PrototypeData.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
