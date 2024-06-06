@@ -38,7 +38,7 @@ struct ContentView: View {
                 Text(model.npub)
                     .lineLimit(1, reservesSpace: false)
                 Spacer()
-                Text("\(model.time) \(model.date)")
+                Text("\(model.time)\n\(model.date)")
             }
             Text(model.content)
         }
