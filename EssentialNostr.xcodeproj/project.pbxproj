@@ -41,6 +41,8 @@
 		ADC6C9612C11513A00322BD9 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C32C09FEC000345A57 /* Helpers.swift */; };
 		ADC6C9622C11514700322BD9 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5B9EBF2BF6CD2800E7D5CD /* XCTestCase+MemoryLeakTracking.swift */; };
 		ADC6C9682C11BB5F00322BD9 /* EssentialNostrCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */; };
+		ADC6C96A2C11BD5D00322BD9 /* EssentialNostriOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADC6C9482C11507300322BD9 /* EssentialNostriOS.framework */; platformFilter = ios; };
+		ADC6C96F2C11BD6700322BD9 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		ADE7026D2BF98D850066AC13 /* ClientMessageMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */; };
 		ADEA67922C06CE9600CF97D9 /* EventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADEA67912C06CE9600CF97D9 /* EventStore.swift */; };
 		ADFFFE722C08066B00A504A3 /* NostrEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFFFE712C08066B00A504A3 /* NostrEvent.swift */; };
@@ -77,6 +79,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = ADC6C9472C11507300322BD9;
 			remoteInfo = EssentialNostriOS;
+		};
+		ADC6C96C2C11BD5D00322BD9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AD51DB482BF42A4D00B5673C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = ADC6C9472C11507300322BD9;
+			remoteInfo = EssentialNostriOS;
+		};
+		ADC6C9712C11BD6700322BD9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AD51DB482BF42A4D00B5673C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AD51DB502BF42A4D00B5673C;
+			remoteInfo = EssentialNostr;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -128,6 +144,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADC6C96A2C11BD5D00322BD9 /* EssentialNostriOS.framework in Frameworks */,
 				AD13434E2C0BB94C0082F2E5 /* EssentialNostr.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -159,6 +176,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADC6C96F2C11BD6700322BD9 /* EssentialNostr.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,6 +210,7 @@
 				ADC6C9492C11507300322BD9 /* EssentialNostriOS */,
 				ADC6C9532C11507300322BD9 /* EssentialNostriOSTests */,
 				AD51DB522BF42A4E00B5673C /* Products */,
+				ADC6C9692C11BD5D00322BD9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -315,8 +334,8 @@
 		ADC6C9532C11507300322BD9 /* EssentialNostriOSTests */ = {
 			isa = PBXGroup;
 			children = (
-				ADC6C9652C11544200322BD9 /* EventCache */,
 				ADC6C9662C11544C00322BD9 /* Integration */,
+				ADC6C9652C11544200322BD9 /* EventCache */,
 				ADC6C9672C11BB0100322BD9 /* EssentialNostriOS.xctestplan */,
 			);
 			path = EssentialNostriOSTests;
@@ -344,6 +363,13 @@
 				AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */,
 			);
 			path = Integration;
+			sourceTree = "<group>";
+		};
+		ADC6C9692C11BD5D00322BD9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		ADE7026B2BF98D4B0066AC13 /* Message API */ = {
@@ -395,6 +421,7 @@
 			);
 			dependencies = (
 				AD1343502C0BB94C0082F2E5 /* PBXTargetDependency */,
+				ADC6C96D2C11BD5D00322BD9 /* PBXTargetDependency */,
 			);
 			name = EssentialNostrCacheIntegrationTests;
 			productName = EssentialNostrCacheIntegrationTests;
@@ -467,6 +494,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				ADC6C9722C11BD6700322BD9 /* PBXTargetDependency */,
 			);
 			name = EssentialNostriOS;
 			productName = EssentialNostriOS;
@@ -691,6 +719,17 @@
 			isa = PBXTargetDependency;
 			target = ADC6C9472C11507300322BD9 /* EssentialNostriOS */;
 			targetProxy = ADC6C9512C11507300322BD9 /* PBXContainerItemProxy */;
+		};
+		ADC6C96D2C11BD5D00322BD9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilter = ios;
+			target = ADC6C9472C11507300322BD9 /* EssentialNostriOS */;
+			targetProxy = ADC6C96C2C11BD5D00322BD9 /* PBXContainerItemProxy */;
+		};
+		ADC6C9722C11BD6700322BD9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AD51DB502BF42A4D00B5673C /* EssentialNostr */;
+			targetProxy = ADC6C9712C11BD6700322BD9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1047,9 +1086,12 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1080,9 +1122,12 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1100,9 +1145,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sal-et-lucem.EssentialNostriOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1119,9 +1167,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sal-et-lucem.EssentialNostriOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
