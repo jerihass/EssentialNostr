@@ -1,0 +1,33 @@
+{
+  "configurations" : [
+    {
+      "id" : "05F22AF9-1B03-45DD-86D7-C981EE47FB49",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:EssentialNostr.xcodeproj",
+          "identifier" : "ADC6C9472C11507300322BD9",
+          "name" : "EssentialNostriOS"
+        }
+      ]
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:EssentialNostr.xcodeproj",
+        "identifier" : "ADC6C94E2C11507300322BD9",
+        "name" : "EssentialNostriOSTests"
+      }
+    }
+  ],
+  "version" : 1
+}
