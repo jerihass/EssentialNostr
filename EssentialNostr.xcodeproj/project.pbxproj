@@ -305,6 +305,7 @@
 		ADC6C9492C11507300322BD9 /* EssentialNostriOS */ = {
 			isa = PBXGroup;
 			children = (
+				ADC6C9642C11542400322BD9 /* EventCache */,
 				AD1343592C0C00100082F2E5 /* SwiftDataEventStore.swift */,
 			);
 			path = EssentialNostriOS;
@@ -313,11 +314,34 @@
 		ADC6C9532C11507300322BD9 /* EssentialNostriOSTests */ = {
 			isa = PBXGroup;
 			children = (
-				AD1343542C0BB98D0082F2E5 /* EssentialNostrCacheIntegrationTests.xctestplan */,
-				AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */,
-				AD1343572C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift */,
+				ADC6C9662C11544C00322BD9 /* Integration */,
+				ADC6C9652C11544200322BD9 /* EventCache */,
 			);
 			path = EssentialNostriOSTests;
+			sourceTree = "<group>";
+		};
+		ADC6C9642C11542400322BD9 /* EventCache */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = EventCache;
+			sourceTree = "<group>";
+		};
+		ADC6C9652C11544200322BD9 /* EventCache */ = {
+			isa = PBXGroup;
+			children = (
+				AD1343572C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift */,
+			);
+			path = EventCache;
+			sourceTree = "<group>";
+		};
+		ADC6C9662C11544C00322BD9 /* Integration */ = {
+			isa = PBXGroup;
+			children = (
+				AD1343542C0BB98D0082F2E5 /* EssentialNostrCacheIntegrationTests.xctestplan */,
+				AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */,
+			);
+			path = Integration;
 			sourceTree = "<group>";
 		};
 		ADE7026B2BF98D4B0066AC13 /* Message API */ = {

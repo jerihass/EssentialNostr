@@ -13,7 +13,7 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:EssentialNostriOSTests/EssentialNostrCacheIntegrationTests.xctestplan"
+            reference = "container:EssentialNostriOSTests/Integration/EssentialNostrCacheIntegrationTests.xctestplan"
             default = "YES">
          </TestPlanReference>
       </TestPlans>
