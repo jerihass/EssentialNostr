@@ -6,7 +6,6 @@ import Foundation
 import SwiftData
 import EssentialNostr
 
-@available(macOS 14, *)
 public class SwiftDataEventStore: EventStore {
     public static func modelSchema() -> Schema {
         Schema([SDEvent.self])
@@ -52,7 +51,6 @@ public class SwiftDataEventStore: EventStore {
     }
 }
 
-@available(macOS 14, *)
 @Model
 class SDEvent {
     public let id: String
@@ -79,7 +77,6 @@ class SDEvent {
 }
 
 extension Array where Element == LocalEvent {
-    @available(macOS 14, *)
     fileprivate func toSwiftData() -> [SDEvent] {
         map {
             SDEvent(id: $0.id, publicKey: $0.publickey, created: $0.created, kind: $0.kind, tags: $0.tags, content: $0.content, signature: $0.signature)

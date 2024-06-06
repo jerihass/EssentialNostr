@@ -7,7 +7,6 @@ import SwiftData
 import EssentialNostr
 import EssentialNostriOS
 
-@available(macOS 14, *)
 class SwiftDataEventStoreTests: XCTestCase, EventStoreSpecs {
 
     func test_retrieve_deliversEmptyOnEmptyCache() {
