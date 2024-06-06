@@ -4,26 +4,28 @@
 
 import SwiftUI
 
+struct NostrEventViewModel: Identifiable {
+    var id = UUID()
+
+    let npub: String
+    let content: String
+    let date: String
+    let time: String
+}
+
 struct ContentView: View {
+    private let nostrEvents = NostrEventViewModel.prototypeEvents
     var body: some View {
         Text("Nostr Events")
             .font(.title)
-        List {
-            noteView()
-            noteView()
-            noteView()
-            noteView()
-            noteView()
-            noteView()
-            noteView()
-            noteView()
-            noteView()
-            noteView()
+
+        List(nostrEvents) { event in
+            noteView(event)
         }
         .listStyle(.plain)
     }
 
-    private func noteView() -> some View {
+    private func noteView(_ model: NostrEventViewModel) -> some View {
         return Group {
             HStack {
                 ZStack {
@@ -33,12 +35,12 @@ struct ContentView: View {
                     Image(systemName: "person.fill")
                         .frame(width: 48, height: 48)
                 }
-                Text("npubsadasdasdasdasdasdasd")
+                Text(model.npub)
                     .lineLimit(1, reservesSpace: false)
                 Spacer()
-                Text("1303 5/31/24")
+                Text("\(model.time) \(model.date)")
             }
-            Text("Content content content Content content content Content content content Content content content Content content content Content content content Content content content Content content content ")
+            Text(model.content)
         }
     }
 }
