@@ -38,10 +38,10 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         var receivedResult = [EventLoader.LoadEventResult]()
 
         let exp = expectation(description: "Wait for load completion")
-        loader.load { result in
+        loader.load {[weak loader] result in
             receivedResult.append(result)
             if ((try? result.get()) != nil) {
-                loader.load {
+                loader?.load {
                     receivedResult.append($0)
                     exp.fulfill()
                 }
