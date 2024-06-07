@@ -12,6 +12,10 @@ class EventsViewModel {
         self.loader = loader
     }
 
+    func refreshEvents() {
+        loadEvents()
+    }
+
     func loadEvents() {
         isRefreshing = true
         loader.load() { [weak self] _ in
@@ -37,7 +41,7 @@ class EventsViewViewModelTests: XCTestCase {
     }
 
     func test_load_showsLoadingIndicator() {
-        let (sut, loader) = makeSUT()
+        let (sut, _) = makeSUT()
 
         sut.loadEvents()
 
@@ -53,6 +57,15 @@ class EventsViewViewModelTests: XCTestCase {
 
         XCTAssertFalse(sut.isRefreshing)
     }
+
+    func test_refresh_showsLoadingIndicator() {
+        let (sut, _) = makeSUT()
+
+        sut.refreshEvents()
+
+        XCTAssertTrue(sut.isRefreshing)
+    }
+
 
     // MARK: - Helpers
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: EventsViewModel, loader: LoaderSpy) {
