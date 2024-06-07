@@ -14,7 +14,10 @@ class EventsViewModel {
 
     func loadEvents() {
         isRefreshing = true
-        loader.load() { _ in }
+        loader.load() { [weak self] _ in
+            guard let self = self else { return }
+            isRefreshing = false
+        }
     }
 }
 
@@ -43,6 +46,17 @@ class EventsViewViewModelTests: XCTestCase {
         XCTAssertTrue(sut.isRefreshing)
     }
 
+    func test_load_showsHidesLoadingAfterCompletLoading() {
+        let loader = LoaderSpy()
+        let sut = EventsViewModel(loader: loader)
+
+        sut.loadEvents()
+
+        loader.completeEventsLoading()
+
+        XCTAssertFalse(sut.isRefreshing)
+    }
+
     class LoaderSpy: EventsLoader {
         private var loadRequests = [(LoadResult) -> Void]()
         var loadCallCount: Int { loadRequests.count }
@@ -51,8 +65,8 @@ class EventsViewViewModelTests: XCTestCase {
             loadRequests.append(completion)
         }
 
-        func completeLoadWith(_ error: Error, at index: Int = 0) {
-
+        func completeEventsLoading() {
+            loadRequests[0](.success([]))
         }
     }
 }
