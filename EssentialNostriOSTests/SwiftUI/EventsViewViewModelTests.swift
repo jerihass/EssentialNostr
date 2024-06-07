@@ -61,7 +61,7 @@ class EventsViewViewModelTests: XCTestCase {
     func test_refresh_showsLoadingIndicator() {
         let (sut, _) = makeSUT()
 
-        sut.refreshEvents()
+        sut.simulateRefresh()
 
         XCTAssertTrue(sut.isRefreshing)
     }
@@ -87,6 +87,12 @@ class EventsViewViewModelTests: XCTestCase {
         func completeEventsLoading() {
             loadRequests[0](.success([]))
         }
+    }
+}
+
+extension EventsViewModel {
+    func simulateRefresh() {
+        self.refreshEvents()
     }
 }
 
