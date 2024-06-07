@@ -44,7 +44,7 @@ class EventsViewViewModelTests: XCTestCase {
         XCTAssertTrue(sut.isRefreshing)
     }
 
-    func test_load_showsHidesLoadingAfterCompletLoading() {
+    func test_load_hidesLoadingAfterCompletLoading() {
         let (sut, loader) = makeSUT()
 
         sut.loadEvents()
