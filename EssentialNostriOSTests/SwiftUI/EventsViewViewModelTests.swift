@@ -32,39 +32,35 @@ class EventsViewViewModelTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 0)
     }
 
-    func test_load_requestLoadFromLoader() {
+    func test_loadActionsRequestFeed() {
         let (sut, loader) = makeSUT()
 
         sut.loadEvents()
-
         XCTAssertEqual(loader.loadCallCount, 1)
+
+        sut.simulateRefresh()
+        XCTAssertEqual(loader.loadCallCount, 2)
+
+        sut.simulateRefresh()
+        XCTAssertEqual(loader.loadCallCount, 3)
     }
 
     func test_load_showsLoadingIndicator() {
-        let (sut, _) = makeSUT()
-
-        sut.loadEvents()
-
-        XCTAssertTrue(sut.isShowingLoadingIndicator)
-    }
-
-    func test_load_hidesLoadingAfterCompletLoading() {
         let (sut, loader) = makeSUT()
 
         sut.loadEvents()
+        XCTAssertTrue(sut.isShowingLoadingIndicator)
 
         loader.completeEventsLoading()
+        XCTAssertFalse(sut.isShowingLoadingIndicator)
 
+        sut.simulateRefresh()
+        XCTAssertTrue(sut.isShowingLoadingIndicator)
+
+        loader.completeEventsLoading()
         XCTAssertFalse(sut.isShowingLoadingIndicator)
     }
 
-    func test_refresh_showsLoadingIndicator() {
-        let (sut, _) = makeSUT()
-
-        sut.simulateRefresh()
-
-        XCTAssertTrue(sut.isShowingLoadingIndicator)
-    }
 
 
     // MARK: - Helpers
