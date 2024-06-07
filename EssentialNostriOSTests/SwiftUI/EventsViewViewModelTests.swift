@@ -6,13 +6,13 @@ import XCTest
 import EssentialNostr
 
 class EventsViewModel {
-    private let loader: EventsViewViewModelTests.LoaderSpy
-    init(loader: EventsViewViewModelTests.LoaderSpy) {
+    private let loader: EventsLoader
+    init(loader: EventsLoader) {
         self.loader = loader
     }
 
     func loadEvents() {
-        loader.load()
+        loader.load() { _ in }
     }
 }
 
@@ -32,10 +32,12 @@ class EventsViewViewModelTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 1)
     }
 
-    class LoaderSpy {
-        private(set) var loadCallCount = 0
-        func load() {
-            loadCallCount += 1
+    class LoaderSpy: EventsLoader {
+        private var loadRequests = [(LoadResult) -> Void]()
+        var loadCallCount: Int { loadRequests.count }
+
+        func load(completion: @escaping (LoadResult) -> Void) {
+            loadRequests.append(completion)
         }
     }
 }
