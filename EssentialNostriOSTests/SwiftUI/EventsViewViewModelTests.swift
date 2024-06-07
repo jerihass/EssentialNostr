@@ -45,19 +45,19 @@ class EventsViewViewModelTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 3)
     }
 
-    func test_load_showsLoadingIndicator() {
+    func test_load_showsAndHidsLoadingIndicator() {
         let (sut, loader) = makeSUT()
 
         sut.loadEvents()
         XCTAssertTrue(sut.isShowingLoadingIndicator)
 
-        loader.completeEventsLoading()
+        loader.completeEventsLoading(at: 0)
         XCTAssertFalse(sut.isShowingLoadingIndicator)
 
         sut.simulateRefresh()
         XCTAssertTrue(sut.isShowingLoadingIndicator)
 
-        loader.completeEventsLoading()
+        loader.completeEventsLoading(at: 1)
         XCTAssertFalse(sut.isShowingLoadingIndicator)
     }
 
@@ -80,8 +80,8 @@ class EventsViewViewModelTests: XCTestCase {
             loadRequests.append(completion)
         }
 
-        func completeEventsLoading() {
-            loadRequests[0](.success([]))
+        func completeEventsLoading(at index: Int = 0) {
+            loadRequests[index](.success([]))
         }
     }
 }
