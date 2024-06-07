@@ -23,14 +23,13 @@ class EventsViewModel {
 
 class EventsViewViewModelTests: XCTestCase {
     func test_init_doesNotLoadEvents() {
-        let loader = LoaderSpy()
-        let _ = EventsViewModel(loader: loader)
+        let (_, loader) = makeSUT()
+
         XCTAssertEqual(loader.loadCallCount, 0)
     }
 
     func test_load_requestLoadFromLoader() {
-        let loader = LoaderSpy()
-        let sut = EventsViewModel(loader: loader)
+        let (sut, loader) = makeSUT()
 
         sut.loadEvents()
 
@@ -38,8 +37,7 @@ class EventsViewViewModelTests: XCTestCase {
     }
 
     func test_load_showsLoadingIndicator() {
-        let loader = LoaderSpy()
-        let sut = EventsViewModel(loader: loader)
+        let (sut, loader) = makeSUT()
 
         sut.loadEvents()
 
@@ -47,14 +45,22 @@ class EventsViewViewModelTests: XCTestCase {
     }
 
     func test_load_showsHidesLoadingAfterCompletLoading() {
-        let loader = LoaderSpy()
-        let sut = EventsViewModel(loader: loader)
+        let (sut, loader) = makeSUT()
 
         sut.loadEvents()
 
         loader.completeEventsLoading()
 
         XCTAssertFalse(sut.isRefreshing)
+    }
+
+    // MARK: - Helpers
+    func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: EventsViewModel, loader: LoaderSpy) {
+        let loader = LoaderSpy()
+        let sut = EventsViewModel(loader: loader)
+        trackForMemoryLeaks(loader)
+        trackForMemoryLeaks(sut)
+        return (sut, loader)
     }
 
     class LoaderSpy: EventsLoader {
