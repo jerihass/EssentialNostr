@@ -42,6 +42,7 @@
 		ADC6C96A2C11BD5D00322BD9 /* EssentialNostriOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADC6C9482C11507300322BD9 /* EssentialNostriOS.framework */; platformFilter = ios; };
 		ADC6C96F2C11BD6700322BD9 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		ADC6C9762C11D3CC00322BD9 /* EventsViewViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6C9752C11D3CC00322BD9 /* EventsViewViewModelTests.swift */; };
+		ADC6C9782C129F3300322BD9 /* EventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6C9772C129F3300322BD9 /* EventsViewModel.swift */; };
 		ADE7026D2BF98D850066AC13 /* ClientMessageMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */; };
 		ADEA67922C06CE9600CF97D9 /* EventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADEA67912C06CE9600CF97D9 /* EventStore.swift */; };
 		ADFFFE722C08066B00A504A3 /* NostrEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFFFE712C08066B00A504A3 /* NostrEvent.swift */; };
@@ -129,6 +130,7 @@
 		ADC6C94F2C11507300322BD9 /* EssentialNostriOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostriOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADC6C9672C11BB0100322BD9 /* EssentialNostriOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialNostriOS.xctestplan; sourceTree = "<group>"; };
 		ADC6C9752C11D3CC00322BD9 /* EventsViewViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsViewViewModelTests.swift; sourceTree = "<group>"; };
+		ADC6C9772C129F3300322BD9 /* EventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsViewModel.swift; sourceTree = "<group>"; };
 		ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessageMapperTests.swift; sourceTree = "<group>"; };
 		ADEA67912C06CE9600CF97D9 /* EventStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStore.swift; sourceTree = "<group>"; };
 		ADFFFE712C08066B00A504A3 /* NostrEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrEvent.swift; sourceTree = "<group>"; };
@@ -323,6 +325,7 @@
 			children = (
 				ADC6C9642C11542400322BD9 /* EventCache */,
 				AD1343592C0C00100082F2E5 /* SwiftDataEventStore.swift */,
+				ADC6C9772C129F3300322BD9 /* EventsViewModel.swift */,
 			);
 			path = EssentialNostriOS;
 			sourceTree = "<group>";
@@ -685,6 +688,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADC6C95D2C1150DD00322BD9 /* SwiftDataEventStore.swift in Sources */,
+				ADC6C9782C129F3300322BD9 /* EventsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

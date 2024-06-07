@@ -4,26 +4,7 @@
 
 import XCTest
 import EssentialNostr
-
-class EventsViewModel {
-    private let loader: EventsLoader
-    private(set) var isRefreshing: Bool = false
-    init(loader: EventsLoader) {
-        self.loader = loader
-    }
-
-    func refreshEvents() {
-        loadEvents()
-    }
-
-    func loadEvents() {
-        isRefreshing = true
-        loader.load() { [weak self] _ in
-            guard let self = self else { return }
-            isRefreshing = false
-        }
-    }
-}
+import EssentialNostriOS
 
 class EventsViewViewModelTests: XCTestCase {
     func test_init_doesNotLoadEvents() {
