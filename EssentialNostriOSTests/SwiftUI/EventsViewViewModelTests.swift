@@ -5,16 +5,16 @@
 import XCTest
 import EssentialNostr
 
-class EventsViewController {
-    init(loader: EventsViewControllerTests.LoaderSpy) {
+class EventsViewModel {
+    init(loader: EventsViewViewModelTests.LoaderSpy) {
         
     }
 }
 
-class EventsViewControllerTests: XCTestCase {
+class EventsViewViewModelTests: XCTestCase {
     func test_init_doesNotLoadEvents() {
         let loader = LoaderSpy()
-        let sut = EventsViewController(loader: loader)
+        let sut = EventsViewModel(loader: loader)
         XCTAssertEqual(loader.loadCallCount, 0)
     }
 
