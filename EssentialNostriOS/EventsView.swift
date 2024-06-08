@@ -39,7 +39,7 @@ extension EventsViewModel {
 }
 
 #Preview {
-    class PreviewLoader: EventLoader {
+    class PreviewLoader: EventsLoader {
         let events:[Event] = [
             Event(id: "eventID1", publicKey: "pubkey1", created: .now, kind: 1, tags: [], content: "contents some 1", signature: "sig1"),
             Event(id: "eventID2", publicKey: "pubkey2", created: .now, kind: 1, tags: [], content: "contents some 2", signature: "sig2"),
@@ -51,10 +51,8 @@ extension EventsViewModel {
 
         }
 
-        func load(_ completion: @escaping (LoadEventResult) -> Void) {
-            for event in events {
-                completion(.success(event))
-            }
+        func load(completion: @escaping (LoadResult) -> Void) {
+            completion(.success(events))
         }
     }
 

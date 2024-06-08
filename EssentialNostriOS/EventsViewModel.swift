@@ -6,9 +6,9 @@ import Foundation
 import EssentialNostr
 
 public class EventsViewModel {
-    private let loader: EventLoader
+    private let loader: EventsLoader
     private(set) var events = [Event]()
-    public init(loader: EventLoader) {
+    public init(loader: EventsLoader) {
         self.loader = loader
     }
 
@@ -17,19 +17,19 @@ public class EventsViewModel {
     }
 
     public func loadEvents() {
-        var load: (_ completion: Result<Event, Error>) -> Void  = { _ in }
-        
+        var load: (_ completion: Result<[Event], Error>) -> Void  = { _ in }
+
         load = { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case let .success(event):
-                events.append(event)
-                loader.load(load)
+            case let .success(events):
+                self.events = events
+                loader.load(completion: load)
             case .failure:
                 break
             }
         }
 
-        loader.load(load)
+        loader.load(completion: load)
     }
 }
