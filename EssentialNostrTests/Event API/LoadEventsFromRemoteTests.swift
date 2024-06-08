@@ -14,23 +14,27 @@ class RemoteEventsLoader {
 
     func load(completion: @escaping (EventsLoader.LoadResult) -> Void) {
         var events = [Event]()
-        var error: Error?
-        eventLoader.load { result in
+
+        var load: (_ : Result<Event?, Error>) -> Void = { _ in }
+
+        load = { [weak self] result in
+            guard let self = self else { return }
             switch result {
-            case let .failure(anError):
-                error = anError
             case let .success(event):
+                guard let event = event else { return completion(.success(events)) }
                 events.append(event)
-            }
-
-            if let error = error {
-                completion(.failure(error))
-            }
-
-            if error == nil {
-                completion(.success(events))
+                eventLoader.load(load)
+            case let .failure(error):
+                if case RemoteEventLoader.Error.eose = error {
+                    completion(.success(events))
+                } else {
+                    completion(.failure(error))
+                }
+                break
             }
         }
+
+        eventLoader.load(load)
     }
 }
 
@@ -126,9 +130,11 @@ class LoadEventsFromRemoteTests: XCTestCase {
         }
 
         func complete(with events: [Event], at index: Int = 0) {
-            for event in events {
-                loadCompletions[index](.success(event))
+            if events.isEmpty { return loadCompletions[index](.success(.none)) }
+            for (i, event) in events.enumerated() {
+                loadCompletions[index + i](.success(event))
             }
+            loadCompletions[index + events.count](.failure(RemoteEventLoader.Error.eose(sub: "any")))
         }
     }
 }
