@@ -13,12 +13,22 @@ class RemoteEventsLoader {
     }
 
     func load(completion: @escaping (EventsLoader.LoadResult) -> Void) {
+        var events = [Event]()
+        var error: Error?
         eventLoader.load { result in
             switch result {
-            case let .failure(error):
+            case let .failure(anError):
+                error = anError
+            case let .success(event):
+                events.append(event)
+            }
+
+            if let error = error {
                 completion(.failure(error))
-            case .success(_):
-                break
+            }
+
+            if error == nil {
+                completion(.success(events))
             }
         }
     }
@@ -47,7 +57,7 @@ class LoadEventsFromRemoteTests: XCTestCase {
         sut.load { result in
             switch result {
             case .success(_):
-                XCTFail()
+                XCTFail("Expected failure, got \(result) instead")
             case let .failure(receivedError as NSError?):
                 XCTAssertEqual(receivedError, error)
             }
@@ -57,7 +67,25 @@ class LoadEventsFromRemoteTests: XCTestCase {
         eventLoader.complete(with: error)
 
         wait(for: [exp], timeout: 1)
-        XCTAssertEqual(eventLoader.receivedMessages, [.loadEvents])
+    }
+
+    func test_load_givesEmptyEventsOnEmptyLoaderSuccess() {
+        let (sut, eventLoader) = makeSUT()
+
+        let exp = expectation(description: "Wait for load completion")
+        sut.load { result in
+            switch result {
+            case let .success(receivedEvents):
+                XCTAssertEqual(receivedEvents, [])
+            case .failure:
+                XCTFail()
+            }
+            exp.fulfill()
+        }
+
+        eventLoader.complete(with: [])
+
+        wait(for: [exp], timeout: 1)
     }
 
 
@@ -88,6 +116,12 @@ class LoadEventsFromRemoteTests: XCTestCase {
 
         func complete(with error: Error, at index: Int = 0) {
             loadCompletions[index](.failure(error))
+        }
+
+        func complete(with events: [Event], at index: Int = 0) {
+            for event in events {
+                loadCompletions[index](.success(event))
+            }
         }
     }
 }
