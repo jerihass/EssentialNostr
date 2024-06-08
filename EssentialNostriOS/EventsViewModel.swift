@@ -5,7 +5,6 @@
 import Foundation
 import EssentialNostr
 
-@Observable
 public class EventsViewModel {
     private let loader: EventsLoader
     private(set) var events = [Event]()
