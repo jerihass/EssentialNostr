@@ -26,7 +26,7 @@ class EventsViewViewModelTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 3)
     }
 
-    func test_loadEvents_deliversEvents() async {
+    func test_loadEvents_deliversSingleEvent() async {
         let (sut, loader) = makeSUT()
         let event0 = Event(id: "someID", publicKey: "somePubkey", created: .now, kind: 1, tags: [], content: "some content", signature: "some sig")
         sut.loadEvents()
@@ -35,6 +35,21 @@ class EventsViewViewModelTests: XCTestCase {
 
         let count = await sut.eventCount()
         XCTAssertEqual(count, 1)
+    }
+
+    func test_loadEvents_deliversMultipleEvents() async {
+        let (sut, loader) = makeSUT()
+        let event0 = Event(id: "someID", publicKey: "somePubkey", created: .now, kind: 1, tags: [], content: "some content", signature: "some sig")
+        let event1 = Event(id: "someID1", publicKey: "somePubkey1", created: .now, kind: 1, tags: [], content: "some content1", signature: "some sig1")
+
+        sut.loadEvents()
+
+        loader.completeEventLoading(with: event0, at: 0)
+        loader.completeEventLoading(with: event1, at: 1)
+
+        let events = await sut.fetchEvents()
+
+        XCTAssertEqual(events, [event0, event1])
     }
 
     // MARK: - Helpers

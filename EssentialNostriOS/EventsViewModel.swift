@@ -17,11 +17,14 @@ public class EventsViewModel {
     }
 
     public func loadEvents() {
-        let load: (_ completion: Result<Event, Error>) -> Void = { [weak self] result in
+        var load: (_ completion: Result<Event, Error>) -> Void  = { _ in }
+        
+        load = { [weak self] result in
             guard let self = self else { return }
             switch result {
             case let .success(event):
                 events.append(event)
+                loader.load(load)
             case .failure:
                 break
             }
