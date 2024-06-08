@@ -6,7 +6,7 @@ import SwiftUI
 import EssentialNostr
 
 struct EventsView: View {
-    @State var viewModel: EventsViewModel
+    var viewModel: EventsViewModel
     @State var events = [Event]()
     var body: some View {
         Text("Nostr Events")
