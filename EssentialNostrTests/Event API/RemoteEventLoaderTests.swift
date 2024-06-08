@@ -170,7 +170,7 @@ class RemoteEventLoaderTests: XCTestCase {
         sut.load { receivedResult in
             switch (receivedResult, expectedResult) {
             case let (.success(receivedEvent), .success(expectedEvent)):
-                XCTAssertEqual(receivedEvent, expectedEvent, "Got \(receivedEvent), expected \(expectedEvent)",
+                XCTAssertEqual(receivedEvent, expectedEvent, "Got \(String(describing: receivedEvent)), expected \(String(describing: expectedEvent))",
                                file: file, line: line)
             case let (.failure(receivedError as RemoteEventLoader.Error), .failure(expectedError as RemoteEventLoader.Error)):
                 XCTAssertEqual(receivedError, expectedError, "Got \(receivedError), expected \(expectedError)",
