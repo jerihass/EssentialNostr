@@ -31,7 +31,7 @@ class EventsViewViewModelTests: XCTestCase {
         let event0 = Event(id: "someID", publicKey: "somePubkey", created: .now, kind: 1, tags: [], content: "some content", signature: "some sig")
         sut.loadEvents()
 
-        loader.completeEventsLoading(with: [event0])
+        loader.completeEventLoading(with: event0, at: 0)
 
         let count = await sut.eventCount()
         XCTAssertEqual(count, 1)
@@ -46,16 +46,19 @@ class EventsViewViewModelTests: XCTestCase {
         return (sut, loader)
     }
 
-    class LoaderSpy: EventsLoader {
-        private var loadRequests = [(LoadResult) -> Void]()
+    class LoaderSpy: EventLoader {
+        private var loadRequests = [(LoadEventResult) -> Void]()
         var loadCallCount: Int { loadRequests.count }
+        func request(_ message: String) {
 
-        func load(completion: @escaping (LoadResult) -> Void) {
+        }
+
+        func load(_ completion: @escaping (LoadEventResult) -> Void) {
             loadRequests.append(completion)
         }
 
-        func completeEventsLoading(with events: [Event], at index: Int = 0) {
-            loadRequests[index](.success(events))
+        func completeEventLoading(with event: Event, at index: Int = 0) {
+            loadRequests[index](.success(event))
         }
     }
 }
