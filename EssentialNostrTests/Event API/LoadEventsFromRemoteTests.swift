@@ -12,8 +12,15 @@ class RemoteEventsLoader {
         self.eventLoader = eventLoader
     }
 
-    func load() {
-        eventLoader.load { _ in }
+    func load(completion: @escaping (EventsLoader.LoadResult) -> Void) {
+        eventLoader.load { result in
+            switch result {
+            case let .failure(error):
+                completion(.failure(error))
+            case .success(_):
+                break
+            }
+        }
     }
 }
 
@@ -27,8 +34,29 @@ class LoadEventsFromRemoteTests: XCTestCase {
     func test_load_requestsEvents() {
         let (sut, eventLoader) = makeSUT()
 
-        sut.load()
+        sut.load() { _ in }
 
+        XCTAssertEqual(eventLoader.receivedMessages, [.loadEvents])
+    }
+
+    func test_load_givesErrorOnLoaderError() {
+        let (sut, eventLoader) = makeSUT()
+
+        let error = anyError()
+        let exp = expectation(description: "Wait for load completion")
+        sut.load { result in
+            switch result {
+            case .success(_):
+                XCTFail()
+            case let .failure(receivedError as NSError?):
+                XCTAssertEqual(receivedError, error)
+            }
+            exp.fulfill()
+        }
+
+        eventLoader.complete(with: error)
+
+        wait(for: [exp], timeout: 1)
         XCTAssertEqual(eventLoader.receivedMessages, [.loadEvents])
     }
 
@@ -46,13 +74,20 @@ class LoadEventsFromRemoteTests: XCTestCase {
         enum Message {
             case loadEvents
         }
+
         var receivedMessages = [Message]()
+        var loadCompletions = [(LoadEventResult) -> Void]()
         func request(_ message: String) {
 
         }
         
         func load(_ completion: @escaping (LoadEventResult) -> Void) {
             receivedMessages.append(.loadEvents)
+            loadCompletions.append(completion)
+        }
+
+        func complete(with error: Error, at index: Int = 0) {
+            loadCompletions[index](.failure(error))
         }
     }
 }
