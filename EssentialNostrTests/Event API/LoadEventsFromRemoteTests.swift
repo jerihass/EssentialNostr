@@ -67,6 +67,14 @@ class LoadEventsFromRemoteTests: XCTestCase {
         }
     }
 
+    func test_load_givesSingleEventOnSingleLoaderSuccess() {
+        let (sut, eventLoader) = makeSUT()
+        let event = uniqueEvent()
+        expect(sut, toCompleteWith: .success([event])) {
+            eventLoader.complete(with: [event])
+        }
+    }
+
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteEventsLoader, loader: RemoteLoaderSpy) {
         let loader = RemoteLoaderSpy()
