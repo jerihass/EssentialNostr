@@ -5,8 +5,10 @@
 import Foundation
 import EssentialNostr
 
+@Observable
 public class EventsViewModel {
     private let loader: EventsLoader
+    private(set) var events = [Event]()
     private(set) public var isRefreshing: Bool = false
     public init(loader: EventsLoader) {
         self.loader = loader
@@ -18,8 +20,9 @@ public class EventsViewModel {
 
     public func loadEvents() {
         isRefreshing = true
-        loader.load() { [weak self] _ in
+        loader.load() { [weak self] result in
             guard let self = self else { return }
+            self.events = (try? result.get()) ?? []
             isRefreshing = false
         }
     }
