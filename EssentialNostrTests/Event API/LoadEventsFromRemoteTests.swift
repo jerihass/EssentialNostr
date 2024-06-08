@@ -53,41 +53,19 @@ class LoadEventsFromRemoteTests: XCTestCase {
         let (sut, eventLoader) = makeSUT()
 
         let error = anyError()
-        let exp = expectation(description: "Wait for load completion")
-        sut.load { result in
-            switch result {
-            case .success(_):
-                XCTFail("Expected failure, got \(result) instead")
-            case let .failure(receivedError as NSError?):
-                XCTAssertEqual(receivedError, error)
-            }
-            exp.fulfill()
+
+        expect(sut, toCompleteWith: .failure(error)) {
+            eventLoader.complete(with: error)
         }
-
-        eventLoader.complete(with: error)
-
-        wait(for: [exp], timeout: 1)
     }
 
     func test_load_givesEmptyEventsOnEmptyLoaderSuccess() {
         let (sut, eventLoader) = makeSUT()
 
-        let exp = expectation(description: "Wait for load completion")
-        sut.load { result in
-            switch result {
-            case let .success(receivedEvents):
-                XCTAssertEqual(receivedEvents, [])
-            case .failure:
-                XCTFail()
-            }
-            exp.fulfill()
+        expect(sut, toCompleteWith: .success([])) {
+            eventLoader.complete(with: [])
         }
-
-        eventLoader.complete(with: [])
-
-        wait(for: [exp], timeout: 1)
     }
-
 
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteEventsLoader, loader: RemoteLoaderSpy) {
@@ -96,6 +74,27 @@ class LoadEventsFromRemoteTests: XCTestCase {
         trackForMemoryLeaks(loader)
         trackForMemoryLeaks(sut)
         return (sut, loader)
+    }
+
+    private func expect(_ sut: RemoteEventsLoader, toCompleteWith expectedResult: EventsLoader.LoadResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+
+        let exp = expectation(description: "Wait for load completion")
+        
+        sut.load { result in
+            switch (result, expectedResult) {
+            case let (.success(receivedEvents), .success(expectedEvents)):
+                XCTAssertEqual(receivedEvents, expectedEvents)
+            case let (.failure(receivedError as NSError?), .failure(expectedError as NSError?)):
+                XCTAssertEqual(receivedError, expectedError)
+            default:
+                XCTFail("Expected: \(expectedResult), got \(result) instead)")
+            }
+            exp.fulfill()
+        }
+
+        action()
+
+        wait(for: [exp], timeout: 1)
     }
 
     private class RemoteLoaderSpy: EventLoader {
