@@ -6,8 +6,9 @@ import SwiftUI
 import EssentialNostr
 
 struct EventsView: View {
-    var viewModel: EventsViewModel
     @State var events = [Event]()
+    var viewModel: EventsViewModel
+
     var body: some View {
         Text("Nostr Events")
             .font(.title)
@@ -15,11 +16,13 @@ struct EventsView: View {
             EventView(event: event)
         }
         .listStyle(.plain)
-        .refreshable {
-            events = await viewModel.fetchEvents()
-        }
+        .task(fetchEvents)
+        .refreshable(action: fetchEvents)
     }
 
+    @Sendable private func fetchEvents() async {
+        events = await viewModel.fetchEvents()
+    }
 }
 
 extension EventsViewModel {
