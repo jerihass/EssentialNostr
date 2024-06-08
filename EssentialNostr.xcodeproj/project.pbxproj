@@ -45,6 +45,8 @@
 		ADC6C9782C129F3300322BD9 /* EventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6C9772C129F3300322BD9 /* EventsViewModel.swift */; };
 		ADE7026D2BF98D850066AC13 /* ClientMessageMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */; };
 		ADEA67922C06CE9600CF97D9 /* EventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADEA67912C06CE9600CF97D9 /* EventStore.swift */; };
+		ADF9FC2E2C14A491003DB353 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF9FC2D2C14A491003DB353 /* EventView.swift */; };
+		ADF9FC302C14A86B003DB353 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF9FC2F2C14A86B003DB353 /* EventsView.swift */; };
 		ADFFFE722C08066B00A504A3 /* NostrEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFFFE712C08066B00A504A3 /* NostrEvent.swift */; };
 		ADFFFE742C0806A600A504A3 /* LocalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFFFE732C0806A600A504A3 /* LocalEvent.swift */; };
 		ADFFFE762C080CB900A504A3 /* LoadEventsFromCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFFFE752C080CB900A504A3 /* LoadEventsFromCacheTests.swift */; };
@@ -133,6 +135,8 @@
 		ADC6C9772C129F3300322BD9 /* EventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsViewModel.swift; sourceTree = "<group>"; };
 		ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessageMapperTests.swift; sourceTree = "<group>"; };
 		ADEA67912C06CE9600CF97D9 /* EventStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStore.swift; sourceTree = "<group>"; };
+		ADF9FC2D2C14A491003DB353 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
+		ADF9FC2F2C14A86B003DB353 /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
 		ADFFFE712C08066B00A504A3 /* NostrEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrEvent.swift; sourceTree = "<group>"; };
 		ADFFFE732C0806A600A504A3 /* LocalEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEvent.swift; sourceTree = "<group>"; };
 		ADFFFE752C080CB900A504A3 /* LoadEventsFromCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadEventsFromCacheTests.swift; sourceTree = "<group>"; };
@@ -326,6 +330,8 @@
 				ADC6C9642C11542400322BD9 /* EventCache */,
 				AD1343592C0C00100082F2E5 /* SwiftDataEventStore.swift */,
 				ADC6C9772C129F3300322BD9 /* EventsViewModel.swift */,
+				ADF9FC2D2C14A491003DB353 /* EventView.swift */,
+				ADF9FC2F2C14A86B003DB353 /* EventsView.swift */,
 			);
 			path = EssentialNostriOS;
 			sourceTree = "<group>";
@@ -687,8 +693,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ADF9FC2E2C14A491003DB353 /* EventView.swift in Sources */,
 				ADC6C95D2C1150DD00322BD9 /* SwiftDataEventStore.swift in Sources */,
 				ADC6C9782C129F3300322BD9 /* EventsViewModel.swift in Sources */,
+				ADF9FC302C14A86B003DB353 /* EventsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
