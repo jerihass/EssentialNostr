@@ -26,7 +26,7 @@ class EventsViewViewModelTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 3)
     }
 
-    func test_load_showsAndHidsLoadingIndicator() {
+    func test_load_showsAndHidesLoadingIndicator() {
         let (sut, loader) = makeSUT()
 
         sut.loadEvents()
