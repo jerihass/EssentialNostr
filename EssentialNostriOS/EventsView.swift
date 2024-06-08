@@ -23,11 +23,13 @@ struct EventsView: View {
 }
 
 extension EventsViewModel {
-    func fetchEvents() async -> [Event] {
+    public func fetchEvents() async -> [Event] {
         await withCheckedContinuation { [weak self] continuation in
+            guard let self = self else { return }
             DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
-                self?.loadEvents()
-                continuation.resume(with: .success(self?.events ?? []))
+                guard let self = self else { return }
+                self.loadEvents()
+                continuation.resume(with: .success(self.events))
             }
         }
     }

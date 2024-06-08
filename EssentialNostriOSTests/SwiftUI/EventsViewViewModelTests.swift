@@ -26,6 +26,17 @@ class EventsViewViewModelTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 3)
     }
 
+    func test_loadEvents_deliversEvents() async {
+        let (sut, loader) = makeSUT()
+        let event0 = Event(id: "someID", publicKey: "somePubkey", created: .now, kind: 1, tags: [], content: "some content", signature: "some sig")
+        sut.loadEvents()
+
+        loader.completeEventsLoading(with: [event0])
+
+        let count = await sut.eventCount()
+        XCTAssertEqual(count, 1)
+    }
+
     // MARK: - Helpers
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: EventsViewModel, loader: LoaderSpy) {
         let loader = LoaderSpy()
@@ -43,8 +54,8 @@ class EventsViewViewModelTests: XCTestCase {
             loadRequests.append(completion)
         }
 
-        func completeEventsLoading(at index: Int = 0) {
-            loadRequests[index](.success([]))
+        func completeEventsLoading(with events: [Event], at index: Int = 0) {
+            loadRequests[index](.success(events))
         }
     }
 }
@@ -54,8 +65,9 @@ extension EventsViewModel {
         self.refreshEvents()
     }
 
-    var isShowingLoadingIndicator: Bool {
-        isRefreshing
+    func eventCount() async -> Int {
+        let events = await fetchEvents()
+        return events.count
     }
 }
 
