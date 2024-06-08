@@ -19,15 +19,13 @@ class RemoteEventsLoader {
 
 class LoadEventsFromRemoteTests: XCTestCase {
     func test_init_doesNotRequestLoadWhenCreated() {
-        let eventLoader = RemoteLoaderSpy()
-        let sut = RemoteEventsLoader(eventLoader: eventLoader)
+        let (_, eventLoader) = makeSUT()
 
         XCTAssertEqual(eventLoader.receivedMessages, [])
     }
 
     func test_load_requestsEvents() {
-        let eventLoader = RemoteLoaderSpy()
-        let sut = RemoteEventsLoader(eventLoader: eventLoader)
+        let (sut, eventLoader) = makeSUT()
 
         sut.load()
 
@@ -36,7 +34,13 @@ class LoadEventsFromRemoteTests: XCTestCase {
 
 
     // MARK: - Helpers
-
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteEventsLoader, loader: RemoteLoaderSpy) {
+        let loader = RemoteLoaderSpy()
+        let sut = RemoteEventsLoader(eventLoader: loader)
+        trackForMemoryLeaks(loader)
+        trackForMemoryLeaks(sut)
+        return (sut, loader)
+    }
 
     private class RemoteLoaderSpy: EventLoader {
         enum Message {
