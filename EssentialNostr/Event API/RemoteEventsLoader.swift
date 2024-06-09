@@ -4,7 +4,7 @@
 
 import Foundation
 
-public class RemoteEventsLoader {
+public class RemoteEventsLoader: EventsLoader {
     let eventLoader: EventLoader
 
     public init(eventLoader: EventLoader) {
