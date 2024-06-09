@@ -4,10 +4,14 @@
 
 import SwiftUI
 
-public struct ErrorView: View {
+public struct ErrorViewModel {
     let message: String
+}
+
+public struct ErrorView: View {
+    let model: ErrorViewModel
     public var body: some View {
-        Text(message)
+        Text(model.message)
             .padding(.vertical)
             .frame(maxWidth: .infinity)
             .background(.red)
@@ -15,5 +19,6 @@ public struct ErrorView: View {
 }
 
 #Preview {
-    ErrorView(message: "Some Error")
+    let model = ErrorViewModel(message: "Some Error")
+    return ErrorView(model: model)
 }
