@@ -5,17 +5,33 @@
 import SwiftUI
 import EssentialNostr
 
+public struct ErrorView: View {
+    let message: String
+    public var body: some View {
+        Text(message)
+            .padding(.vertical)
+            .frame(maxWidth: .infinity)
+            .background(.red)
+    }
+}
+
 public struct EventsView: View {
     @State private var eventModels = [EventModel]()
     private let fetchEvents: () -> [EventModel]
-
-    public init(fetchEvents: @escaping () -> [EventModel]) {
+    private let errorView: () -> ErrorView
+    public init(fetchEvents: @escaping () -> [EventModel], errorView: @escaping () -> ErrorView) {
         self.fetchEvents = fetchEvents
+        self.errorView = errorView
     }
 
     public var body: some View {
         Text("Nostr Events")
             .font(.title)
+
+        if !errorView().message.isEmpty {
+            errorView()
+        }
+
         List(eventModels, id:\.id) { model in
             EventView(model: model)
         }
@@ -41,5 +57,5 @@ public struct EventsView: View {
 
     return EventsView {
         events.map(EventModel.init)
-    }
+    } errorView: { ErrorView(message: "Error") }
 }
