@@ -5,16 +5,6 @@
 import SwiftUI
 import EssentialNostr
 
-public struct ErrorView: View {
-    let message: String
-    public var body: some View {
-        Text(message)
-            .padding(.vertical)
-            .frame(maxWidth: .infinity)
-            .background(.red)
-    }
-}
-
 public struct EventsView: View {
     @State private var eventModels = [EventModel]()
     private let fetchEvents: () -> [EventModel]
