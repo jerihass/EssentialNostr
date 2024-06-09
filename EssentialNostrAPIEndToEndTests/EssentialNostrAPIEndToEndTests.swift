@@ -23,7 +23,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
 
         switch receivedResult {
         case let .success(event)?:
-            XCTAssertEqual(event.id, "eventID")
+            XCTAssertEqual(event?.id, "eventID")
         case let .failure(error)?:
             XCTFail("Expected at successful event result, got \(error) instead.")
         default:
@@ -51,7 +51,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         wait(for: [exp], timeout: 3.0)
 
         XCTAssertEqual(receivedResult.count, 3) // Two events and EOSE
-        XCTAssertEqual(receivedResult.compactMap { try? $0.get().id }, ["eventID", "eventID"])
+        XCTAssertEqual(receivedResult.compactMap { try? $0.get()?.id }, ["eventID", "eventID"])
     }
 
     func test_endToEndTestServer_badEventJSONGivesErrorReply() throws {
@@ -71,7 +71,7 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
 
         switch receivedResult {
         case let .success(event)?:
-            XCTFail("Expected failure, got \(event) instead.")
+            XCTFail("Expected failure, got \(String(describing: event)) instead.")
         case let .failure(error)?:
             print(error)
             XCTAssertNotNil(error, "Expected Error")
