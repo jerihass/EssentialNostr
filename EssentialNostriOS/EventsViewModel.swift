@@ -33,3 +33,16 @@ public class EventsViewModel {
         loader.load(completion: load)
     }
 }
+
+extension EventsViewModel {
+    public func fetchEvents() async -> [Event] {
+        await withCheckedContinuation { [weak self] continuation in
+            guard let self = self else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
+                guard let self = self else { return }
+                self.loadEvents()
+                continuation.resume(returning:self.events)
+            }
+        }
+    }
+}
