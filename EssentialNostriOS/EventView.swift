@@ -5,11 +5,36 @@
 import SwiftUI
 import EssentialNostr
 
-public struct EventView: View {
+public struct EventModel {
     let event: Event
+    let id = UUID()
+    
+    var publicKey: String { event.publicKey }
+    var content: String { event.content }
+    var eventDate: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        formatter.locale = Locale(identifier: "en_US")
 
-    public init(event: Event) {
-        self.event = event
+        return formatter.string(from: event.created)
+    }
+
+    var eventTime: String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        formatter.locale = Locale(identifier: "en_US")
+
+        return formatter.string(from: event.created)
+    }
+}
+
+public struct EventView: View {
+    let model: EventModel
+
+    public init(model: EventModel) {
+        self.model = model
     }
 
     public var body: some View {
@@ -22,38 +47,21 @@ public struct EventView: View {
                     Image(systemName: "person.fill")
                         .frame(width: 48, height: 48)
                 }
-                Text(event.publicKey)
+                Text(model.publicKey)
                     .lineLimit(1, reservesSpace: false)
                 Spacer()
                 VStack {
-                    Text("\(eventDate)")
-                    Text("\(eventTime)")
+                    Text("\(model.eventDate)")
+                    Text("\(model.eventTime)")
                 }
             }
-            Text(event.content)
+            Text(model.content)
         }
-    }
-
-    private var eventDate: String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        formatter.locale = Locale(identifier: "en_US")
-
-        return formatter.string(from: event.created)
-    }
-
-    private var eventTime: String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .none
-        formatter.timeStyle = .short
-        formatter.locale = Locale(identifier: "en_US")
-
-        return formatter.string(from: event.created)
     }
 }
 
 #Preview {
     let event = Event(id: "eventID", publicKey: "pubkey", created: .now, kind: 1, tags: [], content: "some content", signature: "eventSignature")
-    return EventView(event: event)
+    let model = EventModel(event: event)
+    return EventView(model: model)
 }

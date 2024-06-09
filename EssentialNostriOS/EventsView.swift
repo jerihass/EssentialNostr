@@ -6,26 +6,35 @@ import SwiftUI
 import EssentialNostr
 
 public struct EventsView: View {
-    @State var events = [Event]()
-    var viewModel: EventsViewModel
-    
-    public init(viewModel: EventsViewModel) {
-        self.viewModel = viewModel
+    @State private var eventModels = [EventModel]()
+
+    var fetchEvents: () -> [EventModel]
+
+    public init(fetchEvents: @escaping () -> [EventModel]) {
+        self.fetchEvents = fetchEvents
     }
 
     public var body: some View {
         Text("Nostr Events")
             .font(.title)
-        List(events, id:\.id) { event in
-            EventView(event: event)
+        List(eventModels, id:\.id) { model in
+            EventView(model: model)
         }
         .listStyle(.plain)
-        .task(fetchEvents)
-        .refreshable(action: fetchEvents)
+        .task(fetch)
+        .refreshable(action: fetch)
     }
 
-    @Sendable private func fetchEvents() async {
-        events = await viewModel.fetchEvents()
+    @Sendable private func fetch() async {
+        Task {
+            eventModels = fetchEvents()
+        }
+    }
+}
+
+private class EventModelAdapter {
+    static func models(_ events: [Event]) -> [EventModel] {
+        events.map(EventModel.init)
     }
 }
 
@@ -43,6 +52,13 @@ extension EventsViewModel {
 }
 
 #Preview {
+    let events:[Event] = [
+        Event(id: "eventID1", publicKey: "pubkey1", created: .now, kind: 1, tags: [], content: "contents some 1", signature: "sig1"),
+        Event(id: "eventID2", publicKey: "pubkey2", created: .now, kind: 1, tags: [], content: "contents some 2", signature: "sig2"),
+        Event(id: "eventID3", publicKey: "pubkey3", created: .now, kind: 1, tags: [], content: "contents some 3", signature: "sig3"),
+        Event(id: "eventID4", publicKey: "pubkey4", created: .now, kind: 1, tags: [], content: "contents some 4", signature: "sig4")
+    ]
+
     class PreviewLoader: EventsLoader {
         let events:[Event] = [
             Event(id: "eventID1", publicKey: "pubkey1", created: .now, kind: 1, tags: [], content: "contents some 1", signature: "sig1"),
@@ -63,5 +79,7 @@ extension EventsViewModel {
     let previewLoader = PreviewLoader()
     let vm = EventsViewModel(loader: previewLoader)
 
-    return EventsView(viewModel: vm)
+    return EventsView {
+        EventModelAdapter.models(events)
+    }
 }
