@@ -7,7 +7,8 @@ import EssentialNostr
 
 struct EventsView: View {
     @State var events = [Event]()
-    var viewModel: EventsViewModel
+
+    var loadEvents: () -> [Event]
 
     var body: some View {
         Text("Nostr Events")
@@ -21,7 +22,12 @@ struct EventsView: View {
     }
 
     @Sendable private func fetchEvents() async {
-        events = await viewModel.fetchEvents()
+        events = await withCheckedContinuation { continuation in
+            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                events = self.loadEvents()
+                continuation.resume(with: .success(self.events))
+            }
+        }
     }
 }
 
@@ -39,25 +45,12 @@ extension EventsViewModel {
 }
 
 #Preview {
-    class PreviewLoader: EventsLoader {
-        let events:[Event] = [
-            Event(id: "eventID1", publicKey: "pubkey1", created: .now, kind: 1, tags: [], content: "contents some 1", signature: "sig1"),
-            Event(id: "eventID2", publicKey: "pubkey2", created: .now, kind: 1, tags: [], content: "contents some 2", signature: "sig2"),
-            Event(id: "eventID3", publicKey: "pubkey3", created: .now, kind: 1, tags: [], content: "contents some 3", signature: "sig3"),
-            Event(id: "eventID4", publicKey: "pubkey4", created: .now, kind: 1, tags: [], content: "contents some 4", signature: "sig4")
-        ]
+    let events:[Event] = [
+        Event(id: "eventID1", publicKey: "pubkey1", created: .now, kind: 1, tags: [], content: "contents some 1", signature: "sig1"),
+        Event(id: "eventID2", publicKey: "pubkey2", created: .now, kind: 1, tags: [], content: "contents some 2", signature: "sig2"),
+        Event(id: "eventID3", publicKey: "pubkey3", created: .now, kind: 1, tags: [], content: "contents some 3", signature: "sig3"),
+        Event(id: "eventID4", publicKey: "pubkey4", created: .now, kind: 1, tags: [], content: "contents some 4", signature: "sig4")
+    ]
 
-        func request(_ message: String) {
-
-        }
-
-        func load(completion: @escaping (LoadResult) -> Void) {
-            completion(.success(events))
-        }
-    }
-
-    let previewLoader = PreviewLoader()
-    let vm = EventsViewModel(loader: previewLoader)
-
-    return EventsView(viewModel: vm)
+    return EventsView(loadEvents: { events })
 }
