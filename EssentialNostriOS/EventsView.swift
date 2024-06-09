@@ -5,12 +5,15 @@
 import SwiftUI
 import EssentialNostr
 
-struct EventsView: View {
+public struct EventsView: View {
     @State var events = [Event]()
+    var viewModel: EventsViewModel
+    
+    public init(viewModel: EventsViewModel) {
+        self.viewModel = viewModel
+    }
 
-    var loadEvents: () -> [Event]
-
-    var body: some View {
+    public var body: some View {
         Text("Nostr Events")
             .font(.title)
         List(events, id:\.id) { event in
@@ -22,9 +25,17 @@ struct EventsView: View {
     }
 
     @Sendable private func fetchEvents() async {
-        events = await withCheckedContinuation { continuation in
-            DispatchQueue.main.async {
-                events = self.loadEvents()
+        events = await viewModel.fetchEvents()
+    }
+}
+
+extension EventsViewModel {
+    public func fetchEvents() async -> [Event] {
+        await withCheckedContinuation { [weak self] continuation in
+            guard let self = self else { return }
+            DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
+                guard let self = self else { return }
+                self.loadEvents()
                 continuation.resume(with: .success(self.events))
             }
         }
@@ -32,12 +43,25 @@ struct EventsView: View {
 }
 
 #Preview {
-    let events:[Event] = [
-        Event(id: "eventID1", publicKey: "pubkey1", created: .now, kind: 1, tags: [], content: "contents some 1", signature: "sig1"),
-        Event(id: "eventID2", publicKey: "pubkey2", created: .now, kind: 1, tags: [], content: "contents some 2", signature: "sig2"),
-        Event(id: "eventID3", publicKey: "pubkey3", created: .now, kind: 1, tags: [], content: "contents some 3", signature: "sig3"),
-        Event(id: "eventID4", publicKey: "pubkey4", created: .now, kind: 1, tags: [], content: "contents some 4", signature: "sig4")
-    ]
+    class PreviewLoader: EventsLoader {
+        let events:[Event] = [
+            Event(id: "eventID1", publicKey: "pubkey1", created: .now, kind: 1, tags: [], content: "contents some 1", signature: "sig1"),
+            Event(id: "eventID2", publicKey: "pubkey2", created: .now, kind: 1, tags: [], content: "contents some 2", signature: "sig2"),
+            Event(id: "eventID3", publicKey: "pubkey3", created: .now, kind: 1, tags: [], content: "contents some 3", signature: "sig3"),
+            Event(id: "eventID4", publicKey: "pubkey4", created: .now, kind: 1, tags: [], content: "contents some 4", signature: "sig4")
+        ]
 
-    return EventsView(loadEvents: { events })
+        func request(_ message: String) {
+
+        }
+
+        func load(completion: @escaping (LoadResult) -> Void) {
+            completion(.success(events))
+        }
+    }
+
+    let previewLoader = PreviewLoader()
+    let vm = EventsViewModel(loader: previewLoader)
+
+    return EventsView(viewModel: vm)
 }
