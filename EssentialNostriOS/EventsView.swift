@@ -7,8 +7,7 @@ import EssentialNostr
 
 public struct EventsView: View {
     @State private var eventModels = [EventModel]()
-
-    var fetchEvents: () -> [EventModel]
+    private let fetchEvents: () -> [EventModel]
 
     public init(fetchEvents: @escaping () -> [EventModel]) {
         self.fetchEvents = fetchEvents
