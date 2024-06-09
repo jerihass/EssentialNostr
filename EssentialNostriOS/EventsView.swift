@@ -36,7 +36,7 @@ extension EventsViewModel {
             DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
                 guard let self = self else { return }
                 self.loadEvents()
-                continuation.resume(with: .success(self.events))
+                continuation.resume(returning:self.events)
             }
         }
     }
