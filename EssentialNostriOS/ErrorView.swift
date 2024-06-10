@@ -5,17 +5,25 @@
 import SwiftUI
 
 public struct ErrorViewModel {
-    let message: String
+    var message: String
 }
 
 public struct ErrorView: View {
-    let model: ErrorViewModel
+    @State private var model: ErrorViewModel
+
+    init(model: ErrorViewModel) {
+        self.model = model
+    }
+
     public var body: some View {
         if !model.message.isEmpty {
             Text(model.message)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical)
                 .background(.red)
+                .onTapGesture { withAnimation {
+                    model.message = ""
+                }}
         }
     }
 }
