@@ -6,8 +6,10 @@ import Foundation
 
 public class RemoteEventsLoader: EventsLoader {
     let eventLoader: EventLoader
+    let eventHandler: (Event) -> Void
 
-    public init(eventLoader: EventLoader) {
+    public init(eventHandler: @escaping (Event) -> Void = { _ in }, eventLoader: EventLoader) {
+        self.eventHandler = eventHandler
         self.eventLoader = eventLoader
     }
 
@@ -22,6 +24,7 @@ public class RemoteEventsLoader: EventsLoader {
             switch result {
             case let .success(event):
                 guard let event = event else { return completion(.success(events)) }
+                eventHandler(event)
                 events.append(event)
                 eventLoader.load(load)
             case let .failure(error):
