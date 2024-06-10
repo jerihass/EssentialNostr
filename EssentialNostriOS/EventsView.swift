@@ -18,9 +18,7 @@ public struct EventsView: View {
         Text("Nostr Events")
             .font(.title)
 
-        if !errorModel().message.isEmpty {
-            ErrorView(model: errorModel())
-        }
+        ErrorView(model: errorModel())
 
         List(eventModels, id:\.id) { model in
             EventView(model: model)

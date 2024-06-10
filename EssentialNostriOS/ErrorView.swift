@@ -11,10 +11,12 @@ public struct ErrorViewModel {
 public struct ErrorView: View {
     let model: ErrorViewModel
     public var body: some View {
-        Text(model.message)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical)
-            .background(.red)
+        if !model.message.isEmpty {
+            Text(model.message)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical)
+                .background(.red)
+        }
     }
 }
 
