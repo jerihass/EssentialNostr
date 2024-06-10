@@ -54,6 +54,51 @@ class LoadEventsFromRemoteTests: XCTestCase {
         }
     }
 
+    func test_load_givesEventsOnFirstLoadAndMoreOnSubsequentLoads() {
+        let (sut, eventLoader) = makeSUT()
+
+        let uniqueEvents0 = uniqueEvents().model
+        let uniqueEvents1 = uniqueEvents().model
+        var receivedEvents = [Event]()
+
+        let exp0 = expectation(description: "Wait for load completion")
+
+        sut.load { result in
+            switch result {
+            case let .success(events):
+                receivedEvents.append(contentsOf: events)
+            case .failure:
+                XCTFail("Expected success, got failure instead")
+            }
+            exp0.fulfill()
+        }
+
+        eventLoader.complete(with: uniqueEvents0)
+
+        wait(for: [exp0], timeout: 1)
+
+        XCTAssertEqual(receivedEvents, uniqueEvents0)
+
+        let exp1 = expectation(description: "Wait for load completion")
+
+        sut.load { result in
+            switch result {
+            case let .success(events):
+                receivedEvents.append(contentsOf: events)
+            case .failure:
+                XCTFail("Expected success, got failure instead")
+            }
+            exp1.fulfill()
+        }
+
+        eventLoader.complete(with: uniqueEvents1, at: uniqueEvents0.count + 1) // This is because we are using EOSE to signal end of events
+
+        wait(for: [exp1], timeout: 1)
+
+        XCTAssertEqual(receivedEvents.count, (uniqueEvents0 + uniqueEvents1).count)
+        XCTAssertEqual(receivedEvents, uniqueEvents0 + uniqueEvents1)
+    }
+
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteEventsLoader, loader: RemoteLoaderSpy) {
         let loader = RemoteLoaderSpy()
