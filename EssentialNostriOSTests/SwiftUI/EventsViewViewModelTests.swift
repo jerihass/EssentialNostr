@@ -16,7 +16,7 @@ class EventsViewViewModelTests: XCTestCase {
     func test_loadActionsRequestFeed() {
         let (sut, loader) = makeSUT()
 
-        sut.loadEvents()
+        sut.loadEvents() { _ in }
         XCTAssertEqual(loader.loadCallCount, 1)
 
         sut.simulateRefresh()
@@ -26,10 +26,29 @@ class EventsViewViewModelTests: XCTestCase {
         XCTAssertEqual(loader.loadCallCount, 3)
     }
 
+    func test_load_givesErrorOnLoaderError() {
+        let (sut, loader) = makeSUT()
+        
+        let error = anyError()
+
+        let exp = expectation(description: "Wait for load")
+        var gotError: Error?
+        sut.loadEvents { error in
+            gotError = error
+            exp.fulfill()
+        }
+
+        loader.completeEventLoading(with: error)
+        
+        wait(for: [exp], timeout: 1.0)
+
+        XCTAssertNotNil(gotError)
+    }
+
     func test_loadEvents_deliversSingleEvent() async {
         let (sut, loader) = makeSUT()
         let event0 = Event(id: "someID", publicKey: "somePubkey", created: .now, kind: 1, tags: [], content: "some content", signature: "some sig")
-        sut.loadEvents()
+       sut.loadEvents() { _ in }
 
         loader.completeEventLoading(with: [event0], at: 0)
 
@@ -42,7 +61,7 @@ class EventsViewViewModelTests: XCTestCase {
         let event0 = Event(id: "someID", publicKey: "somePubkey", created: .now, kind: 1, tags: [], content: "some content", signature: "some sig")
         let event1 = Event(id: "someID1", publicKey: "somePubkey1", created: .now, kind: 1, tags: [], content: "some content1", signature: "some sig1")
 
-        sut.loadEvents()
+        sut.loadEvents() { _ in }
 
         loader.completeEventLoading(with: [event0, event1], at: 0)
 
@@ -73,6 +92,10 @@ class EventsViewViewModelTests: XCTestCase {
 
         func completeEventLoading(with events: [Event], at index: Int = 0) {
             loadRequests[index](.success(events))
+        }
+
+        func completeEventLoading(with error: Error, at index: Int = 0) {
+            loadRequests[index](.failure(error))
         }
     }
 }

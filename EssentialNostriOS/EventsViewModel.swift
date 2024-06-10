@@ -13,19 +13,19 @@ public class EventsViewModel {
     }
 
     public func refreshEvents() {
-        loadEvents()
+        loadEvents() { _ in }
     }
 
-    public func loadEvents() {
+    public func loadEvents(completion: @escaping (Error?) -> Void) {
         var load: (_ completion: Result<[Event], Error>) -> Void  = { _ in }
-
         load = { [weak self] result in
             guard let self = self else { return }
             switch result {
             case let .success(events):
                 self.events = events
                 loader.load(completion: load)
-            case .failure:
+            case let .failure(error):
+                completion(error)
                 break
             }
         }
@@ -40,7 +40,7 @@ extension EventsViewModel {
             guard let self = self else { return }
             DispatchQueue.main.asyncAfter(deadline: .now()) { [weak self] in
                 guard let self = self else { return }
-                self.loadEvents()
+                self.loadEvents() { _ in }
                 continuation.resume(returning:self.events)
             }
         }
