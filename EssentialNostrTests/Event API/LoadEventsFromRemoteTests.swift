@@ -122,6 +122,29 @@ class LoadEventsFromRemoteTests: XCTestCase {
         XCTAssertEqual(capturedEvent, event)
     }
 
+    func test_load_givesEvenstAsTheyLoad() {
+        var capturedEvents = [Event]()
+
+        let handler: (Event) -> Void = { event in
+            capturedEvents.append(event)
+        }
+
+        let loader = RemoteLoaderSpy()
+        let sut = RemoteEventsLoader(eventHandler: handler, eventLoader: loader)
+        let events = uniqueEvents().model
+        let exp = expectation(description: "Wait for load completion")
+
+        sut.load { _ in
+            exp.fulfill()
+        }
+
+        loader.complete(with: events)
+
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertEqual(capturedEvents, events)
+    }
+
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteEventsLoader, loader: RemoteLoaderSpy) {
         let loader = RemoteLoaderSpy()
