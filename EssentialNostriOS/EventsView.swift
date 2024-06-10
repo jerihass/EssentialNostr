@@ -8,17 +8,17 @@ import EssentialNostr
 public struct EventsView: View {
     @State private var eventModels = [EventModel]()
     private let fetchEvents: () -> [EventModel]
-    private let errorModel: () -> ErrorViewModel
-    public init(fetchEvents: @escaping () -> [EventModel], errorModel: @escaping () -> ErrorViewModel) {
+    private let errorView: () -> ErrorView
+    public init(fetchEvents: @escaping () -> [EventModel], errorView: @escaping () -> ErrorView) {
         self.fetchEvents = fetchEvents
-        self.errorModel = errorModel
+        self.errorView = errorView
     }
 
     public var body: some View {
         Text("Nostr Events")
             .font(.title)
 
-        ErrorView(model: errorModel())
+        errorView()
 
         List(eventModels, id:\.id) { model in
             EventView(model: model)
@@ -43,8 +43,8 @@ public struct EventsView: View {
         Event(id: "eventID4", publicKey: "pubkey4", created: .now, kind: 1, tags: [], content: "contents some 4", signature: "sig4")
     ]
     let errorModel = ErrorViewModel(message: "Error")
-
+    let errorView = ErrorView(model: errorModel)
     return EventsView {
         events.map(EventModel.init)
-    } errorModel: { errorModel }
+    } errorView: { errorView }
 }
