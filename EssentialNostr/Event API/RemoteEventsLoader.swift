@@ -4,11 +4,13 @@
 
 import Foundation
 
+public typealias EventHandler = (Event) -> Void
+
 public class RemoteEventsLoader: EventsLoader {
     let eventLoader: EventLoader
-    let eventHandler: (Event) -> Void
+    let eventHandler: EventHandler
 
-    public init(eventHandler: @escaping (Event) -> Void = { _ in }, eventLoader: EventLoader) {
+    public init(eventHandler: @escaping EventHandler = { _ in }, eventLoader: EventLoader) {
         self.eventHandler = eventHandler
         self.eventLoader = eventLoader
     }
@@ -19,7 +21,6 @@ public class RemoteEventsLoader: EventsLoader {
         var load: (_ : Result<Event?, Error>) -> Void = { _ in }
 
         load = { [weak self] result in
-            
             guard let self = self else { return }
             switch result {
             case let .success(event):
