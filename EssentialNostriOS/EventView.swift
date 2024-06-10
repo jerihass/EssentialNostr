@@ -7,8 +7,8 @@ import EssentialNostr
 
 public struct EventModel {
     let event: Event
-    let id = UUID()
-    
+    var id: String { event.id }
+
     var publicKey: String { event.publicKey }
     var content: String { event.content }
     var eventDate: String {
