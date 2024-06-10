@@ -156,6 +156,7 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
     func expect(_ sut: WebSocketClient, toCompleteSendWithError expectedError: NetworkConnectionWebSocketClient.Error?, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
         let request = makeRequest()
         let exp = expectation(description: "Wait for send completion")
+        if expectedError == .none { exp.isInverted = true }
         var error: NetworkConnectionWebSocketClient.Error?
         sut.stateHandler = { _ in }
 
@@ -167,13 +168,8 @@ class NetworkConnectionWebSocketClientTests: XCTestCase {
             error = $0 as? NetworkConnectionWebSocketClient.Error
             exp.fulfill()
         }
-        if expectedError == .none {
-            XCTExpectFailure {
-                wait(for: [exp], timeout: 1)
-            }
-        } else {
-            wait(for: [exp], timeout: 1)
-        }
+
+        wait(for: [exp], timeout: 1)
 
         XCTAssertEqual(error, expectedError)
     }
