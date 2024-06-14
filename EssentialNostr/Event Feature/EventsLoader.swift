@@ -8,3 +8,5 @@ public protocol EventsLoader {
     typealias LoadResult = Result<[Event], Error>
     func load(completion: @escaping (LoadResult) -> Void)
 }
+
+public typealias EventsRequester = () -> String

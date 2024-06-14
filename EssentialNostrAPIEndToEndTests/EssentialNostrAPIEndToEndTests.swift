@@ -80,6 +80,30 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         }
     }
 
+    func test_endToEndTestServer_retrieves3Events_EOSE_Then2Events() throws {
+        let requester: EventsRequester = { "3EVENT_EOSE_2EVENT" }
+        var events = [Event]()
+
+        let eventHandler: EventHandler = { event in
+            events.append(event)
+        }
+
+        let (sut, loader) = makeEventsLoader(handler: eventHandler)
+
+        loader.request(requester())
+        var results = [Result<[Event], Error>]()
+        let exp = expectation(description: "Wait for load completion")
+        sut.load { result in
+            results.append(result)
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 3.0)
+
+        XCTAssertEqual(events.count, 5) // Two events
+        XCTAssertEqual(try results[0].get(), [events[0], events[1], events[2]]) // Events from the initial request
+    }
+
     // MARK: - Helpers
 
     func makeSUT(file: StaticString = #file, line: UInt = #line) -> RemoteEventLoader {
@@ -93,5 +117,13 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         try? client.start()
 
         return loader
+    }
+
+    func makeEventsLoader(handler: @escaping EventHandler, file: StaticString = #file, line: UInt = #line) -> (sut: RemoteEventsLoader, eventLoader: RemoteEventLoader) {
+        let loader = makeSUT()
+        let sut = RemoteEventsLoader(eventHandler: handler, eventLoader: loader)
+        trackForMemoryLeaks(loader)
+        trackForMemoryLeaks(sut)
+        return (sut, loader)
     }
 }

@@ -35,6 +35,7 @@ public class RemoteEventsLoader: EventsLoader {
                 if case RemoteEventLoader.Error.eose = error {
                     completion(.success(events))
                     events = []
+                    eventLoader.load(load)
                 } else {
                     completion(.failure(error))
                 }
