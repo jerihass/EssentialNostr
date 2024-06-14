@@ -145,6 +145,37 @@ class LoadEventsFromRemoteTests: XCTestCase {
         XCTAssertEqual(capturedEvents, events)
     }
 
+    func test_load_givesEvenstBeforeAndAfterEOSE() {
+        var capturedEvents = [Event]()
+
+        let handler: (Event) -> Void = { event in
+            capturedEvents.append(event)
+        }
+
+        let loader = RemoteLoaderSpy()
+        let sut = RemoteEventsLoader(eventHandler: handler, eventLoader: loader)
+        let events = uniqueEvents().model
+        let exp = expectation(description: "Wait for load completion")
+
+        sut.load { _ in
+            exp.fulfill()
+        }
+
+        loader.complete(with: events)
+
+        wait(for: [exp], timeout: 1)
+
+        XCTAssertEqual(capturedEvents, events)
+
+
+
+        let newEvents = uniqueEvents().model
+
+        loader.complete(with: newEvents, withEOSE: false)
+
+        XCTAssertEqual(capturedEvents, events + newEvents)
+    }
+
     // MARK: - Helpers
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteEventsLoader, loader: RemoteLoaderSpy) {
         let loader = RemoteLoaderSpy()
@@ -195,12 +226,14 @@ class LoadEventsFromRemoteTests: XCTestCase {
             loadCompletions[index](.failure(error))
         }
 
-        func complete(with events: [Event], at index: Int = 0) {
+        func complete(with events: [Event], withEOSE: Bool = true, at index: Int = 0) {
             if events.isEmpty { return loadCompletions[index](.success(.none)) }
             for (i, event) in events.enumerated() {
                 loadCompletions[index + i](.success(event))
             }
-            loadCompletions[index + events.count](.failure(RemoteEventLoader.Error.eose(sub: "any")))
+            if withEOSE {
+                loadCompletions[index + events.count](.failure(RemoteEventLoader.Error.eose(sub: "any")))
+            }
         }
     }
 }
