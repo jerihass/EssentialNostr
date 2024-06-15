@@ -15,7 +15,7 @@ public class RemoteFeedLoader: EventStream {
     let eventLoader: EventLoader
     let eventHandler: EventHandler
 
-    public init(eventHandler: @escaping EventHandler = { _ in }, eventLoader: EventLoader) {
+    public init(eventHandler: @escaping EventHandler, eventLoader: EventLoader) {
         self.eventHandler = eventHandler
         self.eventLoader = eventLoader
     }
