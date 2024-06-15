@@ -18,7 +18,7 @@ public struct FeedViewModel {
     }
 }
 
-public struct EventsView: View {
+public struct FeedView: View {
     @State private var model: FeedViewModel
     private let titleView: TitleView
     private let errorView: ErrorView
@@ -58,5 +58,5 @@ public struct EventsView: View {
     let titleView = TitleView(model: .init(title: "Nostr Events"))
     let errorModel = ErrorViewModel(message: "Error")
     let errorView = ErrorView(model: errorModel)
-    return EventsView(viewModel: viewModel, titleView: titleView, errorView: errorView)
+    return FeedView(viewModel: viewModel, titleView: titleView, errorView: errorView)
 }
