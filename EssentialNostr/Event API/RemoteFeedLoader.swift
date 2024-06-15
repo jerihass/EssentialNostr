@@ -4,9 +4,13 @@
 
 import Foundation
 
+protocol EventStream {
+    var eventHandler: (Event) -> Void { get }
+}
+
 public typealias EventHandler = (Event) -> Void
 
-public class RemoteFeedLoader: FeedLoader {
+public class RemoteFeedLoader: EventStream {
     let eventLoader: EventLoader
     let eventHandler: EventHandler
     private var events = [Event]()
