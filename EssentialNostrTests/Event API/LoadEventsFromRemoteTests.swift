@@ -7,13 +7,13 @@ import EssentialNostr
 
 class LoadEventsFromRemoteTests: XCTestCase {
     func test_init_doesNotRequestLoadWhenCreated() {
-        let (_, eventLoader) = makeSUT()
+        let (_, eventLoader) = makeSUT { _ in }
 
         XCTAssertEqual(eventLoader.receivedMessages, [])
     }
 
     func test_load_requestsEvents() {
-        let (sut, eventLoader) = makeSUT()
+        let (sut, eventLoader) = makeSUT { _ in }
 
         sut.load() { _ in }
 
@@ -21,115 +21,37 @@ class LoadEventsFromRemoteTests: XCTestCase {
     }
 
     func test_load_givesErrorOnLoaderError() {
-        let (sut, eventLoader) = makeSUT()
+        let (sut, eventLoader) = makeSUT { _ in }
 
         let error = anyError()
 
-        expect(sut, toCompleteWith: .failure(error)) {
+        expect(sut, toCompleteWith: error) {
             eventLoader.complete(with: error)
         }
     }
 
     func test_load_givesEmptyEventsOnEmptyLoaderSuccess() {
-        let (sut, eventLoader) = makeSUT()
+        let (sut, eventLoader) = makeSUT { _ in }
 
-        expect(sut, toCompleteWith: .success([])) {
+        expect(sut, toCompleteWith: .none) {
             eventLoader.complete(with: [])
         }
     }
 
     func test_load_givesSingleEventOnSingleLoaderSuccess() {
-        let (sut, eventLoader) = makeSUT()
+        let (sut, eventLoader) = makeSUT { _ in }
         let event = uniqueEvent()
-        expect(sut, toCompleteWith: .success([event])) {
+        expect(sut, toCompleteWith: .none) {
             eventLoader.complete(with: [event])
         }
     }
 
     func test_load_givesMultipleEventsOnMultipleLoaderSuccess() {
-        let (sut, eventLoader) = makeSUT()
+        let (sut, eventLoader) = makeSUT { _ in }
         let events = [uniqueEvent(), uniqueEvent()]
-        expect(sut, toCompleteWith: .success(events)) {
+        expect(sut, toCompleteWith: .none) {
             eventLoader.complete(with: events)
         }
-    }
-
-    func test_load_givesEventsOnFirstLoadAndMoreOnSubsequentLoads() {
-        let (sut, eventLoader) = makeSUT()
-
-        let uniqueEvents0 = uniqueEvents().model
-        let uniqueEvents1 = uniqueEvents().model
-        var receivedEvents = [Event]()
-
-        let exp = expectation(description: "Wait for load completion")
-        exp.expectedFulfillmentCount = 2
-
-        sut.load { result in
-            switch result {
-            case let .success(events):
-                receivedEvents.append(contentsOf: events)
-            case .failure:
-                XCTFail("Expected success, got failure instead")
-            }
-            exp.fulfill()
-        }
-
-        eventLoader.complete(with: uniqueEvents0)
-        XCTAssertEqual(receivedEvents, uniqueEvents0)
-
-        // count + 1: This is because we are using EOSE to signal end of events
-        eventLoader.complete(with: uniqueEvents1, at: uniqueEvents0.count + 1)
-
-        wait(for: [exp], timeout: 1)
-
-        XCTAssertEqual(receivedEvents.count, (uniqueEvents0 + uniqueEvents1).count)
-        XCTAssertEqual(receivedEvents, uniqueEvents0 + uniqueEvents1)
-    }
-
-    func test_load_givesEventAsItOccurs() {
-        var capturedEvent: Event?
-
-        let handler: (Event) -> Void = { event in
-            capturedEvent = event
-        }
-
-        let loader = RemoteLoaderSpy()
-        let sut = RemoteFeedLoader(eventHandler: handler, eventLoader: loader)
-        let event = uniqueEvent()
-        let exp = expectation(description: "Wait for load completion")
-
-        sut.load { _ in
-            exp.fulfill()
-        }
-
-        loader.complete(with: [event])
-
-        wait(for: [exp], timeout: 1)
-
-        XCTAssertEqual(capturedEvent, event)
-    }
-
-    func test_load_givesEvenstAsTheyLoad() {
-        var capturedEvents = [Event]()
-
-        let handler: (Event) -> Void = { event in
-            capturedEvents.append(event)
-        }
-
-        let loader = RemoteLoaderSpy()
-        let sut = RemoteFeedLoader(eventHandler: handler, eventLoader: loader)
-        let events = uniqueEvents().model
-        let exp = expectation(description: "Wait for load completion")
-
-        sut.load { _ in
-            exp.fulfill()
-        }
-
-        loader.complete(with: events)
-
-        wait(for: [exp], timeout: 1)
-
-        XCTAssertEqual(capturedEvents, events)
     }
 
     func test_load_givesEvenstBeforeAndAfterEOSE() {
@@ -143,7 +65,7 @@ class LoadEventsFromRemoteTests: XCTestCase {
         let sut = RemoteFeedLoader(eventHandler: handler, eventLoader: loader)
         let events = uniqueEvents().model
         let exp = expectation(description: "Wait for load completion")
-
+        exp.isInverted = true
         sut.load { _ in
             exp.fulfill()
         }
@@ -154,8 +76,6 @@ class LoadEventsFromRemoteTests: XCTestCase {
 
         XCTAssertEqual(capturedEvents, events)
 
-
-
         let newEvents = uniqueEvents().model
 
         loader.complete(with: newEvents, withEOSE: false)
@@ -164,29 +84,22 @@ class LoadEventsFromRemoteTests: XCTestCase {
     }
 
     // MARK: - Helpers
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteFeedLoader, loader: RemoteLoaderSpy) {
+    private func makeSUT(eventHandler: @escaping EventHandler, file: StaticString = #file, line: UInt = #line) -> (sut: RemoteFeedLoader, loader: RemoteLoaderSpy) {
         let loader = RemoteLoaderSpy()
-        let sut = RemoteFeedLoader(eventLoader: loader)
+        let sut = RemoteFeedLoader(eventHandler: eventHandler, eventLoader: loader)
         trackForMemoryLeaks(loader)
         trackForMemoryLeaks(sut)
         return (sut, loader)
     }
 
-    private func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: FeedLoader.LoadResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedError: Error?, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for load completion")
-        
-        sut.load { result in
-            switch (result, expectedResult) {
-            case let (.success(receivedEvents), .success(expectedEvents)):
-                XCTAssertEqual(receivedEvents, expectedEvents)
-            case let (.failure(receivedError as NSError?), .failure(expectedError as NSError?)):
-                XCTAssertEqual(receivedError, expectedError)
-            default:
-                XCTFail("Expected: \(expectedResult), got \(result) instead)")
-            }
-            exp.fulfill()
+
+        sut.load { receivedError in
+            XCTAssertEqual(receivedError as NSError?, expectedError as NSError?)
         }
+        exp.fulfill()
 
         action()
 

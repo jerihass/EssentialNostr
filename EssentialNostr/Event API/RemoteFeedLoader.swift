@@ -6,6 +6,7 @@ import Foundation
 
 protocol EventStream {
     var eventHandler: (Event) -> Void { get }
+    func load(completion: @escaping (Error?) -> Void)
 }
 
 public typealias EventHandler = (Event) -> Void
@@ -13,14 +14,13 @@ public typealias EventHandler = (Event) -> Void
 public class RemoteFeedLoader: EventStream {
     let eventLoader: EventLoader
     let eventHandler: EventHandler
-    private var events = [Event]()
 
     public init(eventHandler: @escaping EventHandler = { _ in }, eventLoader: EventLoader) {
         self.eventHandler = eventHandler
         self.eventLoader = eventLoader
     }
 
-    public func load(completion: @escaping (FeedLoader.LoadResult) -> Void) {
+    public func load(completion: @escaping (Error?) -> Void) {
 
         var load: (_ : Result<Event?, Error>) -> Void = { _ in }
 
@@ -28,22 +28,15 @@ public class RemoteFeedLoader: EventStream {
             guard let self = self else { return }
             switch result {
             case let .success(event):
-                guard let event = event else {
-                    completion(.success(events))
-                    return events = []
-                }
+                guard let event = event else { return }
                 eventHandler(event)
-                events.append(event)
                 eventLoader.load(load)
             case let .failure(error):
                 if case RemoteEventLoader.Error.eose = error {
-                    completion(.success(events))
                     eventLoader.load(load)
-                    events = []
                 } else {
-                    completion(.failure(error))
+                    completion(error)
                 }
-                break
             }
         }
 
