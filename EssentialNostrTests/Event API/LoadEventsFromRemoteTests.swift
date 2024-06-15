@@ -61,7 +61,8 @@ class LoadEventsFromRemoteTests: XCTestCase {
         let uniqueEvents1 = uniqueEvents().model
         var receivedEvents = [Event]()
 
-        let exp0 = expectation(description: "Wait for load completion")
+        let exp = expectation(description: "Wait for load completion")
+        exp.expectedFulfillmentCount = 2
 
         sut.load { result in
             switch result {
@@ -70,30 +71,16 @@ class LoadEventsFromRemoteTests: XCTestCase {
             case .failure:
                 XCTFail("Expected success, got failure instead")
             }
-            exp0.fulfill()
+            exp.fulfill()
         }
 
         eventLoader.complete(with: uniqueEvents0)
-
-        wait(for: [exp0], timeout: 1)
-
         XCTAssertEqual(receivedEvents, uniqueEvents0)
 
-        let exp1 = expectation(description: "Wait for load completion")
+        // count + 1: This is because we are using EOSE to signal end of events
+        eventLoader.complete(with: uniqueEvents1, at: uniqueEvents0.count + 1)
 
-        sut.load { result in
-            switch result {
-            case let .success(events):
-                receivedEvents.append(contentsOf: events)
-            case .failure:
-                XCTFail("Expected success, got failure instead")
-            }
-            exp1.fulfill()
-        }
-
-        eventLoader.complete(with: uniqueEvents1, at: uniqueEvents0.count + 1) // This is because we are using EOSE to signal end of events
-
-        wait(for: [exp1], timeout: 1)
+        wait(for: [exp], timeout: 1)
 
         XCTAssertEqual(receivedEvents.count, (uniqueEvents0 + uniqueEvents1).count)
         XCTAssertEqual(receivedEvents, uniqueEvents0 + uniqueEvents1)

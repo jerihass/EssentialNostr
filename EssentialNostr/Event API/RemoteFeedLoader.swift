@@ -34,8 +34,8 @@ public class RemoteFeedLoader: FeedLoader {
             case let .failure(error):
                 if case RemoteEventLoader.Error.eose = error {
                     completion(.success(events))
-                    events = []
                     eventLoader.load(load)
+                    events = []
                 } else {
                     completion(.failure(error))
                 }
