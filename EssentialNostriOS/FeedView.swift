@@ -9,7 +9,7 @@ public struct FeedViewModel {
     private(set) var events = [EventModel]()
     private let eventSource: () -> [EventModel]
 
-    init(eventSource: @escaping () -> [EventModel]) {
+    public init(eventSource: @escaping () -> [EventModel]) {
         self.eventSource = eventSource
     }
 
@@ -42,7 +42,7 @@ public struct FeedView: View {
         .refreshable(action: fetch)
     }
 
-    @Sendable private func fetch() async {
+    @Sendable func fetch() async {
         model.fetchEvents()
     }
 }

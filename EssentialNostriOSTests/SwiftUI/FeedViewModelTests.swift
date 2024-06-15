@@ -7,7 +7,7 @@ import EssentialNostr
 @testable import EssentialNostriOS
 
 class FeedViewModelTests: XCTestCase {
-    func test() async {
+    func test_fetchEvents_loadsEventsIntoModel() {
         let events = events()
         var sut = FeedViewModel(eventSource: { events })
 
