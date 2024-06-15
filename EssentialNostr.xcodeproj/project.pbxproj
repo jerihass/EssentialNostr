@@ -43,8 +43,6 @@
 		ADC6C9682C11BB5F00322BD9 /* EssentialNostrCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */; };
 		ADC6C96A2C11BD5D00322BD9 /* EssentialNostriOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADC6C9482C11507300322BD9 /* EssentialNostriOS.framework */; platformFilter = ios; };
 		ADC6C96F2C11BD6700322BD9 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
-		ADC6C9762C11D3CC00322BD9 /* EventsViewViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6C9752C11D3CC00322BD9 /* EventsViewViewModelTests.swift */; };
-		ADC6C9782C129F3300322BD9 /* EventsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADC6C9772C129F3300322BD9 /* EventsViewModel.swift */; };
 		ADE7026D2BF98D850066AC13 /* ClientMessageMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */; };
 		ADEA67922C06CE9600CF97D9 /* EventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADEA67912C06CE9600CF97D9 /* EventStore.swift */; };
 		ADF9FC2E2C14A491003DB353 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF9FC2D2C14A491003DB353 /* EventView.swift */; };
@@ -137,8 +135,6 @@
 		ADC6C9482C11507300322BD9 /* EssentialNostriOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialNostriOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADC6C94F2C11507300322BD9 /* EssentialNostriOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostriOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADC6C9672C11BB0100322BD9 /* EssentialNostriOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialNostriOS.xctestplan; sourceTree = "<group>"; };
-		ADC6C9752C11D3CC00322BD9 /* EventsViewViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsViewViewModelTests.swift; sourceTree = "<group>"; };
-		ADC6C9772C129F3300322BD9 /* EventsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsViewModel.swift; sourceTree = "<group>"; };
 		ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessageMapperTests.swift; sourceTree = "<group>"; };
 		ADEA67912C06CE9600CF97D9 /* EventStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStore.swift; sourceTree = "<group>"; };
 		ADF9FC2D2C14A491003DB353 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
@@ -339,7 +335,6 @@
 			children = (
 				ADC6C9642C11542400322BD9 /* EventCache */,
 				AD1343592C0C00100082F2E5 /* SwiftDataEventStore.swift */,
-				ADC6C9772C129F3300322BD9 /* EventsViewModel.swift */,
 				ADF9FC2D2C14A491003DB353 /* EventView.swift */,
 				ADF9FC2F2C14A86B003DB353 /* EventsView.swift */,
 				AD7767E32C166405005769CE /* ErrorView.swift */,
@@ -393,7 +388,6 @@
 		ADC6C9742C11D3A700322BD9 /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				ADC6C9752C11D3CC00322BD9 /* EventsViewViewModelTests.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -710,7 +704,6 @@
 				AD7767E42C166405005769CE /* ErrorView.swift in Sources */,
 				ADF9FC2E2C14A491003DB353 /* EventView.swift in Sources */,
 				ADC6C95D2C1150DD00322BD9 /* SwiftDataEventStore.swift in Sources */,
-				ADC6C9782C129F3300322BD9 /* EventsViewModel.swift in Sources */,
 				ADF9FC302C14A86B003DB353 /* EventsView.swift in Sources */,
 				AD889E022C1D8DE400B7F407 /* TitleView.swift in Sources */,
 			);
@@ -721,7 +714,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				ADC6C9602C1150F800322BD9 /* EventStoreSpecs+XCTestHelpers.swift in Sources */,
-				ADC6C9762C11D3CC00322BD9 /* EventsViewViewModelTests.swift in Sources */,
 				ADC6C95E2C1150E100322BD9 /* SwiftDataEventStoreTests.swift in Sources */,
 				ADC6C95F2C1150F600322BD9 /* EventStoreSpecs.swift in Sources */,
 				ADC6C9612C11513A00322BD9 /* Helpers.swift in Sources */,
