@@ -48,7 +48,7 @@
 		ADF9FC2E2C14A491003DB353 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF9FC2D2C14A491003DB353 /* EventView.swift */; };
 		ADF9FC302C14A86B003DB353 /* EventsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF9FC2F2C14A86B003DB353 /* EventsView.swift */; };
 		ADF9FC322C14C62A003DB353 /* LoadEventsFromRemoteTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF9FC312C14C62A003DB353 /* LoadEventsFromRemoteTests.swift */; };
-		ADF9FC342C152556003DB353 /* RemoteEventsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF9FC332C152556003DB353 /* RemoteEventsLoader.swift */; };
+		ADF9FC342C152556003DB353 /* RemoteFeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF9FC332C152556003DB353 /* RemoteFeedLoader.swift */; };
 		ADFFFE722C08066B00A504A3 /* NostrEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFFFE712C08066B00A504A3 /* NostrEvent.swift */; };
 		ADFFFE742C0806A600A504A3 /* LocalEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFFFE732C0806A600A504A3 /* LocalEvent.swift */; };
 		ADFFFE762C080CB900A504A3 /* LoadEventsFromCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADFFFE752C080CB900A504A3 /* LoadEventsFromCacheTests.swift */; };
@@ -140,7 +140,7 @@
 		ADF9FC2D2C14A491003DB353 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
 		ADF9FC2F2C14A86B003DB353 /* EventsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsView.swift; sourceTree = "<group>"; };
 		ADF9FC312C14C62A003DB353 /* LoadEventsFromRemoteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadEventsFromRemoteTests.swift; sourceTree = "<group>"; };
-		ADF9FC332C152556003DB353 /* RemoteEventsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEventsLoader.swift; sourceTree = "<group>"; };
+		ADF9FC332C152556003DB353 /* RemoteFeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteFeedLoader.swift; sourceTree = "<group>"; };
 		ADFFFE712C08066B00A504A3 /* NostrEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrEvent.swift; sourceTree = "<group>"; };
 		ADFFFE732C0806A600A504A3 /* LocalEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEvent.swift; sourceTree = "<group>"; };
 		ADFFFE752C080CB900A504A3 /* LoadEventsFromCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadEventsFromCacheTests.swift; sourceTree = "<group>"; };
@@ -272,7 +272,7 @@
 			isa = PBXGroup;
 			children = (
 				AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */,
-				ADF9FC332C152556003DB353 /* RemoteEventsLoader.swift */,
+				ADF9FC332C152556003DB353 /* RemoteFeedLoader.swift */,
 				AD7B0B192BF571AE0053793A /* WebSocketClient.swift */,
 				AD7B0B1B2BF5726C0053793A /* RelayMessageMapper.swift */,
 				AD5B9EBC2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift */,
@@ -666,7 +666,7 @@
 				AD7B0B1C2BF5726C0053793A /* RelayMessageMapper.swift in Sources */,
 				AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */,
 				AD5B9EBD2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift in Sources */,
-				ADF9FC342C152556003DB353 /* RemoteEventsLoader.swift in Sources */,
+				ADF9FC342C152556003DB353 /* RemoteFeedLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

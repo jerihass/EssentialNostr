@@ -6,7 +6,7 @@ import Foundation
 
 public typealias EventHandler = (Event) -> Void
 
-public class RemoteEventsLoader: FeedLoader {
+public class RemoteFeedLoader: FeedLoader {
     let eventLoader: EventLoader
     let eventHandler: EventHandler
     private var events = [Event]()

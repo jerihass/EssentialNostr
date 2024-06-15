@@ -107,7 +107,7 @@ class LoadEventsFromRemoteTests: XCTestCase {
         }
 
         let loader = RemoteLoaderSpy()
-        let sut = RemoteEventsLoader(eventHandler: handler, eventLoader: loader)
+        let sut = RemoteFeedLoader(eventHandler: handler, eventLoader: loader)
         let event = uniqueEvent()
         let exp = expectation(description: "Wait for load completion")
 
@@ -130,7 +130,7 @@ class LoadEventsFromRemoteTests: XCTestCase {
         }
 
         let loader = RemoteLoaderSpy()
-        let sut = RemoteEventsLoader(eventHandler: handler, eventLoader: loader)
+        let sut = RemoteFeedLoader(eventHandler: handler, eventLoader: loader)
         let events = uniqueEvents().model
         let exp = expectation(description: "Wait for load completion")
 
@@ -153,7 +153,7 @@ class LoadEventsFromRemoteTests: XCTestCase {
         }
 
         let loader = RemoteLoaderSpy()
-        let sut = RemoteEventsLoader(eventHandler: handler, eventLoader: loader)
+        let sut = RemoteFeedLoader(eventHandler: handler, eventLoader: loader)
         let events = uniqueEvents().model
         let exp = expectation(description: "Wait for load completion")
 
@@ -177,15 +177,15 @@ class LoadEventsFromRemoteTests: XCTestCase {
     }
 
     // MARK: - Helpers
-    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteEventsLoader, loader: RemoteLoaderSpy) {
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: RemoteFeedLoader, loader: RemoteLoaderSpy) {
         let loader = RemoteLoaderSpy()
-        let sut = RemoteEventsLoader(eventLoader: loader)
+        let sut = RemoteFeedLoader(eventLoader: loader)
         trackForMemoryLeaks(loader)
         trackForMemoryLeaks(sut)
         return (sut, loader)
     }
 
-    private func expect(_ sut: RemoteEventsLoader, toCompleteWith expectedResult: FeedLoader.LoadResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: RemoteFeedLoader, toCompleteWith expectedResult: FeedLoader.LoadResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for load completion")
         

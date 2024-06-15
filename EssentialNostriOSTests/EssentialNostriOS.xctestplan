@@ -15,6 +15,11 @@
           "containerPath" : "container:EssentialNostr.xcodeproj",
           "identifier" : "ADC6C9472C11507300322BD9",
           "name" : "EssentialNostriOS"
+        },
+        {
+          "containerPath" : "container:EssentialNostr.xcodeproj",
+          "identifier" : "AD51DB502BF42A4D00B5673C",
+          "name" : "EssentialNostr"
         }
       ]
     }
