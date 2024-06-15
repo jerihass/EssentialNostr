@@ -5,23 +5,6 @@
 import SwiftUI
 import EssentialNostr
 
-public struct TitleViewModel {
-    let title: String
-}
-
-public struct TitleView: View {
-    private let model: TitleViewModel
-    
-    public init(model: TitleViewModel) {
-        self.model = model
-    }
-
-    public var body: some View {
-        Text(model.title)
-            .font(.title)
-    }
-}
-
 public struct EventsView: View {
     @State private var eventModels = [EventModel]()
     private let fetchEvents: () -> [EventModel]
