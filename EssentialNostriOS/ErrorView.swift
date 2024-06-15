@@ -6,12 +6,16 @@ import SwiftUI
 
 public struct ErrorViewModel {
     var message: String
+    
+    public init(message: String) {
+        self.message = message
+    }
 }
 
 public struct ErrorView: View {
     @State private var model: ErrorViewModel
 
-    init(model: ErrorViewModel) {
+    public init(model: ErrorViewModel) {
         self.model = model
     }
 

@@ -6,6 +6,10 @@ import SwiftUI
 
 public struct TitleViewModel {
     let title: String
+
+    public init(title: String) {
+        self.title = title
+    }
 }
 
 public struct TitleView: View {
