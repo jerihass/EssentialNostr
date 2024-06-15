@@ -5,14 +5,27 @@
 import SwiftUI
 import EssentialNostr
 
+public struct FeedViewModel {
+    private(set) var events = [EventModel]()
+    private let eventSource: () -> [EventModel]
+
+    init(eventSource: @escaping () -> [EventModel]) {
+        self.eventSource = eventSource
+    }
+
+    mutating func fetchEvents() {
+        events = eventSource()
+    }
+}
+
 public struct EventsView: View {
-    @State private var eventModels = [EventModel]()
-    private let fetchEvents: () -> [EventModel]
-    private let errorView: ErrorView
+    @State private var model: FeedViewModel
     private let titleView: TitleView
-    public init(titleView: TitleView, errorView: ErrorView, fetchEvents: @escaping () -> [EventModel]) {
+    private let errorView: ErrorView
+
+    public init(viewModel: FeedViewModel, titleView: TitleView, errorView: ErrorView) {
+        self.model = viewModel
         self.titleView = titleView
-        self.fetchEvents = fetchEvents
         self.errorView = errorView
     }
 
@@ -21,7 +34,7 @@ public struct EventsView: View {
 
         errorView
 
-        List(eventModels, id:\.id) { model in
+        List(model.events, id:\.id) { model in
             EventView(model: model)
         }
         .listStyle(.plain)
@@ -30,9 +43,7 @@ public struct EventsView: View {
     }
 
     @Sendable private func fetch() async {
-        Task {
-            eventModels = fetchEvents()
-        }
+        model.fetchEvents()
     }
 }
 
@@ -43,10 +54,9 @@ public struct EventsView: View {
         Event(id: "eventID3", publicKey: "pubkey3", created: .now - 314159268, kind: 1, tags: [], content: "contents some 3", signature: "sig3"),
         Event(id: "eventID4", publicKey: "pubkey4", created: .distantPast, kind: 1, tags: [], content: "contents some 4", signature: "sig4")
     ]
+    let viewModel = FeedViewModel(eventSource: { events.map(EventModel.init) })
     let titleView = TitleView(model: .init(title: "Nostr Events"))
     let errorModel = ErrorViewModel(message: "Error")
     let errorView = ErrorView(model: errorModel)
-    return EventsView(titleView: titleView, errorView: errorView) {
-        events.map(EventModel.init)
-    }
+    return EventsView(viewModel: viewModel, titleView: titleView, errorView: errorView)
 }
