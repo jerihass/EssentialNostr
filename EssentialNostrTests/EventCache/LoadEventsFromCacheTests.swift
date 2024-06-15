@@ -48,7 +48,7 @@ class LoadEventsFromCacheTests: XCTestCase {
         let store = EventStoreSpy()
         var sut: LocalEventsLoader? = LocalEventsLoader(store: store)
 
-        var results = [EventsLoader.LoadResult]()
+        var results = [FeedLoader.LoadResult]()
         sut?.load { results.append($0) }
 
         sut = nil
@@ -68,7 +68,7 @@ class LoadEventsFromCacheTests: XCTestCase {
         return (sut, store)
     }
 
-    func expect(_ sut: LocalEventsLoader, toLoadWith expectedResult: EventsLoader.LoadResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+    func expect(_ sut: LocalEventsLoader, toLoadWith expectedResult: FeedLoader.LoadResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for load completion")
 

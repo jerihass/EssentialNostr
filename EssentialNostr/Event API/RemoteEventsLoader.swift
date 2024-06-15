@@ -6,7 +6,7 @@ import Foundation
 
 public typealias EventHandler = (Event) -> Void
 
-public class RemoteEventsLoader: EventsLoader {
+public class RemoteEventsLoader: FeedLoader {
     let eventLoader: EventLoader
     let eventHandler: EventHandler
     private var events = [Event]()
@@ -16,7 +16,7 @@ public class RemoteEventsLoader: EventsLoader {
         self.eventLoader = eventLoader
     }
 
-    public func load(completion: @escaping (EventsLoader.LoadResult) -> Void) {
+    public func load(completion: @escaping (FeedLoader.LoadResult) -> Void) {
 
         var load: (_ : Result<Event?, Error>) -> Void = { _ in }
 

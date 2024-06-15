@@ -4,7 +4,7 @@
 
 import Foundation
 
-public protocol EventsLoader {
+public protocol FeedLoader {
     typealias LoadResult = Result<[Event], Error>
     func load(completion: @escaping (LoadResult) -> Void)
 }

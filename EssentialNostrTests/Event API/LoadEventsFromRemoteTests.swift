@@ -185,7 +185,7 @@ class LoadEventsFromRemoteTests: XCTestCase {
         return (sut, loader)
     }
 
-    private func expect(_ sut: RemoteEventsLoader, toCompleteWith expectedResult: EventsLoader.LoadResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+    private func expect(_ sut: RemoteEventsLoader, toCompleteWith expectedResult: FeedLoader.LoadResult, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
 
         let exp = expectation(description: "Wait for load completion")
         

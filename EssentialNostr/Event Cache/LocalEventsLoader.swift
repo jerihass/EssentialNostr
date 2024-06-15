@@ -13,7 +13,7 @@ public class LocalEventsLoader {
     }
 }
 
-extension LocalEventsLoader: EventsLoader {
+extension LocalEventsLoader: FeedLoader {
     public func load(completion: @escaping (LoadResult) -> Void) {
         store.retrieve { [weak self] result in
             guard self != nil else { return  }

@@ -13,7 +13,7 @@
 		AD1343552C0BBB0B0082F2E5 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5B9EBF2BF6CD2800E7D5CD /* XCTestCase+MemoryLeakTracking.swift */; };
 		AD1343562C0BBD520082F2E5 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C32C09FEC000345A57 /* Helpers.swift */; };
 		AD3215C42C09FEC000345A57 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C32C09FEC000345A57 /* Helpers.swift */; };
-		AD3215C62C0A56AF00345A57 /* EventsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C52C0A56AF00345A57 /* EventsLoader.swift */; };
+		AD3215C62C0A56AF00345A57 /* FeedLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3215C52C0A56AF00345A57 /* FeedLoader.swift */; };
 		AD3FFA0D2BFC332500467B85 /* XCTestCase+MemoryLeakTracking.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD5B9EBF2BF6CD2800E7D5CD /* XCTestCase+MemoryLeakTracking.swift */; };
 		AD51DB5A2BF42A4E00B5673C /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD51DB692BF42A7100B5673C /* Event.swift */; };
@@ -109,7 +109,7 @@
 		AD1343572C0BE62F0082F2E5 /* SwiftDataEventStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataEventStoreTests.swift; sourceTree = "<group>"; };
 		AD1343592C0C00100082F2E5 /* SwiftDataEventStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataEventStore.swift; sourceTree = "<group>"; };
 		AD3215C32C09FEC000345A57 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
-		AD3215C52C0A56AF00345A57 /* EventsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventsLoader.swift; sourceTree = "<group>"; };
+		AD3215C52C0A56AF00345A57 /* FeedLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedLoader.swift; sourceTree = "<group>"; };
 		AD3FFA0E2BFC341900467B85 /* EssentialNostrAPIEndToEndTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialNostrAPIEndToEndTests.xctestplan; sourceTree = "<group>"; };
 		AD3FFA112BFC389700467B85 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialNostr.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -263,7 +263,7 @@
 				AD8ED5FE2BFA7E9900B9ED43 /* ClientMessage.swift */,
 				AD51DB692BF42A7100B5673C /* Event.swift */,
 				AD51DB6B2BF42B9A00B5673C /* EventLoader.swift */,
-				AD3215C52C0A56AF00345A57 /* EventsLoader.swift */,
+				AD3215C52C0A56AF00345A57 /* FeedLoader.swift */,
 			);
 			path = "Event Feature";
 			sourceTree = "<group>";
@@ -658,7 +658,7 @@
 				AD8ED5FD2BFA580A00B9ED43 /* ClientMessageMapper.swift in Sources */,
 				AD51DB722BF433E500B5673C /* RemoteEventLoader.swift in Sources */,
 				AD8ED5FF2BFA7E9900B9ED43 /* ClientMessage.swift in Sources */,
-				AD3215C62C0A56AF00345A57 /* EventsLoader.swift in Sources */,
+				AD3215C62C0A56AF00345A57 /* FeedLoader.swift in Sources */,
 				ADFFFE722C08066B00A504A3 /* NostrEvent.swift in Sources */,
 				AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */,
 				AD7B0B1A2BF571AE0053793A /* WebSocketClient.swift in Sources */,
