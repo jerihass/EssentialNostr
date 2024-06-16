@@ -5,7 +5,10 @@
 import SwiftUI
 
 public struct TitleViewModel {
-    let title: String = NSLocalizedString("EVENT_VIEW_TITLE", tableName: "EventsFeed", bundle: Bundle(for: NostrLocalizedStrings.self), comment: "Title for main nostr event view.")
+    let title: String = NSLocalizedString("EVENT_VIEW_TITLE", 
+                                          tableName: "EventsFeed",
+                                          bundle: Bundle(for: NostrLocalizedStrings.self),
+                                          comment: "Title for main nostr event view.")
 }
 
 public struct TitleView: View {
@@ -19,4 +22,8 @@ public struct TitleView: View {
         Text(model.title)
             .font(.title)
     }
+}
+
+#Preview {
+    TitleView(model: .init())
 }
