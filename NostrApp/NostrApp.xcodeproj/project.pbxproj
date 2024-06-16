@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AD80D9CF2C1F8C63005A1647 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD80D9CD2C1F8C63005A1647 /* EssentialNostr.framework */; };
+		AD80D9D02C1F8C63005A1647 /* EssentialNostr.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD80D9CD2C1F8C63005A1647 /* EssentialNostr.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		AD80D9D12C1F8C63005A1647 /* EssentialNostriOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD80D9CE2C1F8C63005A1647 /* EssentialNostriOS.framework */; };
+		AD80D9D22C1F8C63005A1647 /* EssentialNostriOS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AD80D9CE2C1F8C63005A1647 /* EssentialNostriOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		ADA09EE82C1F8A9400837F7B /* NostrAppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA09EE72C1F8A9400837F7B /* NostrAppApp.swift */; };
 		ADA09EEA2C1F8A9400837F7B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA09EE92C1F8A9400837F7B /* ContentView.swift */; };
 		ADA09EEC2C1F8A9600837F7B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ADA09EEB2C1F8A9600837F7B /* Assets.xcassets */; };
@@ -33,7 +37,24 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		AD80D9D32C1F8C64005A1647 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				AD80D9D22C1F8C63005A1647 /* EssentialNostriOS.framework in Embed Frameworks */,
+				AD80D9D02C1F8C63005A1647 /* EssentialNostr.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		AD80D9CD2C1F8C63005A1647 /* EssentialNostr.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialNostr.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		AD80D9CE2C1F8C63005A1647 /* EssentialNostriOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = EssentialNostriOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADA09EE42C1F8A9400837F7B /* NostrApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NostrApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADA09EE72C1F8A9400837F7B /* NostrAppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrAppApp.swift; sourceTree = "<group>"; };
 		ADA09EE92C1F8A9400837F7B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -51,6 +72,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AD80D9D12C1F8C63005A1647 /* EssentialNostriOS.framework in Frameworks */,
+				AD80D9CF2C1F8C63005A1647 /* EssentialNostr.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +94,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AD80D9CC2C1F8C63005A1647 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AD80D9CD2C1F8C63005A1647 /* EssentialNostr.framework */,
+				AD80D9CE2C1F8C63005A1647 /* EssentialNostriOS.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		ADA09EDB2C1F8A9400837F7B = {
 			isa = PBXGroup;
 			children = (
@@ -78,6 +110,7 @@
 				ADA09EF72C1F8A9700837F7B /* NostrAppTests */,
 				ADA09F012C1F8A9700837F7B /* NostrAppUITests */,
 				ADA09EE52C1F8A9400837F7B /* Products */,
+				AD80D9CC2C1F8C63005A1647 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -137,6 +170,7 @@
 				ADA09EE02C1F8A9400837F7B /* Sources */,
 				ADA09EE12C1F8A9400837F7B /* Frameworks */,
 				ADA09EE22C1F8A9400837F7B /* Resources */,
+				AD80D9D32C1F8C64005A1647 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
