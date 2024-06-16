@@ -22,6 +22,22 @@ class FeedViewModelIntegrationTests: XCTestCase {
         XCTAssertEqual(sut.events, events)
     }
 
+    func test_fetchEvents_dispatchesFromBackgroundToMainThread() {
+        let events = events()
+
+        var sut = FeedViewModel(eventSource: {events})
+
+        let exp = expectation(description: "wait for background queue")
+        
+        DispatchQueue.global().async {
+            sut.fetchEvents()
+            exp.fulfill()
+        }
+        wait(for: [exp], timeout: 1)
+        
+        XCTAssertEqual(sut.events, events)
+    }
+
     private func events() -> [EventModel] {
         return [
             Event(id: "eventID1", publicKey: "pubkey1", created: .distantFuture, kind: 1, tags: [], content: "contents some 1", signature: "sig1"),
