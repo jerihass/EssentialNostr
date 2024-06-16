@@ -6,7 +6,13 @@ import XCTest
 import EssentialNostr
 @testable import EssentialNostriOS
 
-class FeedViewModelTests: XCTestCase {
+class FeedViewModelIntegrationTests: XCTestCase {
+    func test_feedViewTitle() {
+        let sut = TitleViewModel()
+
+        XCTAssertEqual(sut.title, localized("EVENT_VIEW_TITLE"))
+    }
+
     func test_fetchEvents_loadsEventsIntoModel() {
         let events = events()
         var sut = FeedViewModel(eventSource: { events })

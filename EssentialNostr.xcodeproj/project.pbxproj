@@ -31,8 +31,7 @@
 		AD889E022C1D8DE400B7F407 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD889E012C1D8DE400B7F407 /* TitleView.swift */; };
 		AD8ED5FD2BFA580A00B9ED43 /* ClientMessageMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8ED5FC2BFA580A00B9ED43 /* ClientMessageMapper.swift */; };
 		AD8ED5FF2BFA7E9900B9ED43 /* ClientMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8ED5FE2BFA7E9900B9ED43 /* ClientMessage.swift */; };
-		ADA09EC82C1E461D00837F7B /* FeedViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA09EC72C1E461D00837F7B /* FeedViewModelTests.swift */; };
-		ADA09ECA2C1E7A4B00837F7B /* LocalizedFeedViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA09EC92C1E7A4B00837F7B /* LocalizedFeedViewTests.swift */; };
+		ADA09EC82C1E461D00837F7B /* FeedViewModelIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA09EC72C1E461D00837F7B /* FeedViewModelIntegrationTests.swift */; };
 		ADA09ECE2C1E811B00837F7B /* EventsFeed.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = ADA09ECD2C1E811B00837F7B /* EventsFeed.xcstrings */; };
 		ADA09ECF2C1E812F00837F7B /* NostrLocalizedStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA09ECB2C1E803A00837F7B /* NostrLocalizedStrings.swift */; };
 		ADA09ED12C1E85D300837F7B /* XCTestCase+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA09ED02C1E85D300837F7B /* XCTestCase+Localization.swift */; };
@@ -134,8 +133,7 @@
 		AD889E012C1D8DE400B7F407 /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		AD8ED5FC2BFA580A00B9ED43 /* ClientMessageMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessageMapper.swift; sourceTree = "<group>"; };
 		AD8ED5FE2BFA7E9900B9ED43 /* ClientMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessage.swift; sourceTree = "<group>"; };
-		ADA09EC72C1E461D00837F7B /* FeedViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModelTests.swift; sourceTree = "<group>"; };
-		ADA09EC92C1E7A4B00837F7B /* LocalizedFeedViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalizedFeedViewTests.swift; sourceTree = "<group>"; };
+		ADA09EC72C1E461D00837F7B /* FeedViewModelIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModelIntegrationTests.swift; sourceTree = "<group>"; };
 		ADA09ECB2C1E803A00837F7B /* NostrLocalizedStrings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NostrLocalizedStrings.swift; sourceTree = "<group>"; };
 		ADA09ECD2C1E811B00837F7B /* EventsFeed.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = EventsFeed.xcstrings; sourceTree = "<group>"; };
 		ADA09ED02C1E85D300837F7B /* XCTestCase+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Localization.swift"; sourceTree = "<group>"; };
@@ -401,8 +399,7 @@
 		ADC6C9742C11D3A700322BD9 /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				ADA09EC72C1E461D00837F7B /* FeedViewModelTests.swift */,
-				ADA09EC92C1E7A4B00837F7B /* LocalizedFeedViewTests.swift */,
+				ADA09EC72C1E461D00837F7B /* FeedViewModelIntegrationTests.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -732,9 +729,8 @@
 			files = (
 				ADC6C9602C1150F800322BD9 /* EventStoreSpecs+XCTestHelpers.swift in Sources */,
 				ADC6C95E2C1150E100322BD9 /* SwiftDataEventStoreTests.swift in Sources */,
-				ADA09ECA2C1E7A4B00837F7B /* LocalizedFeedViewTests.swift in Sources */,
 				ADA09ED12C1E85D300837F7B /* XCTestCase+Localization.swift in Sources */,
-				ADA09EC82C1E461D00837F7B /* FeedViewModelTests.swift in Sources */,
+				ADA09EC82C1E461D00837F7B /* FeedViewModelIntegrationTests.swift in Sources */,
 				ADC6C95F2C1150F600322BD9 /* EventStoreSpecs.swift in Sources */,
 				ADC6C9612C11513A00322BD9 /* Helpers.swift in Sources */,
 				ADC6C9622C11514700322BD9 /* XCTestCase+MemoryLeakTracking.swift in Sources */,
