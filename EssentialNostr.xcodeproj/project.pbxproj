@@ -329,6 +329,34 @@
 			path = "Event Cache";
 			sourceTree = "<group>";
 		};
+		ADA09ED22C1E86A100837F7B /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				ADA09ED02C1E85D300837F7B /* XCTestCase+Localization.swift */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		ADA09ED32C1E86BF00837F7B /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				ADF9FC2D2C14A491003DB353 /* EventView.swift */,
+				ADF9FC2F2C14A86B003DB353 /* FeedView.swift */,
+				AD7767E32C166405005769CE /* ErrorView.swift */,
+				AD889E012C1D8DE400B7F407 /* TitleView.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		ADA09ED42C1E86D300837F7B /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				ADA09ECB2C1E803A00837F7B /* NostrLocalizedStrings.swift */,
+				ADA09ECD2C1E811B00837F7B /* EventsFeed.xcstrings */,
+			);
+			path = Localization;
+			sourceTree = "<group>";
+		};
 		ADB6CEEA2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,14 +369,9 @@
 		ADC6C9492C11507300322BD9 /* EssentialNostriOS */ = {
 			isa = PBXGroup;
 			children = (
+				ADA09ED42C1E86D300837F7B /* Localization */,
+				ADA09ED32C1E86BF00837F7B /* SwiftUI */,
 				ADC6C9642C11542400322BD9 /* EventCache */,
-				AD1343592C0C00100082F2E5 /* SwiftDataEventStore.swift */,
-				ADF9FC2D2C14A491003DB353 /* EventView.swift */,
-				ADF9FC2F2C14A86B003DB353 /* FeedView.swift */,
-				AD7767E32C166405005769CE /* ErrorView.swift */,
-				AD889E012C1D8DE400B7F407 /* TitleView.swift */,
-				ADA09ECB2C1E803A00837F7B /* NostrLocalizedStrings.swift */,
-				ADA09ECD2C1E811B00837F7B /* EventsFeed.xcstrings */,
 			);
 			path = EssentialNostriOS;
 			sourceTree = "<group>";
@@ -356,11 +379,11 @@
 		ADC6C9532C11507300322BD9 /* EssentialNostriOSTests */ = {
 			isa = PBXGroup;
 			children = (
+				ADA09ED22C1E86A100837F7B /* Helpers */,
 				ADC6C9742C11D3A700322BD9 /* SwiftUI */,
 				ADC6C9662C11544C00322BD9 /* Integration */,
 				ADC6C9652C11544200322BD9 /* EventCache */,
 				ADC6C9672C11BB0100322BD9 /* EssentialNostriOS.xctestplan */,
-				ADA09ED02C1E85D300837F7B /* XCTestCase+Localization.swift */,
 			);
 			path = EssentialNostriOSTests;
 			sourceTree = "<group>";
@@ -368,6 +391,7 @@
 		ADC6C9642C11542400322BD9 /* EventCache */ = {
 			isa = PBXGroup;
 			children = (
+				AD1343592C0C00100082F2E5 /* SwiftDataEventStore.swift */,
 			);
 			path = EventCache;
 			sourceTree = "<group>";
