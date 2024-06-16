@@ -91,17 +91,18 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         let (sut, loader) = makeEventsLoader(handler: eventHandler)
 
         loader.request(requester())
-        var results = [Result<[Event], Error>]()
+        var errors = [Error?]()
         let exp = expectation(description: "Wait for load completion")
-        sut.load { result in
-            results.append(result)
+        exp.isInverted = true // due to recurisve call
+        sut.load { error in
+            errors.append(error)
             exp.fulfill()
         }
 
         wait(for: [exp], timeout: 3.0)
 
         XCTAssertEqual(events.count, 5) // Two events
-        XCTAssertEqual(try results[0].get(), [events[0], events[1], events[2]]) // Events from the initial request
+        XCTAssertTrue(errors.isEmpty) // Events from the initial request
     }
 
     // MARK: - Helpers
@@ -119,9 +120,9 @@ final class EssentialNostrAPIEndToEndTests: XCTestCase {
         return loader
     }
 
-    func makeEventsLoader(handler: @escaping EventHandler, file: StaticString = #file, line: UInt = #line) -> (sut: RemoteEventsLoader, eventLoader: RemoteEventLoader) {
+    func makeEventsLoader(handler: @escaping EventHandler, file: StaticString = #file, line: UInt = #line) -> (sut: RemoteFeedLoader, eventLoader: RemoteEventLoader) {
         let loader = makeSUT()
-        let sut = RemoteEventsLoader(eventHandler: handler, eventLoader: loader)
+        let sut = RemoteFeedLoader(eventHandler: handler, eventLoader: loader)
         trackForMemoryLeaks(loader)
         trackForMemoryLeaks(sut)
         return (sut, loader)
