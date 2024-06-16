@@ -5,10 +5,7 @@
 import SwiftUI
 
 public struct TitleViewModel {
-    let title: String = NSLocalizedString("EVENT_VIEW_TITLE", 
-                                          tableName: "EventsFeed",
-                                          bundle: Bundle(for: NostrLocalizedStrings.self),
-                                          comment: "Title for main nostr event view.")
+    let title: String = String(localized: "EVENT_VIEW_TITLE", table: "EventsFeed", bundle: Bundle(for: NostrLocalizedStrings.self))
 }
 
 public struct TitleView: View {
