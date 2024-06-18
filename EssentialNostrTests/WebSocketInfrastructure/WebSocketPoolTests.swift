@@ -20,73 +20,69 @@ class WebSocketPool {
     }
 
     func send(message: String) {
-        pool.forEach({ $0.send(message: message, completion: { _ in })})
+        pool.forEach({ $0.send(message: message, completion: { _ in } )})
     }
 }
 
 class WebSocketPoolTests: XCTestCase {
     func test_add_doesNotSendMessagesToPool() {
-        let sut = WebSocketPool()
-        let client = ClientSpy()
+        let (_, clients) = makeSUT()
 
-        sut.add(client: client)
-
-        XCTAssertTrue(client.receivedMessages.isEmpty)
+        XCTAssertTrue(clients[0].receivedMessages.isEmpty)
     }
 
     func test_add_addsClientToPool() {
-        let sut = WebSocketPool()
-        let client = ClientSpy()
-        sut.add(client: client)
+        let (sut, clients) = makeSUT()
 
-        XCTAssertEqual(sut.pool.count, 1)
+        XCTAssertEqual(sut.pool.count, clients.count)
     }
 
     func test_start_sendsStartToPool() throws {
-        let sut = WebSocketPool()
-        let client = ClientSpy()
-        let client2 = ClientSpy()
-        sut.add(client: client)
-        sut.add(client: client2)
+        let (sut, clients) = makeSUT()
 
         try sut.start()
 
-        let spys = sut.pool.compactMap({ $0 as? ClientSpy })
-        for (index, client) in spys.enumerated() {
+        for (index, client) in clients.enumerated() {
             XCTAssertEqual(client.receivedMessages, [.start], "Client at index \(index) failed.")
         }
     }
 
     func test_disconnect_sendsDisconnectToPool() {
-        let sut = WebSocketPool()
-        let client = ClientSpy()
-        let client2 = ClientSpy()
-        sut.add(client: client)
-        sut.add(client: client2)
+        let (sut, clients) = makeSUT()
 
         sut.disconnect()
 
-        let spys = sut.pool.compactMap({ $0 as? ClientSpy })
-        for (index, client) in spys.enumerated() {
+        for (index, client) in clients.enumerated() {
             XCTAssertEqual(client.receivedMessages, [.disconnect], "Client at index \(index) failed.")
         }
     }
 
     func test_send_sendsMessageToPool() {
-        let sut = WebSocketPool()
-        let client = ClientSpy()
-        let client2 = ClientSpy()
-        sut.add(client: client)
-        sut.add(client: client2)
+        let (sut, clients) = makeSUT()
 
         sut.send(message: "A Message")
 
-        let spys = sut.pool.compactMap({ $0 as? ClientSpy })
-        for (index, client) in spys.enumerated() {
+        for (index, client) in clients.enumerated() {
             XCTAssertEqual(client.receivedMessages, [.send("A Message")], "Client at index \(index) failed.")
         }
     }
 
+    // MARK: - Helpers
+
+    private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: WebSocketPool, clients: [ClientSpy]) {
+        let sut = WebSocketPool()
+        let client = ClientSpy()
+        let client2 = ClientSpy()
+
+        trackForMemoryLeaks(sut)
+        trackForMemoryLeaks(client)
+        trackForMemoryLeaks(client2)
+
+        sut.add(client: client)
+        sut.add(client: client2)
+
+        return (sut, [client, client2])
+    }
 
     private class ClientSpy: WebSocketClient {
         enum Message: Equatable {
