@@ -248,6 +248,8 @@
 		AD51DB532BF42A4E00B5673C /* EssentialNostr */ = {
 			isa = PBXGroup;
 			children = (
+				AD80D9D42C21E7CB005A1647 /* WebSocketAPI */,
+				AD80D9D52C21E803005A1647 /* WebSocketInfrastructure */,
 				AD7FDC872C057630005B3DE0 /* Event Cache */,
 				AD51DB702BF433D900B5673C /* Event API */,
 				AD51DB6D2BF42C4600B5673C /* Event Feature */,
@@ -259,10 +261,11 @@
 			isa = PBXGroup;
 			children = (
 				ADB6CEE42BF9540C00EF3B54 /* EssentialNostr.xctestplan */,
+				AD7B0B1D2BF5A9720053793A /* Event API */,
 				AD5B9EBE2BF6CD1700E7D5CD /* Helpers */,
 				ADE7026B2BF98D4B0066AC13 /* Message API */,
 				AD72AEDD2C03C49A00DD9964 /* EventCache */,
-				AD7B0B1D2BF5A9720053793A /* Event API */,
+				AD80D9D62C21E81A005A1647 /* WebSocketInfrastructure */,
 			);
 			path = EssentialNostrTests;
 			sourceTree = "<group>";
@@ -283,9 +286,7 @@
 			children = (
 				AD51DB712BF433E500B5673C /* RemoteEventLoader.swift */,
 				ADF9FC332C152556003DB353 /* RemoteFeedLoader.swift */,
-				AD7B0B192BF571AE0053793A /* WebSocketClient.swift */,
 				AD7B0B1B2BF5726C0053793A /* RelayMessageMapper.swift */,
-				AD5B9EBC2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift */,
 				AD8ED5FC2BFA580A00B9ED43 /* ClientMessageMapper.swift */,
 				ADFFFE712C08066B00A504A3 /* NostrEvent.swift */,
 			);
@@ -315,7 +316,6 @@
 			isa = PBXGroup;
 			children = (
 				AD51DB6E2BF42CCD00B5673C /* RemoteEventLoaderTests.swift */,
-				AD7B0B1E2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift */,
 				ADF9FC312C14C62A003DB353 /* LoadEventsFromRemoteTests.swift */,
 			);
 			path = "Event API";
@@ -329,6 +329,30 @@
 				ADFFFE732C0806A600A504A3 /* LocalEvent.swift */,
 			);
 			path = "Event Cache";
+			sourceTree = "<group>";
+		};
+		AD80D9D42C21E7CB005A1647 /* WebSocketAPI */ = {
+			isa = PBXGroup;
+			children = (
+				AD7B0B192BF571AE0053793A /* WebSocketClient.swift */,
+			);
+			path = WebSocketAPI;
+			sourceTree = "<group>";
+		};
+		AD80D9D52C21E803005A1647 /* WebSocketInfrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				AD5B9EBC2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift */,
+			);
+			path = WebSocketInfrastructure;
+			sourceTree = "<group>";
+		};
+		AD80D9D62C21E81A005A1647 /* WebSocketInfrastructure */ = {
+			isa = PBXGroup;
+			children = (
+				AD7B0B1E2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift */,
+			);
+			path = WebSocketInfrastructure;
 			sourceTree = "<group>";
 		};
 		ADA09ED22C1E86A100837F7B /* Helpers */ = {
