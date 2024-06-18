@@ -12,7 +12,7 @@ class WebSocketPool {
     }
 
     func start() {
-        try? pool[0].start()
+        pool.forEach{ try? $0.start() }
     }
 }
 
@@ -35,11 +35,15 @@ class WebSocketPoolTests: XCTestCase {
     func test_start_sendsStartToPool() {
         let sut = WebSocketPool()
         let client = ClientSpy()
+        let client2 = ClientSpy()
         sut.add(client: client)
-
+        sut.add(client: client2)
         sut.start()
 
-        XCTAssertEqual(client.receivedMessages, [.start])
+        let spys = sut.pool.compactMap({ $0 as? ClientSpy })
+        for (index, client) in spys.enumerated() {
+            XCTAssertEqual(client.receivedMessages, [.start], "Client at index \(index) failed.")
+        }
     }
 
 
