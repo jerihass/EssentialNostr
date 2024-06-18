@@ -10,6 +10,10 @@ class WebSocketPool {
     func add(client: WebSocketClient) {
         pool.append(client)
     }
+
+    func start() {
+        try? pool[0].start()
+    }
 }
 
 class WebSocketPoolTests: XCTestCase {
@@ -28,10 +32,24 @@ class WebSocketPoolTests: XCTestCase {
         XCTAssertEqual(sut.pool.count, 1)
     }
 
+    func test_start_sendsStartToPool() {
+        let sut = WebSocketPool()
+        let client = ClientSpy()
+        sut.add(client: client)
+
+        sut.start()
+
+        XCTAssertEqual(client.receivedMessages, [.start])
+    }
+
 
     private class ClientSpy: WebSocketClient {
+        enum Message {
+            case start
+        }
+        var receivedMessages = [Message]()
         var stateHandler: ((EssentialNostr.WebSocketDelegateState) -> Void)?
-        func start() throws {}
+        func start() throws {receivedMessages.append(.start)}
         func disconnect() {}
         func send(message: String, completion: @escaping (Error) -> Void) {}
         func receive(completion: @escaping (ReceiveResult) -> Void) {}
