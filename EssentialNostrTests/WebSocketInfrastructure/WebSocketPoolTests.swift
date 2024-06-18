@@ -7,6 +7,12 @@ import EssentialNostr
 
 class WebSocketPool {
     var pool = [WebSocketClient]()
+    var errorHandler: (Error) -> Void
+
+    init() {
+        self.errorHandler = { _ in }
+    }
+
     func add(client: WebSocketClient) {
         pool.append(client)
     }
@@ -20,7 +26,10 @@ class WebSocketPool {
     }
 
     func send(message: String) {
-        pool.forEach({ $0.send(message: message, completion: { _ in } )})
+        pool.forEach({ client in
+            client.send(message: message,
+                        completion: errorHandler)
+        })
     }
 }
 
@@ -67,6 +76,27 @@ class WebSocketPoolTests: XCTestCase {
         }
     }
 
+    func test_send_givesErrorOnSendError() {
+        let (sut, clients) = makeSUT()
+
+        var errors = [Error]()
+        let errorHandler: (Error) -> Void = { error in
+            errors.append(error)
+        }
+
+        sut.errorHandler = errorHandler
+
+        sut.send(message: "A Message")
+
+        let sendError = anyError()
+
+        for client in clients {
+            client.completeSendWith(sendError)
+        }
+
+        XCTAssertEqual(errors.map({ $0 as NSError? }), [sendError, sendError])
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: WebSocketPool, clients: [ClientSpy]) {
@@ -91,10 +121,18 @@ class WebSocketPoolTests: XCTestCase {
             case send(String)
         }
         var receivedMessages = [Message]()
+        var sendCompletions = [(Error) -> Void]()
         var stateHandler: ((EssentialNostr.WebSocketDelegateState) -> Void)?
         func start() throws { receivedMessages.append(.start) }
         func disconnect() { receivedMessages.append(.disconnect) }
-        func send(message: String, completion: @escaping (Error) -> Void) { receivedMessages.append(.send(message))}
+        func send(message: String, completion: @escaping (Error) -> Void) {
+            receivedMessages.append(.send(message))
+            sendCompletions.append(completion)
+        }
         func receive(completion: @escaping (ReceiveResult) -> Void) {}
+
+        func completeSendWith(_ error: Error, at index: Int = 0) {
+            sendCompletions[index](error)
+        }
     }
 }
