@@ -21,11 +21,13 @@ class WebSocketPool {
 }
 
 class WebSocketPoolTests: XCTestCase {
-    func test_init_poolDoesNotSendMessagesToPool() {
-        let _ = WebSocketPool()
-        let pool = PoolSpy()
+    func test_add_doesNotSendMessagesToPool() {
+        let sut = WebSocketPool()
+        let client = ClientSpy()
 
-        XCTAssertTrue(pool.receivedMessages.isEmpty)
+        sut.add(client: client)
+
+        XCTAssertTrue(client.receivedMessages.isEmpty)
     }
 
     func test_add_addsClientToPool() {
@@ -78,9 +80,5 @@ class WebSocketPoolTests: XCTestCase {
         func disconnect() { receivedMessages.append(.disconnect) }
         func send(message: String, completion: @escaping (Error) -> Void) {}
         func receive(completion: @escaping (ReceiveResult) -> Void) {}
-    }
-
-    private class PoolSpy {
-        var receivedMessages = [Any]()
     }
 }
