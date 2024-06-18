@@ -28,6 +28,7 @@
 		AD7B0B1C2BF5726C0053793A /* RelayMessageMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7B0B1B2BF5726C0053793A /* RelayMessageMapper.swift */; };
 		AD7B0B1F2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7B0B1E2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift */; };
 		AD7FDC892C05764A005B3DE0 /* LocalEventsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD7FDC882C05764A005B3DE0 /* LocalEventsLoader.swift */; };
+		AD80D9D82C21E921005A1647 /* WebSocketPoolTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD80D9D72C21E921005A1647 /* WebSocketPoolTests.swift */; };
 		AD889E022C1D8DE400B7F407 /* TitleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD889E012C1D8DE400B7F407 /* TitleView.swift */; };
 		AD8ED5FD2BFA580A00B9ED43 /* ClientMessageMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8ED5FC2BFA580A00B9ED43 /* ClientMessageMapper.swift */; };
 		AD8ED5FF2BFA7E9900B9ED43 /* ClientMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD8ED5FE2BFA7E9900B9ED43 /* ClientMessage.swift */; };
@@ -131,6 +132,7 @@
 		AD7B0B1B2BF5726C0053793A /* RelayMessageMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayMessageMapper.swift; sourceTree = "<group>"; };
 		AD7B0B1E2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkConnectionWebSocketClientTests.swift; sourceTree = "<group>"; };
 		AD7FDC882C05764A005B3DE0 /* LocalEventsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalEventsLoader.swift; sourceTree = "<group>"; };
+		AD80D9D72C21E921005A1647 /* WebSocketPoolTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketPoolTests.swift; sourceTree = "<group>"; };
 		AD889E012C1D8DE400B7F407 /* TitleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleView.swift; sourceTree = "<group>"; };
 		AD8ED5FC2BFA580A00B9ED43 /* ClientMessageMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessageMapper.swift; sourceTree = "<group>"; };
 		AD8ED5FE2BFA7E9900B9ED43 /* ClientMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessage.swift; sourceTree = "<group>"; };
@@ -351,6 +353,7 @@
 			isa = PBXGroup;
 			children = (
 				AD7B0B1E2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift */,
+				AD80D9D72C21E921005A1647 /* WebSocketPoolTests.swift */,
 			);
 			path = WebSocketInfrastructure;
 			sourceTree = "<group>";
@@ -743,6 +746,7 @@
 				AD72AEDF2C03C4BC00DD9964 /* EventCachingTests.swift in Sources */,
 				AD1343432C0BB7C60082F2E5 /* EventStoreSpecs.swift in Sources */,
 				ADFFFE792C080D2E00A504A3 /* EventStoreSpy.swift in Sources */,
+				AD80D9D82C21E921005A1647 /* WebSocketPoolTests.swift in Sources */,
 				ADF9FC322C14C62A003DB353 /* LoadEventsFromRemoteTests.swift in Sources */,
 				ADFFFE762C080CB900A504A3 /* LoadEventsFromCacheTests.swift in Sources */,
 				AD3215C42C09FEC000345A57 /* Helpers.swift in Sources */,
