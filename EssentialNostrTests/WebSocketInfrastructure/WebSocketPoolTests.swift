@@ -14,6 +14,10 @@ class WebSocketPool {
     func start() throws {
         try pool.forEach { try $0.start() }
     }
+
+    func disconnect() {
+        pool.forEach {$0.disconnect() }
+    }
 }
 
 class WebSocketPoolTests: XCTestCase {
@@ -38,6 +42,7 @@ class WebSocketPoolTests: XCTestCase {
         let client2 = ClientSpy()
         sut.add(client: client)
         sut.add(client: client2)
+
         try sut.start()
 
         let spys = sut.pool.compactMap({ $0 as? ClientSpy })
@@ -46,15 +51,31 @@ class WebSocketPoolTests: XCTestCase {
         }
     }
 
+    func test_disconnect_sendsDisconnectToPool() {
+        let sut = WebSocketPool()
+        let client = ClientSpy()
+        let client2 = ClientSpy()
+        sut.add(client: client)
+        sut.add(client: client2)
+
+        sut.disconnect()
+
+        let spys = sut.pool.compactMap({ $0 as? ClientSpy })
+        for (index, client) in spys.enumerated() {
+            XCTAssertEqual(client.receivedMessages, [.disconnect], "Client at index \(index) failed.")
+        }
+    }
+
 
     private class ClientSpy: WebSocketClient {
         enum Message {
             case start
+            case disconnect
         }
         var receivedMessages = [Message]()
         var stateHandler: ((EssentialNostr.WebSocketDelegateState) -> Void)?
         func start() throws { receivedMessages.append(.start) }
-        func disconnect() {}
+        func disconnect() { receivedMessages.append(.disconnect) }
         func send(message: String, completion: @escaping (Error) -> Void) {}
         func receive(completion: @escaping (ReceiveResult) -> Void) {}
     }
