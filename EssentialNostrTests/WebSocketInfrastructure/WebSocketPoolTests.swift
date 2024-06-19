@@ -139,6 +139,36 @@ class WebSocketPoolTests: XCTestCase {
         }
     }
 
+    func test_receive_givesDataOnSuccess() {
+        let (sut, clients) = makeSUT()
+
+        var results = [WebSocketClient.ReceiveResult]()
+        let receiveHandler: (WebSocketClient.ReceiveResult) -> Void = { result in
+            results.append(result)
+        }
+
+        sut.receiveHandler = receiveHandler
+
+        sut.receive()
+
+        let data = Data()
+
+        for client in clients {
+            client.completeReceiveWith(data)
+        }
+
+        XCTAssertTrue(results.count > 0)
+
+        for result in results {
+            switch result {
+            case let .success(gotData):
+                XCTAssertEqual(gotData, data)
+            default:
+                XCTFail("Expected failure, got \(result) instead")
+            }
+        }
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: WebSocketPool, clients: [ClientSpy]) {
@@ -184,6 +214,10 @@ class WebSocketPoolTests: XCTestCase {
 
         func completeReceiveWith(_ error: Error, at index: Int = 0) {
             receiveCompletions[index](.failure(error))
+        }
+
+        func completeReceiveWith(_ data: Data, at index: Int = 0) {
+            receiveCompletions[index](.success(data))
         }
     }
 }
