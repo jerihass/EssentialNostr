@@ -31,6 +31,12 @@ class WebSocketPool {
                         completion: errorHandler)
         })
     }
+
+    func receive() {
+        pool.forEach({ client in
+            client.receive { _ in }
+        })
+    }
 }
 
 class WebSocketPoolTests: XCTestCase {
@@ -97,6 +103,16 @@ class WebSocketPoolTests: XCTestCase {
         XCTAssertEqual(errors.map({ $0 as NSError? }), [sendError, sendError])
     }
 
+    func test_receive_receiveMessageToPool() {
+        let (sut, clients) = makeSUT()
+
+        sut.receive()
+
+        for (index, client) in clients.enumerated() {
+            XCTAssertEqual(client.receivedMessages, [.receive], "Client at index \(index) failed.")
+        }
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: WebSocketPool, clients: [ClientSpy]) {
@@ -119,6 +135,7 @@ class WebSocketPoolTests: XCTestCase {
             case start
             case disconnect
             case send(String)
+            case receive
         }
         var receivedMessages = [Message]()
         var sendCompletions = [(Error) -> Void]()
@@ -129,7 +146,9 @@ class WebSocketPoolTests: XCTestCase {
             receivedMessages.append(.send(message))
             sendCompletions.append(completion)
         }
-        func receive(completion: @escaping (ReceiveResult) -> Void) {}
+        func receive(completion: @escaping (ReceiveResult) -> Void) {
+            receivedMessages.append(.receive)
+        }
 
         func completeSendWith(_ error: Error, at index: Int = 0) {
             sendCompletions[index](error)
