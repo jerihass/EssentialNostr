@@ -23,7 +23,7 @@ class WebSocketPool {
     }
 
     func disconnect() {
-        pool.forEach {$0.disconnect() }
+        pool.forEach { $0.disconnect() }
     }
 
     func send(message: String) {
@@ -111,60 +111,22 @@ class WebSocketPoolTests: XCTestCase {
 
     func test_receive_givesErrorOnReceiveError() {
         let (sut, clients) = makeSUT()
-
-        var results = [WebSocketClient.ReceiveResult]()
-        let receiveHandler: (WebSocketClient.ReceiveResult) -> Void = { result in
-            results.append(result)
-        }
-
-        sut.receiveHandler = receiveHandler
-
-        sut.receive()
-
         let receiveError = anyError()
 
-        for client in clients {
-            client.completeReceiveWith(receiveError)
-        }
-
-        XCTAssertTrue(results.count > 0)
-
-        for result in results {
-            switch result {
-            case let .failure(gotError):
-                XCTAssertEqual(gotError as NSError?, receiveError)
-            default:
-                XCTFail("Expected failure, got \(result) instead")
+        expect(sut, toCompleteWith: .failure(receiveError), resultCount: clients.count) {
+            for client in clients {
+                client.completeReceiveWith(receiveError)
             }
         }
     }
 
     func test_receive_givesDataOnSuccess() {
         let (sut, clients) = makeSUT()
-
-        var results = [WebSocketClient.ReceiveResult]()
-        let receiveHandler: (WebSocketClient.ReceiveResult) -> Void = { result in
-            results.append(result)
-        }
-
-        sut.receiveHandler = receiveHandler
-
-        sut.receive()
-
         let data = Data()
 
-        for client in clients {
-            client.completeReceiveWith(data)
-        }
-
-        XCTAssertTrue(results.count > 0)
-
-        for result in results {
-            switch result {
-            case let .success(gotData):
-                XCTAssertEqual(gotData, data)
-            default:
-                XCTFail("Expected failure, got \(result) instead")
+        expect(sut, toCompleteWith: .success(data), resultCount: clients.count) {
+            for client in clients {
+                client.completeReceiveWith(data)
             }
         }
     }
@@ -184,6 +146,30 @@ class WebSocketPoolTests: XCTestCase {
         sut.add(client: client2)
 
         return (sut, [client, client2])
+    }
+
+    private func expect(_ sut: WebSocketPool, toCompleteWith expected: WebSocketClient.ReceiveResult, resultCount: Int, file: StaticString = #file, line: UInt = #line, when action: () -> Void) {
+        var results = [WebSocketClient.ReceiveResult]()
+        let receiveHandler: (WebSocketClient.ReceiveResult) -> Void = { result in
+            results.append(result)
+        }
+        sut.receiveHandler = receiveHandler
+        sut.receive()
+
+        action()
+
+        XCTAssertEqual(results.count, resultCount)
+
+        for result in results {
+            switch (result, expected) {
+            case let (.failure(gotError), .failure(expectedError)):
+                XCTAssertEqual(gotError as NSError?, expectedError as NSError?)
+            case let (.success(gotData), .success(expectedData)):
+                XCTAssertEqual(gotData, expectedData)
+            default:
+                XCTFail("Expected \(expected), got \(result) instead")
+            }
+        }
     }
 
     private class ClientSpy: WebSocketClient {
