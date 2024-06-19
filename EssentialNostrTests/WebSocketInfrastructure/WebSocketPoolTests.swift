@@ -8,9 +8,10 @@ import EssentialNostr
 class WebSocketPool {
     var pool = [WebSocketClient]()
     var errorHandler: (Error) -> Void
-
+    var receiveHandler: (WebSocketClient.ReceiveResult) -> Void
     init() {
         self.errorHandler = { _ in }
+        self.receiveHandler = { _ in }
     }
 
     func add(client: WebSocketClient) {
@@ -26,16 +27,11 @@ class WebSocketPool {
     }
 
     func send(message: String) {
-        pool.forEach({ client in
-            client.send(message: message,
-                        completion: errorHandler)
-        })
+        pool.forEach({ $0.send(message: message, completion: errorHandler) })
     }
 
     func receive() {
-        pool.forEach({ client in
-            client.receive { _ in }
-        })
+        pool.forEach({ $0.receive(completion: receiveHandler) })
     }
 }
 
@@ -113,6 +109,36 @@ class WebSocketPoolTests: XCTestCase {
         }
     }
 
+    func test_receive_givesErrorOnReceiveError() {
+        let (sut, clients) = makeSUT()
+
+        var results = [WebSocketClient.ReceiveResult]()
+        let receiveHandler: (WebSocketClient.ReceiveResult) -> Void = { result in
+            results.append(result)
+        }
+
+        sut.receiveHandler = receiveHandler
+
+        sut.receive()
+
+        let receiveError = anyError()
+
+        for client in clients {
+            client.completeReceiveWith(receiveError)
+        }
+
+        XCTAssertTrue(results.count > 0)
+
+        for result in results {
+            switch result {
+            case let .failure(gotError):
+                XCTAssertEqual(gotError as NSError?, receiveError)
+            default:
+                XCTFail("Expected failure, got \(result) instead")
+            }
+        }
+    }
+
     // MARK: - Helpers
 
     private func makeSUT(file: StaticString = #file, line: UInt = #line) -> (sut: WebSocketPool, clients: [ClientSpy]) {
@@ -139,6 +165,7 @@ class WebSocketPoolTests: XCTestCase {
         }
         var receivedMessages = [Message]()
         var sendCompletions = [(Error) -> Void]()
+        var receiveCompletions = [(WebSocketClient.ReceiveResult) -> Void]()
         var stateHandler: ((EssentialNostr.WebSocketDelegateState) -> Void)?
         func start() throws { receivedMessages.append(.start) }
         func disconnect() { receivedMessages.append(.disconnect) }
@@ -148,10 +175,15 @@ class WebSocketPoolTests: XCTestCase {
         }
         func receive(completion: @escaping (ReceiveResult) -> Void) {
             receivedMessages.append(.receive)
+            receiveCompletions.append(completion)
         }
 
         func completeSendWith(_ error: Error, at index: Int = 0) {
             sendCompletions[index](error)
+        }
+
+        func completeReceiveWith(_ error: Error, at index: Int = 0) {
+            receiveCompletions[index](.failure(error))
         }
     }
 }
