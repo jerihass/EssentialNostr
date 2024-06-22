@@ -11,11 +11,12 @@ public struct EventModel {
     public init(event: Event) {
         self.event = event
     }
-    
+
     var id: String { event.id }
 
     var publicKey: String { event.publicKey }
     var content: String { event.content }
+    var created: Date { event.created }
     var eventDate: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
