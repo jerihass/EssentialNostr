@@ -9,11 +9,9 @@ public struct TitleViewModel {
 }
 
 public struct TitleView: View {
-    private let model: TitleViewModel
+    private let model: TitleViewModel = .init()
 
-    public init(model: TitleViewModel) {
-        self.model = model
-    }
+    public init() {}
 
     public var body: some View {
         Text(model.title)
@@ -22,5 +20,5 @@ public struct TitleView: View {
 }
 
 #Preview {
-    TitleView(model: .init())
+    TitleView()
 }
