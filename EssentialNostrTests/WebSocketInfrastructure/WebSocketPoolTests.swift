@@ -113,7 +113,7 @@ class WebSocketPoolTests: XCTestCase {
         let (sut, clients) = makeSUT()
         let receiveError = anyError()
 
-        expect(sut, toCompleteWith: .failure(receiveError), resultCount: clients.count) {
+        expect(sut, toCompleteReceiveWith: .failure(receiveError), resultCount: clients.count) {
             for client in clients {
                 client.completeReceiveWith(receiveError)
             }
@@ -124,7 +124,7 @@ class WebSocketPoolTests: XCTestCase {
         let (sut, clients) = makeSUT()
         let data = Data()
 
-        expect(sut, toCompleteWith: .success(data), resultCount: clients.count) {
+        expect(sut, toCompleteReceiveWith: .success(data), resultCount: clients.count) {
             for client in clients {
                 client.completeReceiveWith(data)
             }
@@ -148,7 +148,7 @@ class WebSocketPoolTests: XCTestCase {
         return (sut, [client, client2])
     }
 
-    private func expect(_ sut: WebSocketPool, toCompleteWith expected: WebSocketClient.ReceiveResult, resultCount: Int, file: StaticString = #file, line: UInt = #line, when action: () -> Void) {
+    private func expect(_ sut: WebSocketPool, toCompleteReceiveWith expected: WebSocketClient.ReceiveResult, resultCount: Int, file: StaticString = #file, line: UInt = #line, when action: () -> Void) {
         var results = [WebSocketClient.ReceiveResult]()
         let receiveHandler: (WebSocketClient.ReceiveResult) -> Void = { result in
             results.append(result)
