@@ -6,11 +6,12 @@ import XCTest
 import EssentialNostr
 
 class WebSocketPool {
+    typealias PoolReceiveHandler = (WebSocketClient.ReceiveResult) -> Void
     var pool = [WebSocketClient]()
-    var errorHandler: (Error) -> Void
-    var receiveHandler: (WebSocketClient.ReceiveResult) -> Void
+    var sendErrorHandler: (Error) -> Void
+    var receiveHandler: PoolReceiveHandler
     init() {
-        self.errorHandler = { _ in }
+        self.sendErrorHandler = { _ in }
         self.receiveHandler = { _ in }
     }
 
@@ -27,7 +28,7 @@ class WebSocketPool {
     }
 
     func send(message: String) {
-        pool.forEach({ $0.send(message: message, completion: errorHandler) })
+        pool.forEach({ $0.send(message: message, completion: sendErrorHandler) })
     }
 
     func receive() {
@@ -86,7 +87,7 @@ class WebSocketPoolTests: XCTestCase {
             errors.append(error)
         }
 
-        sut.errorHandler = errorHandler
+        sut.sendErrorHandler = errorHandler
 
         sut.send(message: "A Message")
 
@@ -150,7 +151,7 @@ class WebSocketPoolTests: XCTestCase {
 
     private func expect(_ sut: WebSocketPool, toCompleteReceiveWith expected: WebSocketClient.ReceiveResult, resultCount: Int, file: StaticString = #file, line: UInt = #line, when action: () -> Void) {
         var results = [WebSocketClient.ReceiveResult]()
-        let receiveHandler: (WebSocketClient.ReceiveResult) -> Void = { result in
+        let receiveHandler: WebSocketPool.PoolReceiveHandler = { result in
             results.append(result)
         }
         sut.receiveHandler = receiveHandler
@@ -181,7 +182,7 @@ class WebSocketPoolTests: XCTestCase {
         }
         var receivedMessages = [Message]()
         var sendCompletions = [(Error) -> Void]()
-        var receiveCompletions = [(WebSocketClient.ReceiveResult) -> Void]()
+        var receiveCompletions = [WebSocketPool.PoolReceiveHandler]()
         var stateHandler: ((EssentialNostr.WebSocketDelegateState) -> Void)?
         func start() throws { receivedMessages.append(.start) }
         func disconnect() { receivedMessages.append(.disconnect) }
