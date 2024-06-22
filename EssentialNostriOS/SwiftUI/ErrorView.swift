@@ -4,14 +4,15 @@
 
 import SwiftUI
 
-public struct ErrorViewModel {
-    var message: () -> String
+@Observable
+public class ErrorViewModel {
+    public var message: () -> String
 
     public init(message: @escaping () -> String) {
         self.message = message
     }
 
-    static var connectivityError: String = String(localized: "CONNECTIVITY_ERROR", table: "EventsFeed", bundle: Bundle(for: NostrLocalizedStrings.self))
+    public static var connectivityError: String = String(localized: "CONNECTIVITY_ERROR", table: "EventsFeed", bundle: Bundle(for: NostrLocalizedStrings.self))
 }
 
 public struct ErrorView: View {
@@ -28,13 +29,13 @@ public struct ErrorView: View {
                 .padding(.vertical)
                 .background(.red)
                 .onTapGesture { withAnimation {
-                    model.message = { "" }
+                    model.message = {""}
                 }}
         }
     }
 }
 
 #Preview {
-    let model = ErrorViewModel(message: { "Some Error" })
+    let model = ErrorViewModel(message: {"Some Error"})
     return ErrorView(model: model)
 }
