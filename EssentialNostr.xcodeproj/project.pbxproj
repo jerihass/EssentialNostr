@@ -49,6 +49,7 @@
 		ADC6C9682C11BB5F00322BD9 /* EssentialNostrCacheIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD13434C2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.swift */; };
 		ADC6C96A2C11BD5D00322BD9 /* EssentialNostriOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADC6C9482C11507300322BD9 /* EssentialNostriOS.framework */; platformFilter = ios; };
 		ADC6C96F2C11BD6700322BD9 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
+		ADE5F2562C2736BC00041081 /* WebSocketPool.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE5F2552C2736BC00041081 /* WebSocketPool.swift */; };
 		ADE7026D2BF98D850066AC13 /* ClientMessageMapperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */; };
 		ADEA67922C06CE9600CF97D9 /* EventStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADEA67912C06CE9600CF97D9 /* EventStore.swift */; };
 		ADF9FC2E2C14A491003DB353 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADF9FC2D2C14A491003DB353 /* EventView.swift */; };
@@ -147,6 +148,7 @@
 		ADC6C9482C11507300322BD9 /* EssentialNostriOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = EssentialNostriOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADC6C94F2C11507300322BD9 /* EssentialNostriOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostriOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADC6C9672C11BB0100322BD9 /* EssentialNostriOS.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialNostriOS.xctestplan; sourceTree = "<group>"; };
+		ADE5F2552C2736BC00041081 /* WebSocketPool.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketPool.swift; sourceTree = "<group>"; };
 		ADE7026C2BF98D850066AC13 /* ClientMessageMapperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessageMapperTests.swift; sourceTree = "<group>"; };
 		ADEA67912C06CE9600CF97D9 /* EventStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStore.swift; sourceTree = "<group>"; };
 		ADF9FC2D2C14A491003DB353 /* EventView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 			isa = PBXGroup;
 			children = (
 				AD5B9EBC2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift */,
+				ADE5F2552C2736BC00041081 /* WebSocketPool.swift */,
 			);
 			path = WebSocketInfrastructure;
 			sourceTree = "<group>";
@@ -731,6 +734,7 @@
 				ADFFFE722C08066B00A504A3 /* NostrEvent.swift in Sources */,
 				AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */,
 				AD7B0B1A2BF571AE0053793A /* WebSocketClient.swift in Sources */,
+				ADE5F2562C2736BC00041081 /* WebSocketPool.swift in Sources */,
 				ADFFFE742C0806A600A504A3 /* LocalEvent.swift in Sources */,
 				AD7B0B1C2BF5726C0053793A /* RelayMessageMapper.swift in Sources */,
 				AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */,

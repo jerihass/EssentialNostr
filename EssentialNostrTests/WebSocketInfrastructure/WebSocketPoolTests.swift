@@ -5,37 +5,6 @@
 import XCTest
 import EssentialNostr
 
-class WebSocketPool {
-    typealias PoolReceiveHandler = (WebSocketClient.ReceiveResult) -> Void
-    var pool = [WebSocketClient]()
-    var sendErrorHandler: (Error) -> Void
-    var receiveHandler: PoolReceiveHandler
-    init() {
-        self.sendErrorHandler = { _ in }
-        self.receiveHandler = { _ in }
-    }
-
-    func add(client: WebSocketClient) {
-        pool.append(client)
-    }
-
-    func start() throws {
-        try pool.forEach { try $0.start() }
-    }
-
-    func disconnect() {
-        pool.forEach { $0.disconnect() }
-    }
-
-    func send(message: String) {
-        pool.forEach({ $0.send(message: message, completion: sendErrorHandler) })
-    }
-
-    func receive() {
-        pool.forEach({ $0.receive(completion: receiveHandler) })
-    }
-}
-
 class WebSocketPoolTests: XCTestCase {
     func test_add_doesNotSendMessagesToPool() {
         let (_, clients) = makeSUT()
