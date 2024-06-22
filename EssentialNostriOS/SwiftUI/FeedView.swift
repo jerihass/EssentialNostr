@@ -34,7 +34,7 @@ public struct FeedView: View {
 
         errorView
 
-        List(model.events, id:\.id) { model in
+        List(model.events.sorted(by: { $0.created > $1.created }), id:\.id) { model in
             EventView(model: model)
         }
         .listStyle(.plain)
