@@ -7,6 +7,11 @@ import EssentialNostr
 
 public struct EventModel {
     let event: Event
+
+    public init(event: Event) {
+        self.event = event
+    }
+    
     var id: String { event.id }
 
     var publicKey: String { event.publicKey }
