@@ -10,6 +10,8 @@ public struct ErrorViewModel {
     public init(message: @escaping () -> String) {
         self.message = message
     }
+
+    static var connectivityError: String = String(localized: "CONNECTIVITY_ERROR", table: "EventsFeed", bundle: Bundle(for: NostrLocalizedStrings.self))
 }
 
 public struct ErrorView: View {

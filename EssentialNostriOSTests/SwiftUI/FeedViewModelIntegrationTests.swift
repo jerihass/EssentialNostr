@@ -13,6 +13,11 @@ class FeedViewModelIntegrationTests: XCTestCase {
         XCTAssertEqual(sut.title, localized("EVENT_VIEW_TITLE"))
     }
 
+    func test_errorViewMessage() {
+        let sut = ErrorViewModel(message: { ErrorViewModel.connectivityError })
+        XCTAssertEqual(sut.message(), localized("CONNECTIVITY_ERROR"))
+    }
+
     func test_fetchEvents_loadsEventsIntoModel() {
         let events = events()
         var sut = FeedViewModel(eventSource: { events })

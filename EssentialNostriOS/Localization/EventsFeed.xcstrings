@@ -1,6 +1,30 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "CONNECTIVITY_ERROR" : {
+      "comment" : "Error for no connectivity",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verbindungsfehler"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Connectivity Error"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Error de conectividad"
+          }
+        }
+      }
+    },
     "EVENT_VIEW_TITLE" : {
       "comment" : "Title for main nostr event view.",
       "extractionState" : "manual",
