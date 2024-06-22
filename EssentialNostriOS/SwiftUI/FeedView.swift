@@ -56,7 +56,7 @@ public struct FeedView: View {
     ]
     let viewModel = FeedViewModel(eventSource: { events.map(EventModel.init) })
     let titleView = TitleView(model: .init())
-    let errorModel = ErrorViewModel(message: "Error")
+    let errorModel = ErrorViewModel(message: {"Error"})
     let errorView = ErrorView(model: errorModel)
     return FeedView(viewModel: viewModel, titleView: titleView, errorView: errorView)
 }

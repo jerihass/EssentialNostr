@@ -5,9 +5,9 @@
 import SwiftUI
 
 public struct ErrorViewModel {
-    var message: String
-    
-    public init(message: String) {
+    var message: () -> String
+
+    public init(message: @escaping () -> String) {
         self.message = message
     }
 }
@@ -20,19 +20,19 @@ public struct ErrorView: View {
     }
 
     public var body: some View {
-        if !model.message.isEmpty {
-            Text(model.message)
+        if !model.message().isEmpty {
+            Text(model.message())
                 .frame(maxWidth: .infinity)
                 .padding(.vertical)
                 .background(.red)
                 .onTapGesture { withAnimation {
-                    model.message = ""
+                    model.message = { "" }
                 }}
         }
     }
 }
 
 #Preview {
-    let model = ErrorViewModel(message: "Some Error")
+    let model = ErrorViewModel(message: { "Some Error" })
     return ErrorView(model: model)
 }
