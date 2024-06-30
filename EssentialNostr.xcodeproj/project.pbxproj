@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AD0236662C31B61A008B4DF7 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0236652C31B61A008B4DF7 /* DataLoader.swift */; };
 		AD0236682C31B6C3008B4DF7 /* RemoteDataLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0236672C31B6C3008B4DF7 /* RemoteDataLoaderTests.swift */; };
+		AD02366A2C31BC79008B4DF7 /* RemoteDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0236692C31BC79008B4DF7 /* RemoteDataLoader.swift */; };
 		AD1343432C0BB7C60082F2E5 /* EventStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343422C0BB7C60082F2E5 /* EventStoreSpecs.swift */; };
 		AD1343452C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343442C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift */; };
 		AD13434E2C0BB94C0082F2E5 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
@@ -112,6 +113,7 @@
 /* Begin PBXFileReference section */
 		AD0236652C31B61A008B4DF7 /* DataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
 		AD0236672C31B6C3008B4DF7 /* RemoteDataLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDataLoaderTests.swift; sourceTree = "<group>"; };
+		AD0236692C31BC79008B4DF7 /* RemoteDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDataLoader.swift; sourceTree = "<group>"; };
 		AD1343422C0BB7C60082F2E5 /* EventStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStoreSpecs.swift; sourceTree = "<group>"; };
 		AD1343442C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventStoreSpecs+XCTestHelpers.swift"; sourceTree = "<group>"; };
 		AD13434A2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostrCacheIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -221,6 +223,7 @@
 			isa = PBXGroup;
 			children = (
 				AD0236652C31B61A008B4DF7 /* DataLoader.swift */,
+				AD0236692C31BC79008B4DF7 /* RemoteDataLoader.swift */,
 			);
 			path = "Image API";
 			sourceTree = "<group>";
@@ -753,6 +756,7 @@
 				AD51DB722BF433E500B5673C /* RemoteEventLoader.swift in Sources */,
 				AD8ED5FF2BFA7E9900B9ED43 /* ClientMessage.swift in Sources */,
 				AD3215C62C0A56AF00345A57 /* FeedLoader.swift in Sources */,
+				AD02366A2C31BC79008B4DF7 /* RemoteDataLoader.swift in Sources */,
 				ADFFFE722C08066B00A504A3 /* NostrEvent.swift in Sources */,
 				AD51DB6A2BF42A7100B5673C /* Event.swift in Sources */,
 				AD7B0B1A2BF571AE0053793A /* WebSocketClient.swift in Sources */,

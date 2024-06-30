@@ -3,22 +3,7 @@
 //
 
 import XCTest
-
-class RemoteDataLoader {
-    let client: HTTPClient
-
-    init(client: HTTPClient) {
-        self.client = client
-    }
-
-    func load(url: URL) {
-        client.get(from: url)
-    }
-}
-
-protocol HTTPClient {
-    func get(from url: URL)
-}
+import EssentialNostr
 
 class RemoteDataLoaderTests: XCTestCase {
     func test_init_doesNotRequestDataFromURL() {
@@ -27,7 +12,7 @@ class RemoteDataLoaderTests: XCTestCase {
         XCTAssertNil(client.requestedURL)
     }
 
-    func test_load_requestDataFromURL() {
+    func test_load_requestsDataFromURL() {
         let (sut, client) = makeSUT()
 
         let url = URL(string: "http://any-url.com/")!
