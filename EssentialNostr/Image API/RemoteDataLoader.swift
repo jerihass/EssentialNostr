@@ -11,7 +11,7 @@ public protocol HTTPClient {
 
 public class RemoteDataLoader {
     let client: HTTPClient
-
+    public typealias Result = Swift.Result<Data, Error>
     public enum Error: Swift.Error {
         case connectivity
         case invalidData
@@ -21,13 +21,13 @@ public class RemoteDataLoader {
         self.client = client
     }
 
-    public func load(url: URL, completion: @escaping (Error) -> Void) {
+    public func load(url: URL, completion: @escaping (Result) -> Void) {
         client.get(from: url) { result in
             switch result {
             case .failure:
-                completion(.connectivity)
+                completion(.failure(.connectivity))
             case .success:
-                completion(.invalidData)
+                completion(.failure(.invalidData))
             }
         }
     }

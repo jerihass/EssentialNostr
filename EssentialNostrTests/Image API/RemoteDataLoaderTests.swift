@@ -34,33 +34,18 @@ class RemoteDataLoaderTests: XCTestCase {
     func test_load_deliversErrorOnClientError() {
         let (sut, client) = makeSUT()
 
-        let url = URL(string: "http://any-url.com/")!
-
-        var capturedError: RemoteDataLoader.Error?
-        sut.load(url: url) { error in
-            capturedError = error
+        expect(sut: sut, toCompleteWith: .failure(.connectivity)) {
+            client.completeLoadWith(error: NSError(domain: "domain", code: 0))
         }
-
-        client.completeLoadWith(error: NSError(domain: "domain", code: 0))
-
-        XCTAssertEqual(capturedError, RemoteDataLoader.Error.connectivity)
     }
 
     func test_load_deliversErrorOnNon200HTTPResponse() {
         let (sut, client) = makeSUT()
 
-        let url = URL(string: "http://any-url.com/")!
-
         [199, 201, 300, 400].enumerated().forEach { index, code in
-            var capturedErrors = [RemoteDataLoader.Error?]()
-
-            sut.load(url: url) { error in
-                capturedErrors.append(error)
+            expect(sut: sut, toCompleteWith: .failure(.invalidData)) {
+                client.completeLoadWith(statusCode: code, at: index)
             }
-
-            client.completeLoadWith(statusCode: code, at: index)
-
-            XCTAssertEqual(capturedErrors, [.invalidData])
         }
     }
 
@@ -72,6 +57,27 @@ class RemoteDataLoaderTests: XCTestCase {
         trackForMemoryLeaks(client)
         trackForMemoryLeaks(sut)
         return (sut, client)
+    }
+
+    private func expect(sut: RemoteDataLoader, toCompleteWith expected: RemoteDataLoader.Result, when action: () -> Void, file: StaticString = #file, line: UInt = #line) {
+        let url = URL(string: "http://any-url.com/")!
+        let exp = expectation(description: "Wait for load completion")
+
+        sut.load(url: url) { result in
+            switch (result, expected) {
+            case let (.success(data), .success(expData)):
+                XCTAssertEqual(data, expData)
+            case let (.failure(error), .failure(expFailure)):
+                XCTAssertEqual(error, expFailure)
+            default:
+                XCTFail("Expected: \(expected), got \(result) instead.")
+            }
+            exp.fulfill()
+        }
+
+        action()
+
+        waitForExpectations(timeout: 1)
     }
 
     private class HTTPClientSpy: HTTPClient {
@@ -86,7 +92,7 @@ class RemoteDataLoaderTests: XCTestCase {
             requests[index].completion(.failure(error))
         }
 
-        func completeLoadWith(statusCode: Int, at index: Int = 0) {
+        func completeLoadWith(statusCode: Int, data: Data? = nil, at index: Int = 0) {
             let response = HTTPURLResponse(url: requestedURLs[index], statusCode: statusCode, httpVersion: nil, headerFields: nil)!
             requests[index].completion(.success(response))
         }
