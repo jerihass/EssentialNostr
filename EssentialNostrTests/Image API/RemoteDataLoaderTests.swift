@@ -15,15 +15,9 @@ class RemoteDataLoader {
         client.get(from: url)
     }
 }
+
 protocol HTTPClient {
     func get(from url: URL)
-}
-
-class HTTPClientSpy: HTTPClient {
-    var requestedURL: URL?
-    func get(from url: URL) {
-        requestedURL = url
-    }
 }
 
 class RemoteDataLoaderTests: XCTestCase {
@@ -41,5 +35,16 @@ class RemoteDataLoaderTests: XCTestCase {
         sut.load(url: url)
 
         XCTAssertEqual(client.requestedURL, url)
+    }
+
+    // MARK: - Helpers
+
+
+
+    private class HTTPClientSpy: HTTPClient {
+        var requestedURL: URL?
+        func get(from url: URL) {
+            requestedURL = url
+        }
     }
 }
