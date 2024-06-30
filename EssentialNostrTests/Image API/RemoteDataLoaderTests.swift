@@ -61,16 +61,15 @@ class RemoteDataLoaderTests: XCTestCase {
     }
 
     private class HTTPClientSpy: HTTPClient {
-        var requestedURLs = [URL]()
-        var loadCompletions = [(Error) -> Void]()
+        private var requests = [(url: URL, completion: (Error) -> Void)]()
+        var requestedURLs: [URL] { requests.map(\.url) }
 
         func get(from url: URL, completion:  @escaping (Error) -> Void) {
-            requestedURLs.append(url)
-            loadCompletions.append(completion)
+            requests.append((url, completion))
         }
 
         func completeLoadWith(error: Error, at index: Int = 0) {
-            loadCompletions[index](error)
+            requests[index].completion(error)
         }
     }
 }
