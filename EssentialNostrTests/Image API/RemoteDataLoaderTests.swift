@@ -22,15 +22,14 @@ protocol HTTPClient {
 
 class RemoteDataLoaderTests: XCTestCase {
     func test_init_doesNotRequestDataFromURL() {
-        let client = HTTPClientSpy()
-        _ = RemoteDataLoader(client: client)
+        let (_, client) = makeSUT()
 
         XCTAssertNil(client.requestedURL)
     }
 
     func test_load_requestDataFromURL() {
-        let client = HTTPClientSpy()
-        let sut = RemoteDataLoader(client: client)
+        let (sut, client) = makeSUT()
+
         let url = URL(string: "http://any-url.com/")!
         sut.load(url: url)
 
@@ -39,7 +38,13 @@ class RemoteDataLoaderTests: XCTestCase {
 
     // MARK: - Helpers
 
-
+    private func makeSUT() -> (sut: RemoteDataLoader, client: HTTPClientSpy) {
+        let client = HTTPClientSpy()
+        let sut = RemoteDataLoader(client: client)
+        trackForMemoryLeaks(client)
+        trackForMemoryLeaks(sut)
+        return (sut, client)
+    }
 
     private class HTTPClientSpy: HTTPClient {
         var requestedURL: URL?
