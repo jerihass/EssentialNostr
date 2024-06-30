@@ -5,5 +5,5 @@ import Foundation
 
 public protocol DataLoader {
     typealias Result = Swift.Result<Data, Error>
-    func load(_ completion: @escaping (Result) -> Void)
+    func load(_ url: URL, _ completion: @escaping (Result) -> Void)
 }
