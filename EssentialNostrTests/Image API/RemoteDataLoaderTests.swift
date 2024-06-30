@@ -36,19 +36,29 @@ class RemoteDataLoaderTests: XCTestCase {
 
         let url = URL(string: "http://any-url.com/")!
 
-        let exp = expectation(description: "Wait for load")
-        sut.load(url: url) { result in
-            switch result {
-            case let .failure(error):
-                XCTAssertEqual(error, RemoteDataLoader.Error.connectivity)
-            default:
-                XCTFail("Expected failure, got, \(result) instead.")
-            }
-            exp.fulfill()
+        var capturedError: RemoteDataLoader.Error?
+        sut.load(url: url) { error in
+            capturedError = error
         }
 
         client.completeLoadWith(error: NSError(domain: "domain", code: 0))
-        wait(for: [exp], timeout: 1)
+
+        XCTAssertEqual(capturedError, RemoteDataLoader.Error.connectivity)
+    }
+
+    func test_load_deliversErrorOnNon200HTTPResponse() {
+        let (sut, client) = makeSUT()
+
+        let url = URL(string: "http://any-url.com/")!
+
+        var capturedErrors = [RemoteDataLoader.Error?]()
+        sut.load(url: url) { error in
+            capturedErrors.append(error)
+        }
+
+        client.completeLoadWith(statusCode: 400)
+
+        XCTAssertEqual(capturedErrors, [.invalidData])
     }
 
     // MARK: - Helpers
@@ -62,15 +72,20 @@ class RemoteDataLoaderTests: XCTestCase {
     }
 
     private class HTTPClientSpy: HTTPClient {
-        private var requests = [(url: URL, completion: (Error) -> Void)]()
+        private var requests = [(url: URL, completion: (HTTPClient.Result) -> Void)]()
         var requestedURLs: [URL] { requests.map(\.url) }
 
-        func get(from url: URL, completion:  @escaping (Error) -> Void) {
+        func get(from url: URL, completion:  @escaping (HTTPClient.Result) -> Void) {
             requests.append((url, completion))
         }
 
         func completeLoadWith(error: Error, at index: Int = 0) {
-            requests[index].completion(error)
+            requests[index].completion(.failure(error))
+        }
+
+        func completeLoadWith(statusCode: Int, at index: Int = 0) {
+            let response = HTTPURLResponse(url: requestedURLs[index], statusCode: statusCode, httpVersion: nil, headerFields: nil)!
+            requests[index].completion(.success(response))
         }
     }
 }

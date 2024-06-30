@@ -5,12 +5,13 @@
 import Foundation
 
 public protocol HTTPClient {
-    func get(from url: URL, completion: @escaping (Error) -> Void)
+    typealias Result = Swift.Result<HTTPURLResponse, Error>
+    func get(from url: URL, completion: @escaping (Result) -> Void)
 }
 
 public class RemoteDataLoader {
     let client: HTTPClient
-    public typealias Result = Swift.Result<HTTPURLResponse, Error>
+//    public typealias Result = Swift.Result<HTTPURLResponse, Error>
 
     public enum Error: Swift.Error {
         case connectivity
@@ -21,9 +22,14 @@ public class RemoteDataLoader {
         self.client = client
     }
 
-    public func load(url: URL, completion: @escaping (Result) -> Void) {
-        client.get(from: url) { error in
-            completion(.failure(.connectivity))
+    public func load(url: URL, completion: @escaping (Error) -> Void) {
+        client.get(from: url) { result in
+            switch result {
+            case .failure:
+                completion(.connectivity)
+            case .success:
+                completion(.invalidData)
+            }
         }
     }
 }
