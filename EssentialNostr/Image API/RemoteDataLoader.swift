@@ -11,7 +11,6 @@ public protocol HTTPClient {
 
 public class RemoteDataLoader {
     let client: HTTPClient
-//    public typealias Result = Swift.Result<HTTPURLResponse, Error>
 
     public enum Error: Swift.Error {
         case connectivity

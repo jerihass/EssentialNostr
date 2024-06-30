@@ -51,14 +51,17 @@ class RemoteDataLoaderTests: XCTestCase {
 
         let url = URL(string: "http://any-url.com/")!
 
-        var capturedErrors = [RemoteDataLoader.Error?]()
-        sut.load(url: url) { error in
-            capturedErrors.append(error)
+        [199, 201, 300, 400].enumerated().forEach { index, code in
+            var capturedErrors = [RemoteDataLoader.Error?]()
+
+            sut.load(url: url) { error in
+                capturedErrors.append(error)
+            }
+
+            client.completeLoadWith(statusCode: code, at: index)
+
+            XCTAssertEqual(capturedErrors, [.invalidData])
         }
-
-        client.completeLoadWith(statusCode: 400)
-
-        XCTAssertEqual(capturedErrors, [.invalidData])
     }
 
     // MARK: - Helpers
