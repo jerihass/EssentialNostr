@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		AD0236662C31B61A008B4DF7 /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0236652C31B61A008B4DF7 /* DataLoader.swift */; };
+		AD0236682C31B6C3008B4DF7 /* RemoteDataLoaderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0236672C31B6C3008B4DF7 /* RemoteDataLoaderTests.swift */; };
 		AD1343432C0BB7C60082F2E5 /* EventStoreSpecs.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343422C0BB7C60082F2E5 /* EventStoreSpecs.swift */; };
 		AD1343452C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1343442C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift */; };
 		AD13434E2C0BB94C0082F2E5 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
@@ -110,6 +111,7 @@
 
 /* Begin PBXFileReference section */
 		AD0236652C31B61A008B4DF7 /* DataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
+		AD0236672C31B6C3008B4DF7 /* RemoteDataLoaderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteDataLoaderTests.swift; sourceTree = "<group>"; };
 		AD1343422C0BB7C60082F2E5 /* EventStoreSpecs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventStoreSpecs.swift; sourceTree = "<group>"; };
 		AD1343442C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "EventStoreSpecs+XCTestHelpers.swift"; sourceTree = "<group>"; };
 		AD13434A2C0BB94C0082F2E5 /* EssentialNostrCacheIntegrationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostrCacheIntegrationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -226,6 +228,7 @@
 		AD0236642C31B5E0008B4DF7 /* Image API */ = {
 			isa = PBXGroup;
 			children = (
+				AD0236672C31B6C3008B4DF7 /* RemoteDataLoaderTests.swift */,
 			);
 			path = "Image API";
 			sourceTree = "<group>";
@@ -777,6 +780,7 @@
 				AD51DB6F2BF42CCD00B5673C /* RemoteEventLoaderTests.swift in Sources */,
 				ADE7026D2BF98D850066AC13 /* ClientMessageMapperTests.swift in Sources */,
 				AD7B0B1F2BF639830053793A /* NetworkConnectionWebSocketClientTests.swift in Sources */,
+				AD0236682C31B6C3008B4DF7 /* RemoteDataLoaderTests.swift in Sources */,
 				AD5B9EC02BF6CD2800E7D5CD /* XCTestCase+MemoryLeakTracking.swift in Sources */,
 				AD1343452C0BB7F60082F2E5 /* EventStoreSpecs+XCTestHelpers.swift in Sources */,
 			);
