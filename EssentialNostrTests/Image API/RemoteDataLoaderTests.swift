@@ -36,15 +36,19 @@ class RemoteDataLoaderTests: XCTestCase {
 
         let url = URL(string: "http://any-url.com/")!
 
-        var capturedError: Error?
-
-        sut.load(url: url) { error in
-            capturedError = error
+        let exp = expectation(description: "Wait for load")
+        sut.load(url: url) { result in
+            switch result {
+            case let .failure(error):
+                XCTAssertEqual(error, RemoteDataLoader.Error.connectivity)
+            default:
+                XCTFail("Expected failure, got, \(result) instead.")
+            }
+            exp.fulfill()
         }
 
         client.completeLoadWith(error: NSError(domain: "domain", code: 0))
-
-        XCTAssertEqual(capturedError as? RemoteDataLoader.Error?, RemoteDataLoader.Error.connectivity)
+        wait(for: [exp], timeout: 1)
     }
 
     // MARK: - Helpers
