@@ -38,15 +38,12 @@ class RemoteDataLoaderTests: XCTestCase {
 
         var capturedError: Error?
 
-        let exp = expectation(description: "Wait for load completion")
         sut.load(url: url) { error in
             capturedError = error
-            exp.fulfill()
         }
 
         client.completeLoadWith(error: NSError(domain: "domain", code: 0))
 
-        wait(for: [exp], timeout: 1)
         XCTAssertEqual(capturedError as? RemoteDataLoader.Error?, RemoteDataLoader.Error.connectivity)
     }
 
