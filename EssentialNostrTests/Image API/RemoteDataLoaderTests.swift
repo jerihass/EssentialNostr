@@ -12,11 +12,14 @@ class RemoteDataLoader {
     }
 
     func load(url: URL) {
-        client.requestedURL = url
+        client.get(from: url)
     }
 }
+protocol HTTPClient {
+    func get(from url: URL)
+}
 
-class HTTPClient {
+class HTTPClientSpy: HTTPClient {
     var requestedURL: URL?
     func get(from url: URL) {
         requestedURL = url
@@ -25,14 +28,14 @@ class HTTPClient {
 
 class RemoteDataLoaderTests: XCTestCase {
     func test_init_doesNotRequestDataFromURL() {
-        let client = HTTPClient()
+        let client = HTTPClientSpy()
         _ = RemoteDataLoader(client: client)
 
         XCTAssertNil(client.requestedURL)
     }
 
     func test_load_requestDataFromURL() {
-        let client = HTTPClient()
+        let client = HTTPClientSpy()
         let sut = RemoteDataLoader(client: client)
         let url = URL(string: "http://any-url.com/")!
         sut.load(url: url)
