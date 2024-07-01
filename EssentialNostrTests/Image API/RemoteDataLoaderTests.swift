@@ -49,6 +49,14 @@ class RemoteDataLoaderTests: XCTestCase {
         }
     }
 
+    func test_load_deliversDataOn200HTTPResponse() {
+        let (sut, client) = makeSUT()
+        let data = "SomeData".data(using: .utf8)!
+        expect(sut: sut, toCompleteWith: .success(data)) {
+            client.completeLoadWith(statusCode: 200, data: data)
+        }
+    }
+
     // MARK: - Helpers
 
     private func makeSUT() -> (sut: RemoteDataLoader, client: HTTPClientSpy) {
@@ -66,11 +74,11 @@ class RemoteDataLoaderTests: XCTestCase {
         sut.load(url: url) { result in
             switch (result, expected) {
             case let (.success(data), .success(expData)):
-                XCTAssertEqual(data, expData)
+                XCTAssertEqual(data, expData, file: file, line: line)
             case let (.failure(error), .failure(expFailure)):
-                XCTAssertEqual(error, expFailure)
+                XCTAssertEqual(error, expFailure, file: file, line: line)
             default:
-                XCTFail("Expected: \(expected), got \(result) instead.")
+                XCTFail("Expected: \(expected), got \(result) instead.", file: file, line: line)
             }
             exp.fulfill()
         }
@@ -92,9 +100,9 @@ class RemoteDataLoaderTests: XCTestCase {
             requests[index].completion(.failure(error))
         }
 
-        func completeLoadWith(statusCode: Int, data: Data? = nil, at index: Int = 0) {
+        func completeLoadWith(statusCode: Int, data: Data = Data(), at index: Int = 0) {
             let response = HTTPURLResponse(url: requestedURLs[index], statusCode: statusCode, httpVersion: nil, headerFields: nil)!
-            requests[index].completion(.success(response))
+            requests[index].completion(.success((data, response)))
         }
     }
 }

@@ -5,7 +5,7 @@
 import Foundation
 
 public protocol HTTPClient {
-    typealias Result = Swift.Result<HTTPURLResponse, Error>
+    typealias Result = Swift.Result<(data: Data, response: HTTPURLResponse), Error>
     func get(from url: URL, completion: @escaping (Result) -> Void)
 }
 
@@ -26,8 +26,12 @@ public class RemoteDataLoader {
             switch result {
             case .failure:
                 completion(.failure(.connectivity))
-            case .success:
-                completion(.failure(.invalidData))
+            case let .success((data, response)):
+                if response.statusCode == 200 {
+                    completion(.success(data))
+                } else {
+                    completion(.failure(.invalidData))
+                }
             }
         }
     }
