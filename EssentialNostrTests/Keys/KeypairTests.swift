@@ -23,26 +23,7 @@ class KeypairTests: XCTestCase {
         XCTAssertEqual(key.publicKeyData.count, 32)
     }
 
-    func test_sha256_eventJSONdata() {
-        let data = baseEventJSONData(pubkey: "badpubkey", created_at: .now, kind: 1, tags: [["e"]], content: "content")
-        let eventID = CryptoKit.SHA256.hash(data: data)
-        XCTAssertEqual(eventID.bytes.count, 32)
-    }
-
-    func test_serialzeEvent_createsEventID() {
-        let pub = "17538dc2a62769d09443f18c37cbe358fab5bbf981173542aa7c5ff171ed77c4"
-        let created = Date(timeIntervalSince1970: .init(integerLiteral: 1716341530))
-        let kind: UInt16 = 1
-        let tags = [["t","asknostr"]]
-        let content = "Anyone have experience installing a whole house carbon (or otherwise) water filtration system? \n\n\n#asknostr"
-        let base = BaseEvent(pubkey: pub, created_at: created, kind: kind, tags: tags, content: content)
-
-        let id = base.eventID
-
-        XCTAssertEqual(id, "f97819289cf0bcfb727ded99dc2ebc04d60fe9e4be0097e84fce8d1cc7f252b7")
-    }
-
-    func test_eventFromBaseEventFillsID() {
+    func test_event_fromBaseEventFillsID() {
         let pub = "17538dc2a62769d09443f18c37cbe358fab5bbf981173542aa7c5ff171ed77c4"
         let created = Date(timeIntervalSince1970: .init(integerLiteral: 1716341530))
         let kind: UInt16 = 1
@@ -63,7 +44,7 @@ private func baseEventJSONData(pubkey: String, created_at: Date, kind: UInt16, t
 
 extension Event {
     init(_ base: BaseEvent) {
-        self.init(id: base.eventID, pubkey: base.pubkey, created_at: base.created_at, kind: base.kind, tags: base.tags, content: base.content, sig: "SIGNATURE")
+        self.init(id: base.eventID!, pubkey: base.pubkey, created_at: base.created_at, kind: base.kind, tags: base.tags, content: base.content, sig: "SIGNATURE")
     }
 }
 
@@ -78,17 +59,18 @@ extension BaseEvent: Encodable {
         try? container.encode(content)
     }
 
-    var serialized: Data? {
+    var eventID: String? {
+        guard let serialized = serialized else { return nil }
+        let hash = CryptoKit.SHA256.hash(data: serialized)
+        return Data(hash.bytes).hex
+    }
+
+    private var serialized: Data? {
         do {
             let json = try JSONEncoder().encode(self)
             return json
         } catch {
             return nil
         }
-    }
-
-    var eventID: String {
-        let hash = CryptoKit.SHA256.hash(data: serialized!)
-        return Data(hash.bytes).hex
     }
 }
