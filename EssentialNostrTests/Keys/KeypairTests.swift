@@ -7,15 +7,6 @@ import secp256k1
 import CryptoKit
 import EssentialNostr
 
-class Keypair {
-    let privateKey: secp256k1.Signing.PrivateKey
-    let publicKeyData: Data
-    init() throws {
-        privateKey = try secp256k1.Signing.PrivateKey()
-        publicKeyData = Data(privateKey.publicKey.xonly.bytes)
-    }
-}
-
 class KeypairTests: XCTestCase {
     func test_init_generatesPrivateKey() throws {
         let key = try Keypair()
