@@ -14,10 +14,13 @@ class URLSessionHTTPClient {
     struct UnexpectedValuesRepresentation: Error {}
 
     func get(from url: URL, completion: @escaping (HTTPClient.Result) -> Void) {
-        session.dataTask(with: url) { _, _, error in
+        session.dataTask(with: url) { data, response, error in
             if let error = error {
                 completion(.failure(error))
-            } else {
+            } else if let data = data, data.count > 0, let response = response as? HTTPURLResponse {
+                completion(.success((data, response)))
+            }
+            else {
                 completion(.failure(UnexpectedValuesRepresentation()))
             }
         }.resume()
@@ -70,6 +73,27 @@ class URLSessionHTTPClientTests: XCTestCase {
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: nonHTTPURLResponse(), error: anyError()))
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: anyHTTPURLResponse(), error: anyError()))
         XCTAssertNotNil(resultErrorFor(data: anyData(), response: nonHTTPURLResponse(), error: nil))
+    }
+
+    func test_getFromURL_succeedsOnHTTPURLResponseWithData() {
+        let data = anyData()
+        let response = anyHTTPURLResponse()
+        URLProtocolStub.stub(data: data, response: response, error: nil)
+
+        let exp = expectation(description: "Wait for response")
+        makeSUT().get(from: anyURL()) { result in
+            switch result {
+            case .success((let gotData, let gotResponse)):
+                XCTAssertEqual(gotData, data)
+                XCTAssertEqual(gotResponse.url, response.url)
+                XCTAssertEqual(gotResponse.statusCode, response.statusCode)
+            case .failure:
+                XCTFail("Expected success, got \(result) instead")
+            }
+            exp.fulfill()
+        }
+
+        wait(for: [exp], timeout: 1)
     }
 
     // MARK: - Helpers
@@ -160,7 +184,7 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
 
     private func anyURL() -> URL { URL(string: "http://any-url.com")! }
-    private func anyData() -> Data { Data() }
+    private func anyData() -> Data { "Data".data(using: .utf8)! }
     private func anyHTTPURLResponse() -> HTTPURLResponse { HTTPURLResponse() }
     private func nonHTTPURLResponse() -> URLResponse { URLResponse() }
 }
