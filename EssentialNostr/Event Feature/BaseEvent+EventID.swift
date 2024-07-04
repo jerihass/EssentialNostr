@@ -6,8 +6,8 @@ import Foundation
 import CryptoKit
 
 public extension Event {
-    init(_ base: BaseEvent) {
-        self.init(id: base.eventID!, pubkey: base.pubkey, created_at: base.created_at, kind: base.kind, tags: base.tags, content: base.content, sig: "SIGNATURE")
+    init(_ base: BaseEvent, signed: () -> String = { "SIG" } ) {
+        self.init(id: base.eventID!, pubkey: base.pubkey, created_at: base.created_at, kind: base.kind, tags: base.tags, content: base.content, sig: signed() )
     }
 }
 
@@ -22,7 +22,7 @@ extension BaseEvent: Encodable {
         try? container.encode(content)
     }
 
-    var eventID: String? {
+    public var eventID: String? {
         guard let serialized = serialized else { return nil }
         let hash = CryptoKit.SHA256.hash(data: serialized)
         return Data(hash.bytes).hex
