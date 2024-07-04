@@ -75,6 +75,7 @@
 		AD8ED5FE2BFA7E9900B9ED43 /* ClientMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientMessage.swift; sourceTree = "<group>"; };
 		ADA2B66C2C370324002E962D /* Keypair.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keypair.swift; sourceTree = "<group>"; };
 		ADA2B66E2C3703E5002E962D /* BaseEvent+EventID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BaseEvent+EventID.swift"; sourceTree = "<group>"; };
+		ADA2B6702C37056A002E962D /* Example Event JSON */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Example Event JSON"; sourceTree = "<group>"; };
 		ADB6CEE42BF9540C00EF3B54 /* EssentialNostr.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialNostr.xctestplan; sourceTree = "<group>"; };
 		ADB6CEE92BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostrAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADB6CEEB2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialNostrAPIEndToEndTests.swift; sourceTree = "<group>"; };
@@ -124,6 +125,7 @@
 			children = (
 				AD3FFA142BFC3E7F00467B85 /* KeypairTests.swift */,
 				AD3FFA222BFD084300467B85 /* DataHexEncodingTests.swift */,
+				ADA2B6702C37056A002E962D /* Example Event JSON */,
 			);
 			path = Keys;
 			sourceTree = "<group>";
