@@ -29,16 +29,6 @@ class KeypairTests: XCTestCase {
         XCTAssertEqual(eventID.bytes.count, 32)
     }
 
-    func test_() {
-        let json = """
-        [0,"17538dc2a62769d09443f18c37cbe358fab5bbf981173542aa7c5ff171ed77c4",1716341530,1,[["t","asknostr"]],"Anyone have experience installing a whole house carbon (or otherwise) water filtration system? \\n\\n\\n#asknostr"]
-        """.data(using: .utf8)!
-        let hash = CryptoKit.SHA256.hash(data: json)
-        let hex = Data(hash.bytes).hex
-        print(hex)
-        XCTAssertEqual(hex, "f97819289cf0bcfb727ded99dc2ebc04d60fe9e4be0097e84fce8d1cc7f252b7")
-    }
-
     func test_serialzeEvent_createsEventID() {
         let pub = "17538dc2a62769d09443f18c37cbe358fab5bbf981173542aa7c5ff171ed77c4"
         let created = Date(timeIntervalSince1970: .init(integerLiteral: 1716341530))
@@ -51,15 +41,30 @@ class KeypairTests: XCTestCase {
 
         XCTAssertEqual(id, "f97819289cf0bcfb727ded99dc2ebc04d60fe9e4be0097e84fce8d1cc7f252b7")
     }
+
+    func test_eventFromBaseEventFillsID() {
+        let pub = "17538dc2a62769d09443f18c37cbe358fab5bbf981173542aa7c5ff171ed77c4"
+        let created = Date(timeIntervalSince1970: .init(integerLiteral: 1716341530))
+        let kind: UInt16 = 1
+        let tags = [["t","asknostr"]]
+        let content = "Anyone have experience installing a whole house carbon (or otherwise) water filtration system? \n\n\n#asknostr"
+        let base = BaseEvent(pubkey: pub, created_at: created, kind: kind, tags: tags, content: content)
+
+        let event = Event(base)
+
+        XCTAssertEqual(event.id, "f97819289cf0bcfb727ded99dc2ebc04d60fe9e4be0097e84fce8d1cc7f252b7")
+    }
 }
 
 private func baseEventJSONData(pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String) -> Data {
     let event = BaseEvent(pubkey: pubkey, created_at: created_at, kind: kind, tags: tags, content: content)
-    let time = Int(created_at.timeIntervalSince1970)
-    let tagString = tags.stringed
+    return try! JSONEncoder().encode(event)
+}
 
-    let eventJSON = "{\"pubkey\":\"\(pubkey)\",\"created_at\":\(time),\"kind\":\(kind),\"tags\":\(tagString),\"content\":\"\(content)\"}"
-    return Data(eventJSON.utf8)
+extension Event {
+    init(_ base: BaseEvent) {
+        self.init(id: base.eventID, pubkey: base.pubkey, created_at: base.created_at, kind: base.kind, tags: base.tags, content: base.content, sig: "SIGNATURE")
+    }
 }
 
 extension BaseEvent: Encodable {
