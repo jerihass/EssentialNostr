@@ -41,6 +41,7 @@
 		ADA09ECF2C1E812F00837F7B /* NostrLocalizedStrings.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA09ECB2C1E803A00837F7B /* NostrLocalizedStrings.swift */; };
 		ADA09ED12C1E85D300837F7B /* XCTestCase+Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA09ED02C1E85D300837F7B /* XCTestCase+Localization.swift */; };
 		ADA09EDA2C1F850300837F7B /* SDEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA09ED92C1F850300837F7B /* SDEvent.swift */; };
+		ADA2B66B2C362C48002E962D /* URLSessionHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADA2B66A2C362C48002E962D /* URLSessionHTTPClient.swift */; };
 		ADB6CEEC2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB6CEEB2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.swift */; };
 		ADB6CEED2BF9557600EF3B54 /* EssentialNostr.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD51DB512BF42A4E00B5673C /* EssentialNostr.framework */; };
 		ADC6C9502C11507300322BD9 /* EssentialNostriOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADC6C9482C11507300322BD9 /* EssentialNostriOS.framework */; };
@@ -150,6 +151,7 @@
 		ADA09ECD2C1E811B00837F7B /* EventsFeed.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = EventsFeed.xcstrings; sourceTree = "<group>"; };
 		ADA09ED02C1E85D300837F7B /* XCTestCase+Localization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Localization.swift"; sourceTree = "<group>"; };
 		ADA09ED92C1F850300837F7B /* SDEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SDEvent.swift; sourceTree = "<group>"; };
+		ADA2B66A2C362C48002E962D /* URLSessionHTTPClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionHTTPClient.swift; sourceTree = "<group>"; };
 		ADB6CEE42BF9540C00EF3B54 /* EssentialNostr.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = EssentialNostr.xctestplan; sourceTree = "<group>"; };
 		ADB6CEE92BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EssentialNostrAPIEndToEndTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		ADB6CEEB2BF9557600EF3B54 /* EssentialNostrAPIEndToEndTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EssentialNostrAPIEndToEndTests.swift; sourceTree = "<group>"; };
@@ -226,6 +228,7 @@
 			children = (
 				AD0236652C31B61A008B4DF7 /* DataLoader.swift */,
 				AD0236692C31BC79008B4DF7 /* RemoteDataLoader.swift */,
+				ADA2B66A2C362C48002E962D /* URLSessionHTTPClient.swift */,
 			);
 			path = "Image API";
 			sourceTree = "<group>";
@@ -770,6 +773,7 @@
 				AD51DB6C2BF42B9A00B5673C /* EventLoader.swift in Sources */,
 				AD5B9EBD2BF6CBF500E7D5CD /* NetworkConnectionWebSocketClient.swift in Sources */,
 				ADF9FC342C152556003DB353 /* RemoteFeedLoader.swift in Sources */,
+				ADA2B66B2C362C48002E962D /* URLSessionHTTPClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
