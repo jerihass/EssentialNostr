@@ -55,18 +55,3 @@ class KeypairTests: XCTestCase {
         XCTAssertTrue(event.sig.count == 128)
     }
 }
-
-extension Keypair {
-    private struct SigningFailureError: Error {}
-
-    func sign(_ event: BaseEvent) throws -> Event {
-        guard let id = event.eventID else { throw SigningFailureError() }
-        let sig = try privateKey.signature(for: (id.bytes)!)
-        return Event(event, signed: { sig.dataRepresentation.hex })
-    }
-}
-
-private func baseEventJSONData(pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String) -> Data {
-    let event = BaseEvent(pubkey: pubkey, created_at: created_at, kind: kind, tags: tags, content: content)
-    return try! JSONEncoder().encode(event)
-}
