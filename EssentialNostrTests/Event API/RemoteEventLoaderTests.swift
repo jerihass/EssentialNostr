@@ -215,11 +215,3 @@ class RemoteEventLoaderTests: XCTestCase {
     }
 }
 
-private extension Array where Element == [String] {
-    var stringed: String {
-        if let json = try? JSONEncoder().encode(self), let string = String(data: json, encoding: .utf8) {
-            return string
-        }
-        return ""
-    }
-}
