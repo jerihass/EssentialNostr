@@ -40,7 +40,7 @@ class KeypairTests: XCTestCase {
         XCTAssertEqual(event.id, "4e9d274e0817aca5dbc0d9abcdafaf6abf73faf8109d76e09dab241d7685694c")
     }
 
-    func test_sign_eventGivesSignatureInEvent() {
+    func test_signWithKeypair_eventGivesSignatureInEvent() {
         let keys = try! Keypair()
         let pub = keys.publicKeyData.hex
         let created = Date.now
@@ -49,34 +49,24 @@ class KeypairTests: XCTestCase {
         let content = "Some test content"
         let base = BaseEvent(pubkey: pub, created_at: created, kind: kind, tags: tags, content: content)
 
-        let signer = Signer()
-        signer.signatory = { _ in
-            let sig = try! keys.privateKey.signature(for: (base.eventID?.bytes)!)
-            return sig.dataRepresentation.hex
-        }
-        let event = try! signer.sign(base)
+        let event = try! keys.sign(base)
 
         print(event.sig)
         XCTAssertTrue(event.sig.count == 128)
     }
 }
 
+extension Keypair {
+    private struct SigningFailureError: Error {}
+
+    func sign(_ event: BaseEvent) throws -> Event {
+        guard let id = event.eventID else { throw SigningFailureError() }
+        let sig = try privateKey.signature(for: (id.bytes)!)
+        return Event(event, signed: { sig.dataRepresentation.hex })
+    }
+}
+
 private func baseEventJSONData(pubkey: String, created_at: Date, kind: UInt16, tags: [[String]], content: String) -> Data {
     let event = BaseEvent(pubkey: pubkey, created_at: created_at, kind: kind, tags: tags, content: content)
     return try! JSONEncoder().encode(event)
-}
-
-protocol EventSigner {
-    var signatory: (String) -> String { get }
-    func sign(_ event: BaseEvent) throws -> Event
-}
-
-class Signer: EventSigner {
-    var signatory: (String) -> String = { _ in "" }
-    private struct SigningFailureError: Error {}
-    func sign(_ event: EssentialNostr.BaseEvent) throws -> EssentialNostr.Event {
-        guard let id = event.eventID else { throw SigningFailureError() }
-        let sig = signatory(id)
-        return Event(event, signed: { sig })
-    }
 }
